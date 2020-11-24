@@ -25,7 +25,7 @@ public class SwaggerConfig {
                 //apis() 控制哪些接口暴露给swagger，
                 // RequestHandlerSelectors.any() 所有都暴露
                 // RequestHandlerSelectors.basePackage("com.info.*")  指定包位置
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("cn.edu.buaa.scholarshipserver.controllers"))
                 .paths(PathSelectors.any())
                 .build();
     }
@@ -37,7 +37,7 @@ public class SwaggerConfig {
                 .description("后端接口文档")
                 //联系人实体类
                 .contact(
-                        new Contact("韩子尧", "github.com/h56983577", "h56983577@126.com")
+                        new Contact("韩子尧", "https://github.com/h56983577", "h56983577@126.com")
                 )
                 //版本号
                 .version("1.0.0-SNAPSHOT")
