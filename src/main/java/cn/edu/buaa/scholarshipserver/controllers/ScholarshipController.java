@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/scholarships")
+@RequestMapping("/scholarship")
 @Api(tags = {"学术成果相关接口"})
 public class ScholarshipController {
 
