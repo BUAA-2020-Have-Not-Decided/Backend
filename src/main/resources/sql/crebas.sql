@@ -28,7 +28,7 @@ drop table if exists Paper;
 
 drop table if exists Patent;
 
-drop table if exists PatentPossess;
+drop table if exists Patent_Possess;
 
 drop table if exists Project;
 
@@ -213,9 +213,9 @@ create table Patent
 );
 
 /*==============================================================*/
-/* Table: PatentPossess                                         */
+/* Table: Patent_Possess                                         */
 /*==============================================================*/
-create table PatentPossess
+create table Patent_Possess
 (
    PatentId             bigint not null,
    OwnerID              int not null,
@@ -260,7 +260,7 @@ create table Project_Possess
 (
    ProjectId            bigint not null,
    OwnerID              int not null,
-   SequeceNumber        int not null,
+   SequenceNumber        int not null,
    PossessDatetime      datetime not null,
    primary key (ProjectId, OwnerID)
 );
@@ -293,6 +293,41 @@ create table Scholar
    primary key (ScholarId)
 );
 
+
+/*==============================================================*/
+/* Table: DataScholar                                                */
+/*==============================================================*/
+create table DataScholar
+(
+   AuthorId             int not null,
+   NormalizedName       varchar(127) not null,
+   DisplayName          varchar(127),
+   LastKnownAffiliationId int,
+   PaperCount           int,
+   PaperFamilyCount     int,
+   CitationCount        int,
+   primary key (AuthorId)
+);
+
+/*==============================================================*/
+/* Table: Paper_DataScholar                                            */
+/*==============================================================*/
+create table Paper_DataScholar
+(
+    PaperId         bigint not null,
+    AuthorID        int not null,
+    primary  key(PaperId,AuthorID)
+);
+/*==============================================================*/
+/* Table: Paper_Institution                                           */
+/*==============================================================*/
+create table Paper_Institution
+(
+    PaperId         bigint not null,
+    InstitutionId   int not null,
+    primary  key(PaperId,InstitutionId)
+);
+
 /*==============================================================*/
 /* Table: SubscribeScholar                                      */
 /*==============================================================*/
@@ -311,11 +346,12 @@ create table User
 (
    UserID               int not null,
    Password             varchar(20) not null,
-   Name                 varchar(100) not null,
+   Name                 varchar(20) not null,
    Sex                  int,
    UserImagePath        varchar(100),
+   Organization         varchar(30),
    Email                varchar(50),
-   BriefIntroduction    varchar(100),
+   BriefIntroduction    varchar(50),
    Identify             int,
    primary key (UserID)
 );
@@ -414,4 +450,12 @@ alter table Writer add constraint FK_Writer foreign key (PaperId)
 
 alter table Writer add constraint FK_Writer2 foreign key (ScholarId)
       references Scholar (ScholarId) on delete restrict on update restrict;
+alter table Paper_DataScholar add constraint  FK_Paper_DataScholar foreign key(PaperId)
+      references Paper (PaperId) on delete  restrict  on update  restrict ;
+alter table Paper_DataScholar add constraint  FK_Paper_DataScholar2 foreign key(AuthorId)
+      references DataScholar (AuthorId) on delete  restrict  on update  restrict ;
+alter table Paper_Institution add constraint  FK_Paper_Institution foreign key(PaperId)
+      references Paper (PaperId) on delete  restrict  on update  restrict ;
+alter table Paper_Institution add constraint  FK_Paper_Institution2 foreign key(InstitutionId)
+      references Institution (InstitutionId) on delete  restrict  on update  restrict ;
 
