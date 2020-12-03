@@ -311,12 +311,11 @@ create table User
 (
    UserID               int not null,
    Password             varchar(20) not null,
-   Name                 varchar(20) not null,
+   Name                 varchar(100) not null,
    Sex                  int,
    UserImagePath        varchar(100),
-   Organization         varchar(30),
    Email                varchar(50),
-   BriefIntroduction    varchar(50),
+   BriefIntroduction    varchar(100),
    Identify             int,
    primary key (UserID)
 );
