@@ -11,14 +11,41 @@ public class ScholarService {
         public ScholarService(GetScholar getScholar){
                 this.getScholar = getScholar;
         }
-        public ResponseEntity<Response> getScholarById(Integer id){
+        public ResponseEntity<Response> GetScholar(Integer id){
                 return  getScholar.getScholarById(id);
         }
-        public ResponseEntity<Response> updateScholar(Integer id){
+        public ResponseEntity<Response> PutScholar(Integer id){
                 return  getScholar.updateScholar(id);
         }
-        public ResponseEntity<Response> getScholarsByName(String username){
+        public ResponseEntity<Response> GetSameNameUser(String username){
                 return  getScholar.getScholarByUserName(username);
         }
-        public ResponseEntity<Response>
+        public ResponseEntity<Response> PostScholar_DataScholar(){
+
+        }
+        public ResponseEntity<Response> GetAdminScholar(){
+
+        }
+        public ResponseEntity<Response> GetAdminScholar(){
+
+        }
+        public ResponseEntity<Response> DeleteAdminScholar(){
+
+        }
+        public ResponseEntity<Response> GetSubscribe(){
+
+        }
+        public ResponseEntity<Response> PostSubscribe(){
+
+        }
+        public ResponseEntity<Response> DeleteSubscribe(){
+
+        }
+        public ResponseEntity<Response> PostSearch(){
+
+        }
+        public ResponseEntity<Response> PostMessage(){
+
+        }
+
 }

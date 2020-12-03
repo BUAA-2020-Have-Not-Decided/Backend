@@ -29,6 +29,7 @@ public class GetScholar {
         public ResponseEntity<Response> updateScholar(Integer id){
                 Scholar scholar =new Scholar();
                 scholarDao.save(scholar);
+
                 return  ResponseEntity.ok(new Response(1));
         }
 
