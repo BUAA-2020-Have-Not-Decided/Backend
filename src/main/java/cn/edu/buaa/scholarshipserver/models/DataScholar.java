@@ -8,5 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class DataScholar {
-
+    private int AuthorId;
+    private String NormalizedName;
+    private String DisplayName;
+    private int LastKnownAffiliationId;
+    private int PaperCount;
+    private int PaperFamilyCount;
+    private int CitationCount;
 }

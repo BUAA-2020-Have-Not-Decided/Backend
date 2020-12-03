@@ -51,8 +51,7 @@ public class ScholarController {
     }
 
     @DeleteMapping("/admin/{ScholarId}/{DataScholarId}")
-    public ResponseEntity<Response> DeleteAdminScholar(@PathVariable("ScholarId") String ScholarId,
-                                                       @PathVariable("DataScholarId") String DataScholarId) {
+    public ResponseEntity<Response> DeleteAdminScholar(@PathVariable("ScholarId") String ScholarId, @PathVariable("DataScholarId") String DataScholarId){
 
     }
 
