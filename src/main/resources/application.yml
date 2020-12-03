@@ -8,6 +8,13 @@ spring:
     redis:
       port:6379
       host:localhost
+  mail:
+    protocol: smtps
+    host: smtp.126.com
+    username: notdecidedyet@126.com
+    password: OGRFFURPYTUANFDF
+    spring.mail.smtp.ssl.enable: true
+    port: 465
 mybatis:
   mapper-locations: classpath:Mapper/*.xml
 # 网络设置

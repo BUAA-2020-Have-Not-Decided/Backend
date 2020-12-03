@@ -15,6 +15,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public void register(String name, String password, String email) {
         User u = new User(name, password, email);
+        user_mapper.insertNewUser(u);
     }
 
     @Override

@@ -2,7 +2,6 @@ package cn.edu.buaa.scholarshipserver.services.users;
 
 import org.springframework.stereotype.Service;
 
-@Service
 public interface UserService {
     /*注册一个用户*/
     void register(String name, String password, String email);

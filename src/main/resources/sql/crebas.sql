@@ -306,7 +306,7 @@ create table SubscribeScholar
 /*==============================================================*/
 create table User
 (
-   UserID               int not null,
+   UserID               int not null auto_increment,
    Password             varchar(20) not null,
    Name                 varchar(100) not null,
    Sex                  int,
