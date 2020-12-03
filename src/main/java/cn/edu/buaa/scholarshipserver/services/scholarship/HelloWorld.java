@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class HelloWorld {
 
     public ResponseEntity<Response> hello() {
-        Response response = new Response("Hello, world!");
+        Response response = new Response(null);
         return ResponseEntity.ok(response);
     }
 }
