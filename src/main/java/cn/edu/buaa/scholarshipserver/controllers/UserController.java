@@ -4,10 +4,8 @@ import cn.edu.buaa.scholarshipserver.models.User;
 import cn.edu.buaa.scholarshipserver.services.users.UserService;
 import cn.edu.buaa.scholarshipserver.utils.DigestUtil;
 import cn.edu.buaa.scholarshipserver.utils.EmailSender;
-import cn.edu.buaa.scholarshipserver.utils.Response;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -57,8 +55,9 @@ public class UserController {
         }
         else{
             try{
-                email_sender.sendEmail(email,digest_util.getRandMD5Code(email));
-                user_service.register(username, password, email);
+                String code = digest_util.getRandMD5Code(email);
+                email_sender.sendEmail(email, code);
+                user_service.register(username, password, email, code);
                 result.put("message", String.format("验证链接已发送到%s，链接10分钟内有效", email));
                 result.put("status",true);
                 return result;
@@ -72,5 +71,29 @@ public class UserController {
         result.put("status", false);
         return result;
     }
-
+    /*用户验证的地方*/
+    @PostMapping("/verify")
+    public Map<String, Object>verifyUser(@RequestParam("Code") String code){
+        Map<String, Object> result = new TreeMap<>();
+        int verify_status = user_service.verify(code);
+        result.put("status", verify_status > 0);
+        switch(verify_status){
+            case -1:
+                result.put("message", "用户名被人抢注了");
+                break;
+            case 0:
+                result.put("message", "验证链接有误");
+                break;
+            case 1:
+                result.put("message", "邮箱已注册，请直接登录");
+                break;
+            case 2:
+                result.put("message", "验证成功");
+                break;
+            default:
+                result.put("message", "未知错误");
+                break;
+        }
+        return result;
+    }
 }
