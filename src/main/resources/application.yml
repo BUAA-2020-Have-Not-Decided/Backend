@@ -2,8 +2,8 @@
 spring:
   datasource:
     username: root
-    password: qaz123wsx
-    url: jdbc:mysql://localhost:3306/buaase?useUnicode=true&characterEncoding=UTF-8
+    password: buaase2020.
+    url: jdbc:mysql://123.56.145.79:3306/buaase2020?useUnicode=true&characterEncoding=UTF-8
     driver-class-name: com.mysql.cj.jdbc.Driver
 mybatis:
   mapper-locations: classpath:Mapper/*.xml
