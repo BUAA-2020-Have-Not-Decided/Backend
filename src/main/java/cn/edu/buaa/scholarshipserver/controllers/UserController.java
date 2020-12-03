@@ -2,6 +2,7 @@ package cn.edu.buaa.scholarshipserver.controllers;
 
 import cn.edu.buaa.scholarshipserver.models.User;
 import cn.edu.buaa.scholarshipserver.services.users.UserService;
+import cn.edu.buaa.scholarshipserver.utils.DigestUtil;
 import cn.edu.buaa.scholarshipserver.utils.EmailSender;
 import cn.edu.buaa.scholarshipserver.utils.Response;
 import io.swagger.annotations.Api;
@@ -21,6 +22,9 @@ public class UserController {
 
     @Autowired
     private EmailSender email_sender;
+
+    @Autowired
+    private DigestUtil digest_util;
 
     /*判断这个用户名用过没有*/
     @PostMapping("/nameUsed")
@@ -53,7 +57,7 @@ public class UserController {
         }
         else{
             try{
-                email_sender.sendEmail(email,"testcode");
+                email_sender.sendEmail(email,digest_util.getRandMD5Code(email));
                 user_service.register(username, password, email);
                 result.put("message", String.format("验证链接已发送到%s，链接10分钟内有效", email));
                 result.put("status",true);
