@@ -1,7 +1,12 @@
 package cn.edu.buaa.scholarshipserver.models;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class User implements Serializable {
     /*用户的id，主键*/
     private Integer UserID;
@@ -21,6 +26,12 @@ public class User implements Serializable {
     private Integer Identify;
 
     private static final long serialVersionUID = 1L;
+
+    public User(String name, String password, String email){
+        this.Password = password;
+        this.Name = name;
+        this.Email = email;
+    }
 
     public Integer getUserID() {
         return UserID;
