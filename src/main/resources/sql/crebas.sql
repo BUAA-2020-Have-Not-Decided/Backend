@@ -329,9 +329,9 @@ create table Paper_Institution
 );
 
 /*==============================================================*/
-/* Table: SubscribeScholar                                      */
+/* Table: Subscribe_Scholar                                      */
 /*==============================================================*/
-create table SubscribeScholar
+create table Subscribe_Scholar
 (
    FanID                int not null,
    ScholarId            int not null,
