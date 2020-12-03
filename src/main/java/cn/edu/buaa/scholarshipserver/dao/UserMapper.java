@@ -14,6 +14,8 @@ public interface UserMapper {
     User getUserByID(Integer id);
     /*根据Name获取用户*/
     User getUserByName(String name);
+    /*根据Email获取用户*/
+    User getUserByEmail(String email);
     /*插入数据部分*/
     /*创建一个新的用户*/
     void insertNewUser(User u);
