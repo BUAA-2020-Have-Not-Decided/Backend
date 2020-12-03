@@ -24,6 +24,10 @@
     select * from User where Name=#{v}
   </select>
 
+  <select id="getUserByEmail" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from User where Email=#{v}
+  </select>
+
   <insert id="insertNewUser" parameterType="cn.edu.buaa.scholarshipserver.models.User">
     insert into User values(Password=#{Password}, Name=#{Name}, Sex=#{Sex}, UserImagePath=#{UserImagePath}, Email=#{Email}, BriefIntroduction=#{BriefIntroduction}, Identity=#{Identity})
   </insert>

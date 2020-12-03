@@ -3,7 +3,13 @@ spring:
   datasource:
     username: root
     password: qaz123wsx
-    url: jdbc:mysql://localhost:3306/buaase?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/buaase?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
+    redis:
+      port:6379
+      host:localhost
 mybatis:
   mapper-locations: classpath:Mapper/*.xml
+# 网络设置
+server:
+  port:8086

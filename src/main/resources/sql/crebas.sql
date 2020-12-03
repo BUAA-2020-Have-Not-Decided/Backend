@@ -42,9 +42,6 @@ drop table if exists User;
 
 drop table if exists Writer;
 
-/*==============================================================*/
-/* Table: AffiliationFieldRank                                  */
-/*==============================================================*/
 create table AffiliationFieldRank
 (
    FieldsId             bigint not null,
