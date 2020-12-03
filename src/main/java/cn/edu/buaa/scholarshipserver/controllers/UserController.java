@@ -2,6 +2,7 @@ package cn.edu.buaa.scholarshipserver.controllers;
 
 import cn.edu.buaa.scholarshipserver.models.User;
 import cn.edu.buaa.scholarshipserver.services.users.UserService;
+import cn.edu.buaa.scholarshipserver.utils.EmailSender;
 import cn.edu.buaa.scholarshipserver.utils.Response;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ import java.util.TreeMap;
 public class UserController {
     @Autowired
     private UserService user_service;
+
+    @Autowired
+    private EmailSender email_sender;
 
     /*判断这个用户名用过没有*/
     @PostMapping("/nameUsed")
@@ -41,7 +45,6 @@ public class UserController {
     @PostMapping("/register")
     public Map<String, Object> register(@RequestParam("Name") String username, @RequestParam("Email") String email, @RequestParam("Password") String password){
         Map<String, Object> result = new TreeMap<>();
-        user_service.register(username, password, email);
         if(user_service.emailUsed(email)){
             result.put("message", "这个邮箱已经被用过了");
         }
@@ -49,12 +52,20 @@ public class UserController {
             result.put("message", "这个用户名已经被用过了");
         }
         else{
-            result.put("message", String.format("验证链接已发至%s，链接一天内有效", email));
-            result.put("status", true);
-            return result;
+            try{
+                email_sender.sendEmail(email,"testcode");
+                user_service.register(username, password, email);
+                result.put("message", String.format("验证链接已发送到%s，链接10分钟内有效", email));
+                result.put("status",true);
+                return result;
+            }
+            catch(Exception e){
+                result.put("message", "邮件发送失败");
+                result.put("status", false);
+                return result;
+            }
         }
-
-        result.put("success", false);
+        result.put("status", false);
         return result;
     }
 
