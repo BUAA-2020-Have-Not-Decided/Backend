@@ -24,8 +24,12 @@
     select * from User where Name=#{v}
   </select>
 
-  <insert id="insertNewUser" parameterType="cn.edu.buaa.scholarshipserver.models.User">
-    insert into User values(Password=#{Password}, Name=#{Name}, Sex=#{Sex}, UserImagePath=#{UserImagePath}, Email=#{Email}, BriefIntroduction=#{BriefIntroduction}, Identity=#{Identity})
+  <select id="getUserByEmail" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from User where Email=#{v}
+  </select>
+
+  <insert id="insertNewUser" useGeneratedKeys="true" parameterType="cn.edu.buaa.scholarshipserver.models.User">
+    insert into User(Password, Name, Sex, UserImagePath, Email, BriefIntroduction, Identify) values(#{Password}, #{Name}, #{Sex}, #{UserImagePath}, #{Email}, #{BriefIntroduction}, #{Identify})
   </insert>
 
   <update id="updatePassword" parameterType="map">

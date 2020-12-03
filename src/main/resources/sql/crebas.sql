@@ -42,9 +42,6 @@ drop table if exists User;
 
 drop table if exists Writer;
 
-/*==============================================================*/
-/* Table: AffiliationFieldRank                                  */
-/*==============================================================*/
 create table AffiliationFieldRank
 (
    FieldsId             bigint not null,
@@ -344,7 +341,7 @@ create table SubscribeScholar
 /*==============================================================*/
 create table User
 (
-   UserID               int not null,
+   UserID               int not null auto_increment,
    Password             varchar(20) not null,
    Name                 varchar(20) not null,
    Sex                  int,
