@@ -18,7 +18,8 @@ public class UserServiceImpl implements UserService{
     /*注册之后，先新建一个用户的对象，放到redis里面，等待接收验证*/
     @Override
     public void register(String name, String password, String email, String code) {
-        User u = new User(name, password, email);
+        //User u = new User(name, password, email);
+        User u = new User();
         redis_util.setUserAndCode(u, code);
     }
 
