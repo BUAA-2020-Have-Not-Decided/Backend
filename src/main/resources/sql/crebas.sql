@@ -147,7 +147,7 @@ create table Institution
 /*==============================================================*/
 create table Message
 (
-   MsgId                int not null,
+   MsgId                int not null auto_increment,
    PaperId              bigint,
    PatentId             bigint,
    ProjectId            bigint,

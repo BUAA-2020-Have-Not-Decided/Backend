@@ -14,9 +14,9 @@ public class MessageController {
         this.messageService = messageService;
     }
 
-    @PostMapping("/send")
-    public int sendMessage(String msgtitle, String msgcontent, Integer sender_userid, Integer receiver_userid) {
-        return messageService.sendMessage(msgtitle, msgcontent, sender_userid, receiver_userid);
+    @PostMapping("/user")
+    public int sendMessage(String messageTitle, String messageContent, Integer sender_userid, Integer receiver_userid) {
+        return messageService.sendUserMessage(messageTitle, messageContent, sender_userid, receiver_userid);
     }
 
 }

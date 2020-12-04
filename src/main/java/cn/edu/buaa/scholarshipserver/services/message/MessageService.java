@@ -15,9 +15,9 @@ public class MessageService {
         this.messageMapper = messageMapper;
     }
 
-    public int sendMessage(String msgtitle, String msgcontent, Integer sender_userid, Integer receiver_userid) {
-        int newMessageId = messageMapper.countRecords();
-        Message newMessage = new Message(newMessageId, null, null, null, sender_userid, receiver_userid, msgtitle, msgcontent, 0, new Date(), 1);
+    public int sendUserMessage(String messageTitle, String messageContent, Integer sender_userid, Integer receiver_userid) {
+        Message newMessage = new Message(null, null, null, null, sender_userid, receiver_userid, messageTitle, messageContent, 0, new Date(), 1);
         return messageMapper.insertSelective(newMessage);
     }
+
 }
