@@ -1,16 +1,18 @@
 package cn.edu.buaa.scholarshipserver.services;
 
-import cn.edu.buaa.scholarshipserver.services.scholar.GetScholar;
 import cn.edu.buaa.scholarshipserver.utils.Response;
-import org.graalvm.compiler.serviceprovider.ServiceProvider;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import cn.edu.buaa.scholarshipserver.utils.Response;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+/*
 @Service
 public class ScholarService {
+        @Autowired
         private GetScholar getScholar;
-        public ScholarService(GetScholar getScholar){
-                this.getScholar = getScholar;
-        }
         public ResponseEntity<Response> GetScholar(Integer id){
                 return  getScholar.getScholarById(id);
         }
@@ -49,3 +51,6 @@ public class ScholarService {
         }
 
 }
+    }
+ */
+

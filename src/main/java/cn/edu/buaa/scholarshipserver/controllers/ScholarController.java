@@ -1,7 +1,6 @@
 package cn.edu.buaa.scholarshipserver.controllers;
 
 import cn.edu.buaa.scholarshipserver.models.Scholar;
-import cn.edu.buaa.scholarshipserver.services.ScholarService;
 import cn.edu.buaa.scholarshipserver.utils.Response;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.html.parser.Entity;
-
+/*
 @RestController
 @RequestMapping("/schlorship")
 @Api(tags = {"学者门户相关接口"})
@@ -17,7 +16,6 @@ import javax.swing.text.html.parser.Entity;
 public class ScholarController {
     @Autowired
     private ScholarService scholarService;
-
     @GetMapping("/{ScholarId}")
     public ResponseEntity<Response> GetScholar(@PathVariable("ScholarId") String ScholarId) {
 
@@ -80,4 +78,5 @@ public class ScholarController {
 
     }
 }
+ */
 
