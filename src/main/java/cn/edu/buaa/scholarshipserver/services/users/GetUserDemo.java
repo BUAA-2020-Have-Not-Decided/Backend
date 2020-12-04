@@ -9,18 +9,4 @@ import org.springframework.stereotype.Service;
 @Service
 public class GetUserDemo {
 
-    private UserMapper userMapper;
-
-    GetUserDemo(UserMapper userMapper) {
-        this.userMapper = userMapper;
-    }
-
-    public ResponseEntity<Response> getUser(Integer id) {
-        System.out.println(id);
-        User user;
-        if ((user = userMapper.selectByPrimaryKey(id)) == null)
-            user = new User();
-        Response response = new Response(user);
-        return ResponseEntity.ok(response);
-    }
 }

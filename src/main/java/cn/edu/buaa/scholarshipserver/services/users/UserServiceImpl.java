@@ -5,7 +5,7 @@ import cn.edu.buaa.scholarshipserver.models.User;
 import cn.edu.buaa.scholarshipserver.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+/*
 @Service
 public class UserServiceImpl implements UserService{
 
@@ -15,7 +15,6 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private RedisUtil redis_util;
 
-    /*注册之后，先新建一个用户的对象，放到redis里面，等待接收验证*/
     @Override
     public void register(String name, String password, String email, String code) {
         User u = new User(name, password, email);
@@ -49,3 +48,4 @@ public class UserServiceImpl implements UserService{
         return u != null;
     }
 }
+*/
