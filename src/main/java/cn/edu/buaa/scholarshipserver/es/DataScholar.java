@@ -18,6 +18,8 @@ public class DataScholar {
         @Field(type = FieldType.Auto)
         private Integer id;
         @Field(type = FieldType.Auto)
+        private Integer scholarId;
+        @Field(type = FieldType.Auto)
         private int authorId;
         @Field(type = FieldType.Auto)
         private String normalizedName;

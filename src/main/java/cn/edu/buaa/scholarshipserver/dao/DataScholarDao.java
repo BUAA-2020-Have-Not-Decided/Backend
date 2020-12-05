@@ -7,7 +7,6 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import java.util.List;
 
 public interface DataScholarDao extends ElasticsearchRepository<DataScholar,Long> {
-    public List<DataScholar> findByAuthorId(int authorId);
-
+    public DataScholar findByAuthorId(int authorId);
 }
 
