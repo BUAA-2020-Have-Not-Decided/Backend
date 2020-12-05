@@ -14,7 +14,7 @@ public class UserService {
         this.getUserDemo = getUserDemo;
     }
 
-    public ResponseEntity<Response> getUserById(Integer id) {
+    /*public ResponseEntity<Response> getUserById(Integer id) {
         return getUserDemo.getUser(id);
-    }
+    }*/
 }

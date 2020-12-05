@@ -1,17 +1,26 @@
 package cn.edu.buaa.scholarshipserver.services;
 
-import cn.edu.buaa.scholarshipserver.services.scholar.GetScholar;
+import cn.edu.buaa.scholarshipserver.es.DataScholar;
+import cn.edu.buaa.scholarshipserver.services.scholar.GetDataScholar;
+import cn.edu.buaa.scholarshipserver.services.scholar.GetSubscribe;
 import cn.edu.buaa.scholarshipserver.utils.Response;
-import org.graalvm.compiler.serviceprovider.ServiceProvider;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import cn.edu.buaa.scholarshipserver.utils.Response;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.util.Map;
+
 @Service
 public class ScholarService {
-        private GetScholar getScholar;
-        public ScholarService(GetScholar getScholar){
-                this.getScholar = getScholar;
-        }
-        public ResponseEntity<Response> GetScholar(Integer id){
+        @Autowired
+        //private GetScholar getScholar;
+        private GetDataScholar getDataScholar;
+        private GetSubscribe getSubscribe;
+        /*public ResponseEntity<Response> GetScholar(Integer id){
                 return  getScholar.getScholarById(id);
         }
         public ResponseEntity<Response> PutScholar(Integer id){
@@ -20,10 +29,24 @@ public class ScholarService {
         public ResponseEntity<Response> GetSameNameUser(String username){
                 return  getScholar.getScholarByUserName(username);
         }
-        public ResponseEntity<Response> PostScholar_DataScholar(){
-
+        */
+        public ResponseEntity<Response> PostScholar_DataScholar(Map<String,Integer> params) {
+            DataScholar dataScholar = getDataScholar.getDataScholarByAuthorId(params.get("authorId"));
+            if (dataScholar  != null) {
+                if(dataScholar.getScholarId()==null) {
+                    dataScholar.setScholarId(params.get("scholarId"));
+                    getDataScholar.updateDataScholar(dataScholar);
+                    return ResponseEntity.ok(new Response(200,"success"));
+                }
+                else {
+                    return ResponseEntity.ok(new Response(200,"关系已添加"));
+                }
+            }
+            else {
+                return ResponseEntity.ok(new Response(404, "该数据库门户不存在"));
+            }
         }
-        public ResponseEntity<Response> GetAdminScholar(){
+        /*public ResponseEntity<Response> GetAdminScholar(){
 
         }
         public ResponseEntity<Response> GetAdminScholar(){
@@ -32,9 +55,10 @@ public class ScholarService {
         public ResponseEntity<Response> DeleteAdminScholar(){
 
         }
-        public ResponseEntity<Response> GetSubscribe(){
+        public ResponseEntity<Response> GetSubscribe(Integer userId){
 
         }
+
         public ResponseEntity<Response> PostSubscribe(){
 
         }
@@ -46,6 +70,7 @@ public class ScholarService {
         }
         public ResponseEntity<Response> PostMessage(){
 
-        }
-
+        }*/
 }
+
+

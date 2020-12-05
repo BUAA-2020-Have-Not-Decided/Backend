@@ -18,7 +18,7 @@ import java.io.Serializable;
 public class Project implements Serializable {
         @Id
         @Field(type= FieldType.Auto)
-        private Long projectId;
+        private Integer projectId;
         @Field(type= FieldType.Auto)
         private String organization;
         @Field(type=FieldType.Auto)

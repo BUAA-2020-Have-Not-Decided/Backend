@@ -1,15 +1,21 @@
 package cn.edu.buaa.scholarshipserver.models;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+
 import java.io.Serializable;
 import java.util.Date;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class Scholar implements Serializable {
+
     private Integer scholarid;
 
     private Integer institutionid;

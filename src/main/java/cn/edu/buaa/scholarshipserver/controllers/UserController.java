@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.TreeMap;
 
-@RestController
+/*@RestController
 @RequestMapping("/user")
 @Api(tags = {"用户相关接口"})
 public class UserController {
-    @Autowired
-    private UserService user_service;
+    //@Autowired
+    //private UserService user_service;
 
     @Autowired
     private EmailSender email_sender;
@@ -24,7 +24,7 @@ public class UserController {
     @Autowired
     private DigestUtil digest_util;
 
-    /*判断这个用户名用过没有*/
+    //判断这个用户名用过没有
     @PostMapping("/nameUsed")
     public Map<String, Object> isNameUsed(@RequestParam("Username") String username){
         Map<String,Object> result = new TreeMap<>();
@@ -33,7 +33,7 @@ public class UserController {
         return result;
     }
 
-    /*判断这个邮箱用过没有*/
+    //判断这个邮箱用过没有
     @PostMapping("/emailUsed")
     public Map<String, Object> isEmailUsed(@RequestParam("Email") String email){
         Map<String,Object> result = new TreeMap<>();
@@ -42,8 +42,8 @@ public class UserController {
         return result;
     }
 
-    /*注册：先接收前端发上来的东西，发送验证邮箱，然后把邮箱中的code保存在redis中，等待验证*/
-    /*返回一个验证链接已发至xxx邮箱*/
+    //注册：先接收前端发上来的东西，发送验证邮箱，然后把邮箱中的code保存在redis中，等待验证
+    //返回一个验证链接已发至xxx邮箱
     @PostMapping("/register")
     public Map<String, Object> register(@RequestParam("Name") String username, @RequestParam("Email") String email, @RequestParam("Password") String password){
         Map<String, Object> result = new TreeMap<>();
@@ -71,7 +71,7 @@ public class UserController {
         result.put("status", false);
         return result;
     }
-    /*用户验证的地方*/
+    //用户验证的地方
     @PostMapping("/verify")
     public Map<String, Object>verifyUser(@RequestParam("Code") String code){
         Map<String, Object> result = new TreeMap<>();
@@ -97,3 +97,4 @@ public class UserController {
         return result;
     }
 }
+*/

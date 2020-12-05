@@ -1,7 +1,4 @@
 package cn.edu.buaa.scholarshipserver.services.scholar;
-
-import cn.edu.buaa.scholarshipserver.dao.ScholarDao;
-import cn.edu.buaa.scholarshipserver.models.Scholar;
 import cn.edu.buaa.scholarshipserver.utils.Response;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/*
 @Component
 public class GetScholar {
         @Autowired
@@ -39,3 +36,6 @@ public class GetScholar {
                 return ResponseEntity.ok(new Response(scholarList));
         }
 }
+
+
+ */
