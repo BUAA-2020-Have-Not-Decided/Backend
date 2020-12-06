@@ -12,7 +12,16 @@ public class SubscribeMethod {
     @Autowired
     private SubscribeDao subscribeDao;
 
-    public List<Subscribe> getSubscribeByFansId(Integer FansId){
-        return subscribeDao.findByFanId(FansId);
+    public List<Subscribe> getSubscribeByFanId(Integer FanId){
+        return subscribeDao.findByFanId(FanId);
+    }
+    public Subscribe getSubscribeByFanIdAndScholarId(Integer FanId,Integer ScholarId){
+        return subscribeDao.findByFanIdAndScholarId(FanId,ScholarId);
+    }
+    public void updateSubscribe(Subscribe subscribe){
+        subscribeDao.save(subscribe);
+    }
+    public void deleteSubscribe(Subscribe subscribe){
+        subscribeDao.delete(subscribe);
     }
 }

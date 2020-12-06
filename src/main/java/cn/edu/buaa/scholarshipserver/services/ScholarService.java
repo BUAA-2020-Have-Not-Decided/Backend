@@ -7,6 +7,7 @@ import cn.edu.buaa.scholarshipserver.services.scholar.DataScholarMethod;
 import cn.edu.buaa.scholarshipserver.services.scholar.ScholarMethod;
 import cn.edu.buaa.scholarshipserver.services.scholar.SubscribeMethod;
 import cn.edu.buaa.scholarshipserver.utils.Response;
+import org.joda.time.DateTime;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ScholarService {
         @Autowired
         private ScholarMethod scholarMethod;
+        @Autowired
         private DataScholarMethod dataScholarMethod;
+        @Autowired
         private SubscribeMethod subscribeMethod;
         /*public ResponseEntity<Response> GetScholar(Integer id){
                 return  getScholar.getScholarById(id);
@@ -42,14 +42,14 @@ public class ScholarService {
                 if(dataScholar.getScholarId()==null) {
                     dataScholar.setScholarId(params.get("scholarId"));
                     dataScholarMethod.updateDataScholar(dataScholar);
-                    return ResponseEntity.ok(new Response(200,"success"));
+                    return ResponseEntity.ok(new Response(1001,"success",""));
                 }
                 else {
-                    return ResponseEntity.ok(new Response(200,"关系已添加"));
+                    return ResponseEntity.ok(new Response(-1,"关系已添加",""));
                 }
             }
             else {
-                return ResponseEntity.ok(new Response(404, "该数据库门户不存在"));
+                return ResponseEntity.ok(new Response(-1, "该数据库门户不存在",""));
             }
         }
         /*public ResponseEntity<Response> GetAdminScholar(){
@@ -64,7 +64,7 @@ public class ScholarService {
         */
         public ResponseEntity<Response> GetSubscribe(Integer fanId){
             List<Map<String,String>> res = new ArrayList<>();
-            List<Subscribe> subscribes = subscribeMethod.getSubscribeByFansId(fanId);
+            List<Subscribe> subscribes = subscribeMethod.getSubscribeByFanId(fanId);
             for(int i=0;i<subscribes.size();i++){
                 Map<String,String> ins = new HashMap<String,String>();
                 int scholarId = subscribes.get(0).getScholarId();
@@ -75,16 +75,32 @@ public class ScholarService {
                 ins.put("Institution",scholar.getOrganization());
                 res.add(ins);
             }
-            return ResponseEntity.ok(new Response(res));
+            return ResponseEntity.ok(new Response(1001,res));
         }
 
+
+        public ResponseEntity<Response> PostSubscribe(Integer UserId,Integer ScholarId){
+            Subscribe subscribe = subscribeMethod.getSubscribeByFanIdAndScholarId(UserId, ScholarId);
+            if(subscribe==null){
+                subscribe = new Subscribe();
+                subscribe.setFanId(UserId);
+                subscribe.setScholarId(ScholarId);
+                subscribe.setSubscribeDatetime(new DateTime());
+                subscribeMethod.updateSubscribe(subscribe);
+                return ResponseEntity.ok(new Response(1001,"success",""));
+            }
+            else return ResponseEntity.ok(new Response(-1,"该关注关系已存在",""));
+        }
+
+        public ResponseEntity<Response> DeleteSubscribe(Integer UserId,Integer ScholarId){
+            Subscribe subscribe = subscribeMethod.getSubscribeByFanIdAndScholarId(UserId, ScholarId);
+            if(subscribe!=null){
+                subscribeMethod.deleteSubscribe(subscribe);
+                return ResponseEntity.ok(new Response(1001,"success",""));
+            }
+            else return ResponseEntity.ok(new Response(-1,"该关注关系不存在",""));
+        }
         /*
-        public ResponseEntity<Response> PostSubscribe(){
-
-        }
-        public ResponseEntity<Response> DeleteSubscribe(){
-
-        }
         public ResponseEntity<Response> PostSearch(){
 
         }

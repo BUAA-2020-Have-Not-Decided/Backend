@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.html.parser.Entity;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -40,10 +41,13 @@ public class ScholarController {
     @PostMapping("/Scholar_DataScholar")
     @ApiOperation(value = "为ScholarId 的门户中添加一个数据库门户authorId")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="scholarId",value="学者Id",required=true,paramType="body",dataType = "Integer"),
-            @ApiImplicitParam(name="authorId",value="数据库门户Id",required=true,paramType="body",dataType = "Integer")
+            @ApiImplicitParam(name="scholarId",value="学者Id",required=true,paramType="body"),
+            @ApiImplicitParam(name="authorId",value="数据库门户Id",required=true,paramType="body")
     })
-    public ResponseEntity<Response> PostScholar_DataScholar(@RequestBody Map<String,Integer> params) {
+    public ResponseEntity<Response> PostScholar_DataScholar(@RequestParam String scholarId,@RequestParam String authorId) {
+        Map<String,Integer> params = new HashMap<String,Integer>();
+        params.put("scholarId",Integer.valueOf(scholarId));
+        params.put("authorId",Integer.valueOf(authorId));
         return scholarService.PostScholar_DataScholar(params);
     }
 /*
@@ -73,17 +77,31 @@ public class ScholarController {
         Integer a = Integer.valueOf(userId);
         return scholarService.GetSubscribe(a);
     }
-    /*
-    @PostMapping("/subscribe/{UserId}/{ScholarId}")
-    public ResponseEntity<Response> PostSubscribe(@PathVariable("UserId") String UserId, @PathVariable("ScholarId") String ScholarId) {
 
+    @PostMapping("/subscribe/{UserId}/{ScholarId}")
+    @ApiOperation(value = "向UserId的关注列表中添加ScholarId")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="UserId",value="用户Id",required=true,paramType="path"),
+            @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path")
+    })
+    public ResponseEntity<Response> PostSubscribe(@PathVariable("UserId") String userId, @PathVariable("ScholarId") String scholarId) {
+        Integer UserId = Integer.valueOf(userId);
+        Integer ScholarId = Integer.valueOf(scholarId);
+        return scholarService.PostSubscribe(UserId,ScholarId);
     }
 
     @DeleteMapping("/subscribe/{UserId}/{ScholarId}")
-    public ResponseEntity<Response> DeleteSubscribe(@PathVariable("UserId") String UserId, @PathVariable("ScholarId") String ScholarId) {
-
+    @ApiOperation(value = "在UserId的关注列表中删除ScholarId")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="UserId",value="用户Id",required=true,paramType="path"),
+            @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path")
+    })
+    public ResponseEntity<Response> DeleteSubscribe(@PathVariable("UserId") String userId, @PathVariable("ScholarId") String scholarId) {
+        Integer UserId = Integer.valueOf(userId);
+        Integer ScholarId = Integer.valueOf(scholarId);
+        return scholarService.DeleteSubscribe(UserId,ScholarId);
     }
-
+/*
     @PostMapping("/Scholar/Search")
     public ResponseEntity<Response> PostSearch() {
 
