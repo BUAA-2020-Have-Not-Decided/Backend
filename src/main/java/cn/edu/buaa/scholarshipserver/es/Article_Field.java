@@ -7,17 +7,16 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-//@Document(indexName = )
-public class Paper_DataScholar {
-        @Id
-        @Field(type = FieldType.Auto)
-        private Integer id;
-        @Field(type = FieldType.Auto)
-        private Long PaperId;
-        @Field(type = FieldType.Auto)
-        private Integer authorId;
+//@Document(indexName = "")
+public class Article_Field {
+    @Id
+    @Field(type = FieldType.Auto)
+    private String id;
+    @Field(type = FieldType.Auto)
+    private Integer FieldsId;
+    @Field(type = FieldType.Auto)
+    private Integer PaperId;
 }
