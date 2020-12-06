@@ -1,18 +1,20 @@
 package cn.edu.buaa.scholarshipserver.controllers;
 
+import cn.edu.buaa.scholarshipserver.es.WorkExperience;
 import cn.edu.buaa.scholarshipserver.models.Scholar;
 import cn.edu.buaa.scholarshipserver.services.ScholarService;
+import cn.edu.buaa.scholarshipserver.services.UploadService;
 import cn.edu.buaa.scholarshipserver.utils.Response;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.swing.text.html.parser.Entity;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,21 +24,33 @@ import java.util.Map;
 public class ScholarController {
     @Autowired
     private ScholarService scholarService;
-    /*
+    @Autowired
+    private UploadService uploadService;
     @GetMapping("/{ScholarId}")
-    public ResponseEntity<Response> GetScholar(@PathVariable("ScholarId") String ScholarId) {
-
+    public ResponseEntity<Response> GetScholar(@PathVariable("ScholarId") String scholarId) {
+        return scholarService.GetScholar(Integer.parseInt(scholarId));
     }
 
+    @PostMapping("/image/{ScholarId}")
+    public ResponseEntity<Response> UploadImage(@PathVariable String ScholarId,@RequestBody String base64Data){
+        return uploadService.UploadImage(Integer.parseInt(ScholarId),base64Data);
+    }
     @PutMapping("/{ScholarId}")
-    public ResponseEntity<Response> PutScholar(@PathVariable("ScholarId") String ScholarId) {
-
+    @ApiOperation(value = "更新学者门户相关信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="url",dataType = "String")
+    })
+    public ResponseEntity<Response> PutScholar(@PathVariable("ScholarId") String scholarId,@RequestBody Map<String,Object> params) {
+        return scholarService.PutScholar(Integer.parseInt(scholarId),params);
     }
-
+    @PutMapping("/workExperience/{ScholarId}")
+    public ResponseEntity<Response> PutWorkExperience(@PathVariable String ScholarId, @RequestBody List<WorkExperience> workExperienceList){
+        return scholarService.PutWorkExperience(Integer.parseInt(ScholarId),workExperienceList);
+    }
     @GetMapping("/sameName/{UserName}")
-    public ResponseEntity<Response> GetSameNameUser(@PathVariable("UserName") String UserName) {
-
-    }*/
+    public ResponseEntity<Response> GetSameNameUser(@PathVariable("UserName") String userName) {
+       return scholarService.GetSameNameUser(userName);
+    }
 
     @PostMapping("/Scholar_DataScholar")
     @ApiOperation(value = "为ScholarId 的门户中添加一个数据库门户authorId")

@@ -11,13 +11,13 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-//@Document(indexName = )
-public class Paper_DataScholar {
+//@Document(indexName = "")
+public class Institution {
         @Id
         @Field(type = FieldType.Auto)
-        private Integer id;
+        private Integer institutionId;
         @Field(type = FieldType.Auto)
-        private Long PaperId;
+        private String institutionName;
         @Field(type = FieldType.Auto)
-        private Integer authorId;
+        private Double natureIndex;
 }

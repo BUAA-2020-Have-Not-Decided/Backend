@@ -15,23 +15,13 @@ import java.util.List;
 public class ScholarMethod {
         @Autowired
         private ScholarDao scholarDao;
-
         public Scholar getScholarById(Integer id){
                 return  scholarDao.findByScholarId(id);
         }
-        /*
-        public ResponseEntity<Response> updateScholar(Integer id){
-                Scholar scholar =new Scholar();
-                scholarDao.save(scholar);
-
-                return  ResponseEntity.ok(new Response(1));
+        public Scholar updateScholar(Scholar scholar){
+                return scholarDao.save(scholar);
         }
 
-        public ResponseEntity<Response> getScholarByUserName(String username){
-                List<Scholar> scholarList = new ArrayList<>();
-                scholarList = scholarDao.findByName(username);
-                return ResponseEntity.ok(new Response(scholarList));
-        }*/
 }
 
 
