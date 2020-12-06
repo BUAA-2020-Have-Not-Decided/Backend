@@ -53,7 +53,7 @@ public class ScholarController {
     }
 
     @PostMapping("/Scholar_DataScholar")
-    @ApiOperation(value = "为ScholarId 的门户中添加一个数据库门户authorId")
+    @ApiOperation(value = "为ScholarId的门户中添加一个数据库门户authorId")
     @ApiImplicitParams({
             @ApiImplicitParam(name="scholarId",value="学者Id",required=true,paramType="body"),
             @ApiImplicitParam(name="authorId",value="数据库门户Id",required=true,paramType="body")
@@ -64,24 +64,31 @@ public class ScholarController {
         params.put("authorId",Integer.valueOf(authorId));
         return scholarService.PostScholar_DataScholar(params);
     }
-/*
+
+    @DeleteMapping("/Scholar_DataScholar")
+    @ApiOperation(value = "将ScholarId的门户中的数据库门户authorId删除")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="scholarId",value="学者Id",required=true,paramType="body"),
+            @ApiImplicitParam(name="authorId",value="数据库门户Id",required=true,paramType="body")
+    })
+    public ResponseEntity<Response> DeleteScholar_DataScholar(@RequestParam String scholarId,@RequestParam String authorId) {
+        Map<String,Integer> params = new HashMap<String,Integer>();
+        params.put("scholarId",Integer.valueOf(scholarId));
+        params.put("authorId",Integer.valueOf(authorId));
+        return scholarService.DeleteScholar_DataScholar(params);
+    }
+
     @GetMapping("/admin/{ScholarName}/{ScholarId}")
+    @ApiOperation(value = "查找学者,按照顺序,没有为空字符串")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="ScholarName",value="学者名字",required=true,paramType="path"),
+            @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path")
+    })
     public ResponseEntity<Response> GetAdminScholar(@PathVariable("ScholarName") String ScholarName,
                                                     @PathVariable("ScholarId") String ScholarId) {
-
+        return scholarService.GetAdminScholar(ScholarName,ScholarId);
     }
 
-    @PostMapping("/admin/{ScholarId}/{DataScholarId}")
-    public ResponseEntity<Response> GetAdminScholar(@PathVariable("ScholarId") String ScholarId,
-                                                    @PathVariable("DataScholarId") String DataScholarId) {
-
-    }
-
-    @DeleteMapping("/admin/{ScholarId}/{DataScholarId}")
-    public ResponseEntity<Response> DeleteAdminScholar(@PathVariable("ScholarId") String ScholarId, @PathVariable("DataScholarId") String DataScholarId){
-
-    }
-    */
     @GetMapping("/subscribe/{userId}")
     @ApiOperation(value = "查找UserId的关注列表")
     @ApiImplicitParams({
@@ -115,17 +122,17 @@ public class ScholarController {
         Integer ScholarId = Integer.valueOf(scholarId);
         return scholarService.DeleteSubscribe(UserId,ScholarId);
     }
-/*
-    @PostMapping("/Scholar/Search")
-    public ResponseEntity<Response> PostSearch() {
 
+    @GetMapping("/Scholar/Search/{ScholarName}/{Institution}")
+    @ApiOperation(value = "在UserId的关注列表中删除ScholarId")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="UserId",value="用户Id",required=true,paramType="path"),
+            @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path")
+    })
+    public ResponseEntity<Response> Search(@PathVariable("ScholarName") String ScholarName
+                                                ,@PathVariable("Institution") String Institution) {
+            return scholarService.Search(ScholarName,Institution);
     }
-
-    @PostMapping("/Message")
-    public ResponseEntity<Response> PostMessage() {
-
-    }
- */
 }
 
 
