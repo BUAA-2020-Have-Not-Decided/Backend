@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GetDataScholar {
+public class DataScholarMethod {
     @Autowired
     private DataScholarDao dataScholarDao;
     public DataScholar getDataScholarByAuthorId(Integer authorId){

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class GetSubscribe {
+public class SubscribeMethod {
     @Autowired
     private SubscribeDao subscribeDao;
 

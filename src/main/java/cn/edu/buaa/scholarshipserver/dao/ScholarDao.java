@@ -5,7 +5,7 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import java.util.List;
 public interface ScholarDao extends ElasticsearchRepository<Scholar,Long> {
     public Scholar findByScholarId(int scholarId);
-    public Scholar findByName(String name);
+    public List<Scholar> findByName(String name);
     public Scholar findByOrganization (String organization);
 }
 

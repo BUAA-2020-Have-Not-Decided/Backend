@@ -63,7 +63,7 @@ public class ScholarController {
     public ResponseEntity<Response> DeleteAdminScholar(@PathVariable("ScholarId") String ScholarId, @PathVariable("DataScholarId") String DataScholarId){
 
     }
-
+    */
     @GetMapping("/subscribe/{userId}")
     @ApiOperation(value = "查找UserId的关注列表")
     @ApiImplicitParams({
@@ -73,7 +73,7 @@ public class ScholarController {
         Integer a = Integer.valueOf(userId);
         return scholarService.GetSubscribe(a);
     }
-
+    /*
     @PostMapping("/subscribe/{UserId}/{ScholarId}")
     public ResponseEntity<Response> PostSubscribe(@PathVariable("UserId") String UserId, @PathVariable("ScholarId") String ScholarId) {
 
