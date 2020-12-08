@@ -6,6 +6,7 @@ import java.util.List;
 public interface ScholarDao extends ElasticsearchRepository<Scholar,Long> {
     public Scholar findByScholarId(int scholarId);
     public List<Scholar> findByName(String name);
-    public Scholar findByOrganization (String organization);
+    public List<Scholar> findByOrganization (String organization);
+    public List<Scholar> findByNameAndOrganization (String Name,String organization);
 }
 

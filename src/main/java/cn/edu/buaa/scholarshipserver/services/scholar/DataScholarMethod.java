@@ -5,7 +5,6 @@ import cn.edu.buaa.scholarshipserver.es.DataScholar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.net.InetAddress;
 import java.util.List;
 
 @Component
