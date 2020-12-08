@@ -15,8 +15,15 @@ spring:
     password: OGRFFURPYTUANFDF
     spring.mail.smtp.ssl.enable: true
     port: 465
+  http:
+    multipart:
+      enabled: true
+      maxFileSize: 30MB
+
 mybatis:
   mapper-locations: classpath:Mapper/*.xml
 # 网络设置
 server:
   port:8086
+
+files.path: D:/Files/
