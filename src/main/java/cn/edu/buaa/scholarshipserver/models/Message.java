@@ -10,6 +10,7 @@ public class Message implements Serializable {
     private Long paperid;
     private Long patentid;
     private Long projectid;
+    private String complaint_material_url;
     private Integer sender_userid;
     private Integer receiver_userid;
     private String msgtitle;
@@ -18,11 +19,12 @@ public class Message implements Serializable {
     private Date sendtime;
     private Integer msgtype;
 
-    public Message(Integer msgid, Long paperid, Long patentid, Long projectid, Integer sender_userid, Integer receiver_userid, String msgtitle, String msgcontent, Integer msgstatus, Date sendtime, Integer msgtype) {
+    public Message(Integer msgid, Long paperid, Long patentid, Long projectid, String complaint_material_url, Integer sender_userid, Integer receiver_userid, String msgtitle, String msgcontent, Integer msgstatus, Date sendtime, Integer msgtype) {
         this.msgid = msgid;
         this.paperid = paperid;
         this.patentid = patentid;
         this.projectid = projectid;
+        this.complaint_material_url = complaint_material_url;
         this.sender_userid = sender_userid;
         this.receiver_userid = receiver_userid;
         this.msgtitle = msgtitle;
@@ -62,6 +64,14 @@ public class Message implements Serializable {
 
     public void setProjectid(Long projectid) {
         this.projectid = projectid;
+    }
+
+    public String getComplaintMaterialUrl() {
+        return complaint_material_url;
+    }
+
+    public void setComplaintMaterialUrl(String complaint_material_url) {
+        this.complaint_material_url = complaint_material_url;
     }
 
     public Integer getSenderUserid() {
@@ -129,6 +139,7 @@ public class Message implements Serializable {
                 ", paperid=" + paperid +
                 ", patentid=" + patentid +
                 ", projectid=" + projectid +
+                ", complaint material url=" + complaint_material_url +
                 ", sender userid=" + sender_userid +
                 ", receiver userid=" + receiver_userid +
                 ", msgtitle=" + msgtitle +
