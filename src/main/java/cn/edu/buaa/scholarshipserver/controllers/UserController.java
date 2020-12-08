@@ -5,9 +5,16 @@ import cn.edu.buaa.scholarshipserver.services.users.UserService;
 import cn.edu.buaa.scholarshipserver.utils.DigestUtil;
 import cn.edu.buaa.scholarshipserver.utils.EmailSender;
 import io.swagger.annotations.Api;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -95,5 +102,35 @@ public class UserController {
                 break;
         }
         return result;
+    }
+
+    //用户登录的地方
+    @PostMapping("/login")
+    public Map<String, Object> login(@RequestParam("Email") String email, @RequestParam("Password") String password, HttpServletResponse response){
+        Map<String, Object> result = new HashMap<>();
+        Subject sub = SecurityUtils.getSubject();
+        UsernamePasswordToken token = new UsernamePasswordToken(email,password);
+        try{
+            sub.login(token);
+            response.setHeader("Authorization","hahaha");
+            response.setHeader("Access-Control-Expose-Headers", "Authorization");
+            result.put("success", true);
+            return result;
+        }catch(UnknownAccountException e){
+            result.put("success", false);
+            result.put("msg", "账号有误");
+            return result;
+        }catch(IncorrectCredentialsException e){
+            result.put("success", false);
+            result.put("msg", "密码有误");
+            return result;
+        }
+    }
+
+    //用来显示没有权限
+    @RequestMapping("/unauthorized")
+    @ResponseBody
+    public String unauthorized(){
+        return "unauthorized!";
     }
 }
