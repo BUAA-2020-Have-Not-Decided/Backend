@@ -22,7 +22,9 @@ public class MessageService {
     }
 
     public List<Message> getUserMessages(Integer userId) {
-        return messageMapper.findByReceiverUserId(userId);
+        List<Message> userMessages = messageMapper.findByReceiverUserId(userId);
+        userMessages.removeIf(message -> message.getMsgstatus() == 2);
+        return userMessages;
     }
 
     public int messageRead(Integer messageId) {
