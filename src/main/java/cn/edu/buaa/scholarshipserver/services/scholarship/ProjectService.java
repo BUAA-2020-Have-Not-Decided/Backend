@@ -60,7 +60,7 @@ public class ProjectService {
                         ,new HighlightBuilder.Field("authors")
                         ,new HighlightBuilder.Field("journal")
                         ,new HighlightBuilder.Field("fundProject"))
-                .withHighlightBuilder(new HighlightBuilder().preTags("<span style='color:red'>").postTags("</span>"))
+                .withHighlightBuilder(new HighlightBuilder().preTags("<span class='highlight'>").postTags("</span>"))
                 .build();
         //查询
         SearchHits<Project> search = elasticsearchRestTemplate.search(searchQuery, Project.class);
