@@ -147,18 +147,18 @@ create table Institution
 /*==============================================================*/
 create table Message
 (
-   MsgId                int not null auto_increment,
+   MessageId            int not null auto_increment,
    PaperId              bigint,
    PatentId             bigint,
    ProjectId            bigint,
-   UserID               int,
-   Use_UserID           int,
+   SenderUserID         int,
+   ReceiverUserID       int,
    MsgTitle             varchar(30) not null,
    MsgContent           varchar(500) not null,
    MsgStatus            int not null,
    SendTime             datetime not null,
    MsgType              int not null,
-   primary key (MsgId)
+   primary key (MessageId)
 );
 
 /*==============================================================*/
@@ -415,10 +415,10 @@ alter table Message add constraint FK_MsgPatent foreign key (PatentId)
 alter table Message add constraint FK_MsgProject foreign key (ProjectId)
       references Project (ProjectId) on delete restrict on update restrict;
 
-alter table Message add constraint FK_MsgReceiver foreign key (Use_UserID)
+alter table Message add constraint FK_MsgReceiver foreign key (ReceiverUserID)
       references User (UserID) on delete restrict on update restrict;
 
-alter table Message add constraint FK_MsgSender foreign key (UserID)
+alter table Message add constraint FK_MsgSender foreign key (SenderUserID)
       references User (UserID) on delete restrict on update restrict;
 
 alter table PatentPossess add constraint FK_PatentPossess foreign key (PatentId)

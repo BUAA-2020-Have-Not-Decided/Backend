@@ -5,6 +5,7 @@ import cn.edu.buaa.scholarshipserver.models.Message;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class MessageService {
@@ -18,6 +19,22 @@ public class MessageService {
     public int sendUserMessage(String messageTitle, String messageContent, Integer sender_userid, Integer receiver_userid) {
         Message newMessage = new Message(null, null, null, null, sender_userid, receiver_userid, messageTitle, messageContent, 0, new Date(), 1);
         return messageMapper.insertSelective(newMessage);
+    }
+
+    public List<Message> getUserMessages(Integer userId) {
+        return messageMapper.findByReceiverUserId(userId);
+    }
+
+    public int messageRead(Integer messageId) {
+        Message message = messageMapper.selectByPrimaryKey(messageId);
+        message.setMsgstatus(1);
+        return messageMapper.updateByPrimaryKeySelective(message);
+    }
+
+    public int deleteMessage(Integer messageId) {
+        Message message = messageMapper.selectByPrimaryKey(messageId);
+        message.setMsgstatus(2);
+        return messageMapper.updateByPrimaryKeySelective(message);
     }
 
 }
