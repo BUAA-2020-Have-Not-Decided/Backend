@@ -151,6 +151,7 @@ create table Message
    PaperId              bigint,
    PatentId             bigint,
    ProjectId            bigint,
+   ComplaintMaterialUrl varchar(200),
    SenderUserID         int,
    ReceiverUserID       int,
    MsgTitle             varchar(30) not null,
