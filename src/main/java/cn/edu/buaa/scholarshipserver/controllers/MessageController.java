@@ -3,8 +3,10 @@ package cn.edu.buaa.scholarshipserver.controllers;
 import cn.edu.buaa.scholarshipserver.models.Message;
 import cn.edu.buaa.scholarshipserver.services.message.MessageService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/message")
@@ -16,7 +18,10 @@ public class MessageController {
     }
 
     @PostMapping("/user")
-    public int sendMessage(String messageTitle, String messageContent, Integer sender_userid, Integer receiver_userid) {
+    public int sendMessage(String messageTitle,
+                           String messageContent,
+                           Integer sender_userid,
+                           Integer receiver_userid) {
         return messageService.sendUserMessage(messageTitle, messageContent, sender_userid, receiver_userid);
     }
 
@@ -33,6 +38,15 @@ public class MessageController {
     @DeleteMapping("/mailbox")
     public int deleteMessage(Integer messageId) {
         return messageService.deleteMessage(messageId);
+    }
+
+    @PostMapping("/appeal")
+    public int makeAppeal(Integer userId,
+                          Map.Entry< String, Long > scholarshipId,
+                          MultipartFile complaintMaterial,
+                          String messageTitle,
+                          String messageContent) {
+        return messageService.makeAppeal(userId, scholarshipId, complaintMaterial, messageTitle, messageContent);
     }
 
 }
