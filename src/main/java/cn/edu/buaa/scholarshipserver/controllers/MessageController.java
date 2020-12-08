@@ -1,9 +1,10 @@
 package cn.edu.buaa.scholarshipserver.controllers;
 
+import cn.edu.buaa.scholarshipserver.models.Message;
 import cn.edu.buaa.scholarshipserver.services.message.MessageService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/message")
@@ -17,6 +18,21 @@ public class MessageController {
     @PostMapping("/user")
     public int sendMessage(String messageTitle, String messageContent, Integer sender_userid, Integer receiver_userid) {
         return messageService.sendUserMessage(messageTitle, messageContent, sender_userid, receiver_userid);
+    }
+
+    @GetMapping("/user")
+    public List<Message> getUserMessages(Integer userId) {
+        return messageService.getUserMessages(userId);
+    }
+
+    @PutMapping("/mailbox")
+    public int messageRead(Integer messageId) {
+        return messageService.messageRead(messageId);
+    }
+
+    @DeleteMapping("/mailbox")
+    public int deleteMessage(Integer messageId) {
+        return messageService.deleteMessage(messageId);
     }
 
 }
