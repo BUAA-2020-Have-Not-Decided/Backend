@@ -91,7 +91,7 @@ public class ScholarService {
                                         coAuthorsMap.put(authorName,cooperation.getTimes());
                                 }else{
                                         Integer oldTimes = coAuthorsMap.get(authorName);
-                                        coAuthorsMap.put(authorName,Math.max(oldTimes,cooperation.getTimes()));
+                                        coAuthorsMap.put(authorName,oldTimes+cooperation.getTimes());
                                 }
                         }
                 }
