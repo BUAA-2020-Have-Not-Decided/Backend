@@ -12,7 +12,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-//@Document(indexName = )
+@Document(indexName = "buaase2020")
 public class DataScholar {
         @Id
         @Field(type = FieldType.Auto)
@@ -20,7 +20,7 @@ public class DataScholar {
         @Field(type = FieldType.Auto)
         private Integer scholarId;
         @Field(type = FieldType.Auto)
-        private int authorId;
+        private Long authorId;
         @Field(type = FieldType.Auto)
         private String normalizedName;
         @Field(type = FieldType.Auto)

@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/schlorship")
+@RequestMapping("/scholarship")
 @Api(tags = {"学者门户相关接口"})
 
 public class ScholarController {
@@ -82,9 +82,9 @@ public class ScholarController {
             @ApiImplicitParam(name="authorId",value="数据库门户Id",required=true,paramType="body")
     })
     public ResponseEntity<Response> PostScholar_DataScholar(@RequestParam String scholarId,@RequestParam String authorId) {
-        Map<String,Integer> params = new HashMap<String,Integer>();
+        Map<String,Object> params = new HashMap<String,Object>();
         params.put("scholarId",Integer.valueOf(scholarId));
-        params.put("authorId",Integer.valueOf(authorId));
+        params.put("authorId",Long.valueOf(authorId));
         return scholarService.PostScholar_DataScholar(params);
     }
 
@@ -95,9 +95,9 @@ public class ScholarController {
             @ApiImplicitParam(name="authorId",value="数据库门户Id",required=true,paramType="body")
     })
     public ResponseEntity<Response> DeleteScholar_DataScholar(@RequestParam String scholarId,@RequestParam String authorId) {
-        Map<String,Integer> params = new HashMap<String,Integer>();
+        Map<String,Object> params = new HashMap<String,Object>();
         params.put("scholarId",Integer.valueOf(scholarId));
-        params.put("authorId",Integer.valueOf(authorId));
+        params.put("authorId",Long.valueOf(authorId));
         return scholarService.DeleteScholar_DataScholar(params);
     }
 

@@ -7,6 +7,7 @@ import cn.edu.buaa.scholarshipserver.services.scholar.DataScholarMethod;
 import cn.edu.buaa.scholarshipserver.services.scholar.ScholarMethod;
 import cn.edu.buaa.scholarshipserver.services.scholar.SubscribeMethod;
 import cn.edu.buaa.scholarshipserver.utils.Response;
+import io.swagger.models.auth.In;
 import org.joda.time.DateTime;
 
 import org.springframework.http.ResponseEntity;
@@ -160,11 +161,11 @@ public class ScholarService {
         return ResponseEntity.ok(new Response(1001, "success", ""));
     }
 
-    public ResponseEntity<Response> PostScholar_DataScholar (Map < String, Integer > params){
-        DataScholar dataScholar = dataScholarMethod.getDataScholarByAuthorId(params.get("authorId"));
+    public ResponseEntity<Response> PostScholar_DataScholar (Map < String, Object > params){
+        DataScholar dataScholar = dataScholarMethod.getDataScholarByAuthorId((Long)params.get("authorId"));
         if (dataScholar != null) {
             if (dataScholar.getScholarId() == null) {
-                dataScholar.setScholarId(params.get("scholarId"));
+                dataScholar.setScholarId((Integer) params.get("scholarId"));
                 dataScholarMethod.updateDataScholar(dataScholar);
                 return ResponseEntity.ok(new Response(1001, "success", ""));
             } else {
@@ -175,10 +176,10 @@ public class ScholarService {
         }
     }
 
-    public ResponseEntity<Response> DeleteScholar_DataScholar (Map < String, Integer > params){
-        DataScholar dataScholar = dataScholarMethod.getDataScholarByAuthorId(params.get("authorId"));
+    public ResponseEntity<Response> DeleteScholar_DataScholar (Map < String, Object> params){
+        DataScholar dataScholar = dataScholarMethod.getDataScholarByAuthorId((Long)params.get("authorId"));
         if (dataScholar != null) {
-            if (dataScholar.getScholarId().equals(params.get("scholarId"))) {
+            if (dataScholar.getScholarId().equals((Integer) params.get("scholarId"))) {
                 dataScholar.setScholarId(null);
                 dataScholarMethod.updateDataScholar(dataScholar);
                 return ResponseEntity.ok(new Response(1001, "success", ""));
