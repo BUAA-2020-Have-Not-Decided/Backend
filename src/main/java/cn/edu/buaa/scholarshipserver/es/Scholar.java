@@ -14,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-//@Document(indexName = )
+@Document(indexName = "buaase2020")
 public class Scholar implements Serializable {
         @Id
         @Field(type = FieldType.Auto)

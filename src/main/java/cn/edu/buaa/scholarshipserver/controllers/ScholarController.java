@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/schlorship")
+@RequestMapping("/scholarship")
 @Api(tags = {"学者门户相关接口"})
 
 public class ScholarController {
@@ -27,27 +27,50 @@ public class ScholarController {
     @Autowired
     private UploadService uploadService;
     @GetMapping("/{ScholarId}")
+    @ApiOperation(value = "获得学者门户相关信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path",dataType = "String")
+    })
     public ResponseEntity<Response> GetScholar(@PathVariable("ScholarId") String scholarId) {
         return scholarService.GetScholar(Integer.parseInt(scholarId));
     }
-
     @PostMapping("/image/{ScholarId}")
+    @ApiOperation(value = "上传学者头像")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path",dataType = "String"),
+            @ApiImplicitParam(name="base64Data",value = "图片的base64编码",required = true,paramType = "body",dataType = "String")
+    })
     public ResponseEntity<Response> UploadImage(@PathVariable String ScholarId,@RequestBody String base64Data){
         return uploadService.UploadImage(Integer.parseInt(ScholarId),base64Data);
     }
     @PutMapping("/{ScholarId}")
     @ApiOperation(value = "更新学者门户相关信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="url",dataType = "String")
+            @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path",dataType = "String"),
+            @ApiImplicitParam(name="name",value = "更改后的学者名称",required = false,paramType = "body",dataType = "String"),
+            @ApiImplicitParam(name="email",value = "更改后学者邮箱",required = false,paramType = "body",dataType = "String"),
+            @ApiImplicitParam(name = "phone",value = "更改后的学者姓名",required = false,paramType = "body",dataType = "String"),
+            @ApiImplicitParam(name = "title",value = "更改后的学者头衔",required = false,paramType = "body",dataType = "String"),
+            @ApiImplicitParam(name = "introduction",value = "更改后的学者个人简介",required = false,paramType = "body",dataType = "String"),
+            @ApiImplicitParam(name ="organization",value = "更改后的学者所属组织",required = false,paramType = "body",dataType = "String")
     })
     public ResponseEntity<Response> PutScholar(@PathVariable("ScholarId") String scholarId,@RequestBody Map<String,Object> params) {
         return scholarService.PutScholar(Integer.parseInt(scholarId),params);
     }
     @PutMapping("/workExperience/{ScholarId}")
+    @ApiOperation(value="更新学者工作简历")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path",dataType = "String"),
+            @ApiImplicitParam(name = "workExperienceList",value = "学者所填工作经历列表",required = true,paramType = "body",dataType = "List<WorkExperience>")
+    })
     public ResponseEntity<Response> PutWorkExperience(@PathVariable String ScholarId, @RequestBody List<WorkExperience> workExperienceList){
         return scholarService.PutWorkExperience(Integer.parseInt(ScholarId),workExperienceList);
     }
     @GetMapping("/sameName/{UserName}")
+    @ApiOperation(value = "推送同名学者")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="UserName",value="学者名字",required=true,paramType="path",dataType = "String")
+    })
     public ResponseEntity<Response> GetSameNameUser(@PathVariable("UserName") String userName) {
        return scholarService.GetSameNameUser(userName);
     }
@@ -59,9 +82,9 @@ public class ScholarController {
             @ApiImplicitParam(name="authorId",value="数据库门户Id",required=true,paramType="body")
     })
     public ResponseEntity<Response> PostScholar_DataScholar(@RequestParam String scholarId,@RequestParam String authorId) {
-        Map<String,Integer> params = new HashMap<String,Integer>();
+        Map<String,Object> params = new HashMap<String,Object>();
         params.put("scholarId",Integer.valueOf(scholarId));
-        params.put("authorId",Integer.valueOf(authorId));
+        params.put("authorId",Long.valueOf(authorId));
         return scholarService.PostScholar_DataScholar(params);
     }
 
@@ -72,9 +95,9 @@ public class ScholarController {
             @ApiImplicitParam(name="authorId",value="数据库门户Id",required=true,paramType="body")
     })
     public ResponseEntity<Response> DeleteScholar_DataScholar(@RequestParam String scholarId,@RequestParam String authorId) {
-        Map<String,Integer> params = new HashMap<String,Integer>();
+        Map<String,Object> params = new HashMap<String,Object>();
         params.put("scholarId",Integer.valueOf(scholarId));
-        params.put("authorId",Integer.valueOf(authorId));
+        params.put("authorId",Long.valueOf(authorId));
         return scholarService.DeleteScholar_DataScholar(params);
     }
 
