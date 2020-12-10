@@ -29,4 +29,18 @@ public class ScholarshipController {
         return projectService.getProjectListByKeyword(keyword,page,size);
     }
 
+    @GetMapping("/advancedSearchProject")
+    @ApiOperation(notes = "通过关键词查找项目(高级检索)", value = "通过关键词查找项目(高级检索)")
+    public ResponseEntity<Response> advancedSearchProject(@RequestParam("organizationKeyword") String organizationKeyword,
+                                                          @RequestParam("authorKeyword") String authorKeyword,
+                                                          @RequestParam("journalKeyword") String journalKeyword,
+                                                          @RequestParam("fundProjectKeyword")String fundProjectKeyword,
+                                                          @RequestParam("startYear")String startYear,
+                                                          @RequestParam("endYear")String endYear,
+                                                          @RequestParam("page")String page,
+                                                          @RequestParam("size")String size) {
+        return projectService.advancedSearchProject(organizationKeyword, authorKeyword,
+                journalKeyword,fundProjectKeyword, startYear,endYear, page, size);
+    }
+
 }
