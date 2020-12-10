@@ -26,4 +26,5 @@ mybatis:
 server:
   port:8086
 
-files.path: D:/Files/
+files:
+  path: D:/Files/
