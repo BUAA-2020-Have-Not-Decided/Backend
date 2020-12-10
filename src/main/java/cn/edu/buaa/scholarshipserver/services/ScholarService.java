@@ -134,7 +134,7 @@ public class ScholarService {
                         }
                 }
                 scholarMethod.updateScholar(scholar);
-                return ResponseEntity.ok(new Response(1001,"success",""));
+                return ResponseEntity.ok(new Response(1001,"修改提交成功",""));
 
             }
     public ResponseEntity<Response> GetSameNameUser (String username){
@@ -161,6 +161,15 @@ public class ScholarService {
         return ResponseEntity.ok(new Response(1001, "success", ""));
     }
 
+    public ResponseEntity<Response> GetScholar_DataScholar (Integer scholarId){
+        List<DataScholar> dataScholars = dataScholarMethod.getDataScholarByScholarId(scholarId);
+        if (dataScholars.size()!=0) {
+            return ResponseEntity.ok(new Response(1001,dataScholars));
+        } else {
+            return ResponseEntity.ok(new Response(400, "该数据库门户不存在", ""));
+        }
+    }
+
     public ResponseEntity<Response> PostScholar_DataScholar (Map < String, Object > params){
         DataScholar dataScholar = dataScholarMethod.getDataScholarByAuthorId((Long)params.get("authorId"));
         if (dataScholar != null) {
@@ -169,10 +178,10 @@ public class ScholarService {
                 dataScholarMethod.updateDataScholar(dataScholar);
                 return ResponseEntity.ok(new Response(1001, "success", ""));
             } else {
-                return ResponseEntity.ok(new Response(-1, "关系已添加", ""));
+                return ResponseEntity.ok(new Response(400, "关系已添加", ""));
             }
         } else {
-            return ResponseEntity.ok(new Response(-1, "该数据库门户不存在", ""));
+            return ResponseEntity.ok(new Response(400, "该数据库门户不存在", ""));
         }
     }
 
@@ -184,10 +193,10 @@ public class ScholarService {
                 dataScholarMethod.updateDataScholar(dataScholar);
                 return ResponseEntity.ok(new Response(1001, "success", ""));
             } else {
-                return ResponseEntity.ok(new Response(-1, "关系已添加", ""));
+                return ResponseEntity.ok(new Response(400, "关系已添加", ""));
             }
         } else {
-            return ResponseEntity.ok(new Response(-1, "该数据库门户不存在", ""));
+            return ResponseEntity.ok(new Response(400, "该数据库门户不存在", ""));
         }
     }
 
@@ -204,8 +213,8 @@ public class ScholarService {
                     ins.put("ScholarId", String.valueOf(scholar.getScholarId()));
                     ins.put("Institution", scholar.getOrganization());
                     res.add(ins);
-                } else return ResponseEntity.ok(new Response(-1, "scholarId与ScholarName不对应", ""));
-            } else return ResponseEntity.ok(new Response(-1, "scholarId不存在", ""));
+                } else return ResponseEntity.ok(new Response(400, "scholarId与ScholarName不对应", ""));
+            } else return ResponseEntity.ok(new Response(400, "scholarId不存在", ""));
         } else if (ScholarName.length() != 0) {
             List<Scholar> scholars = scholarMethod.getScholarByName(ScholarName);
             for (int i = 0; i < scholars.size(); i++) {
@@ -216,7 +225,7 @@ public class ScholarService {
                 ins.put("Institution", scholars.get(i).getOrganization());
                 res.add(ins);
             }
-        } else return ResponseEntity.ok(new Response(-1, "2个参数都为空", ""));
+        } else return ResponseEntity.ok(new Response(400, "2个参数都为空", ""));
         return ResponseEntity.ok(new Response(1001, res));
     }
 
@@ -245,7 +254,7 @@ public class ScholarService {
             subscribe.setSubscribeDatetime(new DateTime());
             subscribeMethod.updateSubscribe(subscribe);
             return ResponseEntity.ok(new Response(1001, "success", ""));
-        } else return ResponseEntity.ok(new Response(-1, "该关注关系已存在", ""));
+        } else return ResponseEntity.ok(new Response(400, "该关注关系已存在", ""));
     }
 
     public ResponseEntity<Response> DeleteSubscribe (Integer UserId, Integer ScholarId){
@@ -253,7 +262,7 @@ public class ScholarService {
         if (subscribe != null) {
             subscribeMethod.deleteSubscribe(subscribe);
             return ResponseEntity.ok(new Response(1001, "success", ""));
-        } else return ResponseEntity.ok(new Response(-1, "该关注关系不存在", ""));
+        } else return ResponseEntity.ok(new Response(400, "该关注关系不存在", ""));
     }
 
     public ResponseEntity<Response> Search (String ScholarName, String Institution){
@@ -265,7 +274,7 @@ public class ScholarService {
             scholars = scholarMethod.getScholarByName(ScholarName);
         } else if (Institution.length() != 0) {
             scholars = scholarMethod.getScholarByOrganization(Institution);
-        } else return ResponseEntity.ok(new Response(-1, "两个参数都为空", ""));
+        } else return ResponseEntity.ok(new Response(400, "两个参数都为空", ""));
         for (Scholar scholar : scholars) {
             Map<String, Object> ins = new HashMap<String, Object>();
             ins.put("AvatarUrl", scholar.getAvatarUrl());

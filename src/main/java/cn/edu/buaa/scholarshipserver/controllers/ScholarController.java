@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/scholarship")
+@RequestMapping("/scholar")
 @Api(tags = {"学者门户相关接口"})
 
 public class ScholarController {
@@ -73,6 +73,15 @@ public class ScholarController {
     })
     public ResponseEntity<Response> GetSameNameUser(@PathVariable("UserName") String userName) {
        return scholarService.GetSameNameUser(userName);
+    }
+
+    @GetMapping("/Scholar_DataScholar")
+    @ApiOperation(value = "为ScholarId的门户中添加一个数据库门户authorId")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="scholarId",value="学者Id",required=true,paramType="body"),
+    })
+    public ResponseEntity<Response> GetScholar_DataScholar(@RequestParam String scholarId) {
+        return scholarService.GetScholar_DataScholar(Integer.valueOf(scholarId));
     }
 
     @PostMapping("/Scholar_DataScholar")
@@ -147,7 +156,7 @@ public class ScholarController {
     }
 
     @GetMapping("/Scholar/Search/{ScholarName}/{Institution}")
-    @ApiOperation(value = "在UserId的关注列表中删除ScholarId")
+    @ApiOperation(value = "按照名字和机构查询学者")
     @ApiImplicitParams({
             @ApiImplicitParam(name="UserId",value="用户Id",required=true,paramType="path"),
             @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path")
