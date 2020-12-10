@@ -33,4 +33,6 @@ public class DataScholar {
         private int paperFamilyCount;
         @Field(type = FieldType.Auto)
         private int citationCount;
+        @Field(type = FieldType.Auto)
+        private int hIndex;
 }
