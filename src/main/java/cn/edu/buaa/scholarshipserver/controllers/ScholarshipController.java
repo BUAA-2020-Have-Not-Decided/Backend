@@ -34,13 +34,13 @@ public class ScholarshipController {
     public ResponseEntity<Response> advancedSearchProject(@RequestParam("organizationKeyword") String organizationKeyword,
                                                           @RequestParam("authorKeyword") String authorKeyword,
                                                           @RequestParam("journalKeyword") String journalKeyword,
-                                                          @RequestParam("fundProjectKeyword")String fundProjectKeyword,
+                                                          @RequestParam("chineseTitleKeyword")String chineseTitleKeyword,
                                                           @RequestParam("startYear")String startYear,
                                                           @RequestParam("endYear")String endYear,
                                                           @RequestParam("page")String page,
                                                           @RequestParam("size")String size) {
         return projectService.advancedSearchProject(organizationKeyword, authorKeyword,
-                journalKeyword,fundProjectKeyword, startYear,endYear, page, size);
+                journalKeyword,chineseTitleKeyword, startYear,endYear, page, size);
     }
 
 }

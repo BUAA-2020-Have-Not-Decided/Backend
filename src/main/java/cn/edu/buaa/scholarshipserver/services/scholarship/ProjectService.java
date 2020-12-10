@@ -94,7 +94,7 @@ public class ProjectService {
 
 
     public ResponseEntity<Response> advancedSearchProject(String organizationKeyword, String authorKeyword,
-                                                          String journalKeyword,String fundProjectKeyword,
+                                                          String journalKeyword,String chineseTitleKeyword,
                                                           String startYear,String endYear,
                                                           String page, String size) {
         int pageNum = Integer.parseInt(page);
@@ -108,8 +108,8 @@ public class ProjectService {
             boolQuery.should(QueryBuilders.matchQuery("authors", authorKeyword));
         if (!journalKeyword.equals(""))
             boolQuery.should(QueryBuilders.matchQuery("journal", journalKeyword));
-        if(!fundProjectKeyword.equals(""))
-            boolQuery.should(QueryBuilders.matchQuery("fundProject", fundProjectKeyword));
+        if(!chineseTitleKeyword.equals(""))
+            boolQuery.should(QueryBuilders.matchQuery("chineseTitle", chineseTitleKeyword));
         if(!startYear.equals("")) {
             RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery("publishDate")
                     .from(startYear).to(endYear);
@@ -123,7 +123,7 @@ public class ProjectService {
                         new HighlightBuilder.Field("organization")
                         , new HighlightBuilder.Field("authors")
                         , new HighlightBuilder.Field("journal")
-                        , new HighlightBuilder.Field("fundProject"))
+                        , new HighlightBuilder.Field("chineseTitle"))
                 .withHighlightBuilder(new HighlightBuilder().preTags("<span style='color:red'>").postTags("</span>"))
                 .build();
         //取消10000最大数量限制
@@ -142,7 +142,7 @@ public class ProjectService {
             searchHit.getContent().setOrganization(highlightFields.get("organization") == null ? searchHit.getContent().getOrganization() : highlightFields.get("organization").get(0));
             searchHit.getContent().setAuthors(highlightFields.get("authors") == null ? searchHit.getContent().getAuthors() : highlightFields.get("authors").get(0));
             searchHit.getContent().setJournal(highlightFields.get("journal") == null ? searchHit.getContent().getJournal() : highlightFields.get("journal").get(0));
-            searchHit.getContent().setFundProject(highlightFields.get("fundProject") == null ? searchHit.getContent().getFundProject() : highlightFields.get("fundProject").get(0));
+            searchHit.getContent().setChineseTitle(highlightFields.get("chineseTitle") == null ? searchHit.getContent().getChineseTitle() : highlightFields.get("chineseTitle").get(0));
             //放到实体类中
             projects.add(searchHit.getContent());
         }
