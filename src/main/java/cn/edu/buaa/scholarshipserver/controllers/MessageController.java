@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/message")
@@ -17,7 +16,7 @@ public class MessageController {
         this.messageService = messageService;
     }
 
-    @PostMapping("/user")
+    @PostMapping("/user/one")
     public int sendMessage(String messageTitle,
                            String messageContent,
                            Integer sender_userid,
@@ -25,22 +24,27 @@ public class MessageController {
         return messageService.sendUserMessage(messageTitle, messageContent, sender_userid, receiver_userid);
     }
 
-    @GetMapping("/user")
-    public List<Message> getUserMessages(Integer userId) {
-        return messageService.getUserMessages(userId);
+    @GetMapping("/user/inbox")
+    public List<Message> getMessages(Integer userId) {
+        return messageService.getMessages(userId);
     }
 
-    @PutMapping("/mailbox")
-    public int messageRead(Integer messageId) {
-        return messageService.messageRead(messageId);
+    @GetMapping("/one")
+    public Message getMessage(Integer messageId) {
+        return messageService.getMessage(messageId);
     }
 
-    @DeleteMapping("/mailbox")
+    @PutMapping("/one")
+    public int markMessageAsRead(Integer messageId) {
+        return messageService.markMessageAsRead(messageId);
+    }
+
+    @DeleteMapping("/one")
     public int deleteMessage(Integer messageId) {
         return messageService.deleteMessage(messageId);
     }
 
-    @PostMapping("/appeal")
+    @PostMapping("/appeal/one")
     public int makeAppeal(Integer userId,
                           Long scholarshipId,
                           String scholarshipType,
@@ -48,6 +52,11 @@ public class MessageController {
                           String messageTitle,
                           String messageContent) {
         return messageService.makeAppeal(userId, scholarshipId, scholarshipType, complaintMaterial, messageTitle, messageContent);
+    }
+
+    @GetMapping("/appeal/all")
+    public List<Message> getAppeals() {
+        return messageService.getAppeals();
     }
 
 }
