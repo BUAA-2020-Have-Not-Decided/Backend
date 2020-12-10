@@ -1,13 +1,27 @@
 package cn.edu.buaa.scholarshipserver.config;
 
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
+import cn.edu.buaa.scholarshipserver.dao.UserMapper;
+import cn.edu.buaa.scholarshipserver.models.User;
+import cn.edu.buaa.scholarshipserver.utils.JWTToken;
+import cn.edu.buaa.scholarshipserver.utils.RedisUtil;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class JWTRealm extends AuthorizingRealm {
+
+    @Autowired
+    private UserMapper user_mapper;
+
+    @Autowired
+    private RedisUtil redis_util;
+
+    @Override
+    public boolean supports(AuthenticationToken token){
+        return token instanceof JWTToken;
+    }
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         return null;
@@ -15,6 +29,11 @@ public class JWTRealm extends AuthorizingRealm {
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        return null;
+        JWTToken jwt_token = (JWTToken)authenticationToken;
+        User u = redis_util.getUserByString((String)jwt_token.getPrincipal());
+        if(u == null){
+            throw new UnknownAccountException();
+        }
+        return new SimpleAuthenticationInfo(u, jwt_token.getPrincipal(), "JWTRealm");
     }
 }

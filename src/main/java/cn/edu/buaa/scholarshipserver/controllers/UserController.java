@@ -4,6 +4,8 @@ import cn.edu.buaa.scholarshipserver.models.User;
 import cn.edu.buaa.scholarshipserver.services.users.UserService;
 import cn.edu.buaa.scholarshipserver.utils.DigestUtil;
 import cn.edu.buaa.scholarshipserver.utils.EmailSender;
+import cn.edu.buaa.scholarshipserver.utils.JwtUtil;
+import cn.edu.buaa.scholarshipserver.utils.RedisUtil;
 import io.swagger.annotations.Api;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -30,6 +33,9 @@ public class UserController {
 
     @Autowired
     private DigestUtil digest_util;
+
+    @Autowired
+    private RedisUtil redis_util;
 
     //判断这个用户名用过没有
     @PostMapping("/nameUsed")
@@ -112,9 +118,13 @@ public class UserController {
         UsernamePasswordToken token = new UsernamePasswordToken(email,password);
         try{
             sub.login(token);
-            response.setHeader("Authorization","hahaha");
+            User u = (User)SecurityUtils.getSubject().getPrincipal();
+            String jwt = JwtUtil.createToken(u.getEmail(), new Date().getTime());
+            response.setHeader("Authorization",jwt);
             response.setHeader("Access-Control-Expose-Headers", "Authorization");
             result.put("success", true);
+            redis_util.setUserAndCode(u, jwt);
+            System.out.println(SecurityUtils.getSubject().getPrincipal());
             return result;
         }catch(UnknownAccountException e){
             result.put("success", false);
