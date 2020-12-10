@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/scholarship")
+@RequestMapping("/scholar")
 @Api(tags = {"学者门户相关接口"})
 
 public class ScholarController {
@@ -147,7 +147,7 @@ public class ScholarController {
     }
 
     @GetMapping("/Scholar/Search/{ScholarName}/{Institution}")
-    @ApiOperation(value = "在UserId的关注列表中删除ScholarId")
+    @ApiOperation(value = "按照名字和机构查询学者")
     @ApiImplicitParams({
             @ApiImplicitParam(name="UserId",value="用户Id",required=true,paramType="path"),
             @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path")
