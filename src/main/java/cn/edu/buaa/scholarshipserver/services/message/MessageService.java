@@ -34,13 +34,17 @@ public class MessageService {
         return messageMapper.insertSelective(newMessage);
     }
 
-    public List<Message> getUserMessages(Integer userId) {
+    public List<Message> getMessages(Integer userId) {
         List<Message> userMessages = messageMapper.findByReceiverUserId(userId);
         userMessages.removeIf(message -> message.getMsgstatus() == 2);
         return userMessages;
     }
 
-    public int messageRead(Integer messageId) {
+    public Message getMessage(Integer messageId) {
+        return messageMapper.selectByPrimaryKey(messageId);
+    }
+
+    public int markMessageAsRead(Integer messageId) {
         Message message = messageMapper.selectByPrimaryKey(messageId);
         message.setMsgstatus(1);
         return messageMapper.updateByPrimaryKeySelective(message);
@@ -100,6 +104,12 @@ public class MessageService {
         }
 
         return newFileName;
+    }
+
+    public List<Message> getAppeals() {
+        List<Message> appeals = messageMapper.findByReceiverUserId(0);
+        appeals.removeIf(message -> message.getMsgstatus() == 2);
+        return appeals;
     }
 
 }
