@@ -134,7 +134,7 @@ public class ScholarService {
                         }
                 }
                 scholarMethod.updateScholar(scholar);
-                return ResponseEntity.ok(new Response(1001,"success",""));
+                return ResponseEntity.ok(new Response(1001,"修改提交成功",""));
 
             }
     public ResponseEntity<Response> GetSameNameUser (String username){
