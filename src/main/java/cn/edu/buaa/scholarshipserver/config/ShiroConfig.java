@@ -1,5 +1,6 @@
 package cn.edu.buaa.scholarshipserver.config;
 
+import cn.edu.buaa.scholarshipserver.filter.JWTBasicFilter;
 import org.apache.shiro.authc.Authenticator;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy;
@@ -12,6 +13,8 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.servlet.Filter;
 import java.util.*;
 
 @Configuration
@@ -19,15 +22,15 @@ public class ShiroConfig {
     @Bean
     public Authenticator authenticator() {
         ModularRealmAuthenticator authenticator = new MyModularRealmAuthenticator();
-        authenticator.setRealms(Collections.singletonList(userRealm()));
+        authenticator.setRealms(Collections.singletonList(jwtRealm()));
         authenticator.setAuthenticationStrategy(new AtLeastOneSuccessfulStrategy());
         return authenticator;
     }
     @Bean(name = "securityManager")
-    public DefaultWebSecurityManager getDefaultWebSecurityManager(@Qualifier("userRealm") UserRealm userRealm){
+    public DefaultWebSecurityManager getDefaultWebSecurityManager(@Qualifier("jwtRealm") JWTRealm jwtRealm){
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         List<Realm> list = new ArrayList<>();
-        list.add(userRealm);
+        list.add(jwtRealm);
         securityManager.setRealms(list);
         DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
         DefaultSessionStorageEvaluator sessionStorageEvaluator = new DefaultSessionStorageEvaluator();
@@ -45,23 +48,32 @@ public class ShiroConfig {
 
         shiroFilterFactoryBean.setUnauthorizedUrl("/unauthorized");
 
+        //设置过滤器
+        Map<String, Filter> filterMap = new HashMap<>();
+        filterMap.put("jwt_basic", new JWTBasicFilter());
+        shiroFilterFactoryBean.setFilters(filterMap);
+
         Map<String,String> filterRuleMap = new HashMap<>();
-        filterRuleMap.put("/login","anon");
+        /*用户系统的过滤器*/
+        filterRuleMap.put("/user/login","jwt_basic");
         filterRuleMap.put("/register","anon");
-        filterRuleMap.put("/swagger-ui.html", "anon");
-        filterRuleMap.put("/swagger-resources/**", "anon");
-        filterRuleMap.put("/v2/**", "anon");
-        filterRuleMap.put("/webjars/**", "anon");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return shiroFilterFactoryBean;
     }
 
-    @Bean("userRealm")
+    /*@Bean("userRealm")
     public UserRealm userRealm(){
         UserRealm userRealm = new UserRealm();
         userRealm.setAuthenticationCachingEnabled(false);
         return userRealm;
+    }*/
+
+    @Bean("jwtRealm")
+    public JWTRealm jwtRealm(){
+        JWTRealm jwt_realm = new JWTRealm();
+        jwt_realm.setAuthenticationCachingEnabled(false);
+        return jwt_realm;
     }
 
     @Bean(name = "matcher")

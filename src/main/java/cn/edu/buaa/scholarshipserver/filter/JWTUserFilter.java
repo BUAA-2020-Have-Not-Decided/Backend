@@ -15,6 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 
-public class JWTFilter extends BasicHttpAuthenticationFilter {
+public class JWTUserFilter extends BasicHttpAuthenticationFilter {
 
 }

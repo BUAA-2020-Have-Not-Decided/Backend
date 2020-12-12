@@ -165,13 +165,29 @@ public class UserController {
         return res;
     }
 
-    //尝试进行jwt登录
-    @RequestMapping("/jwtLoginTest")
+    //尝试进行jwt_user登录
+    @PostMapping("/jwtLoginUserTest")
     @ResponseBody
-    public String tryLogin(){
+    public String tryLogin(@RequestParam("Test")int test)
+    {
         return "登陆成功";
     }
 
+    //尝试进行jwt_scholar登录
+    @PostMapping("/jwtLoginScholarTest")
+    @ResponseBody
+    public String tryLoginScholar(@RequestParam("Test")int test)
+    {
+        return "登陆成功";
+    }
+
+    //尝试进行jwt_scholar登录
+    @PostMapping("/jwtLoginAdminTest")
+    @ResponseBody
+    public String tryLoginAdmin(@RequestParam("Test")int test)
+    {
+        return "登陆成功";
+    }
     //用来显示没有权限
     @RequestMapping("/unauthorized")
     @ResponseBody
