@@ -1,6 +1,7 @@
 package cn.edu.buaa.scholarshipserver.config;
 
 import cn.edu.buaa.scholarshipserver.filter.JWTBasicFilter;
+import cn.edu.buaa.scholarshipserver.filter.JWTUserFilter;
 import org.apache.shiro.authc.Authenticator;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy;
@@ -51,12 +52,14 @@ public class ShiroConfig {
         //设置过滤器
         Map<String, Filter> filterMap = new HashMap<>();
         filterMap.put("jwt_basic", new JWTBasicFilter());
+        filterMap.put("jwt_user", new JWTUserFilter());
         shiroFilterFactoryBean.setFilters(filterMap);
 
         Map<String,String> filterRuleMap = new HashMap<>();
         /*用户系统的过滤器*/
         filterRuleMap.put("/user/login","jwt_basic");
         filterRuleMap.put("/register","anon");
+        filterRuleMap.put("/user/jwtLoginUserTest", "jwt_user");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return shiroFilterFactoryBean;

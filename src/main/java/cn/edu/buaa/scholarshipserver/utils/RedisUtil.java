@@ -22,8 +22,25 @@ public class RedisUtil {
         redis_template.opsForValue().set(code, u, 5, TimeUnit.MINUTES);
     }
 
+    /*设置一个用户和自己的jwt的关系*/
+    public void setUserAndJWT(User u, String jwt){
+        redis_template.opsForValue().set(jwt, u, 30, TimeUnit.MINUTES);
+    }
+
     /*根据key移除掉value*/
     public void removeUserByKey(String code){
         redis_template.delete(code);
+    }
+
+    /*根据jwt获得用户*/
+    public User getUserByJWT(String jwt){
+        return redis_template.opsForValue().get(jwt);
+    }
+
+    public void refreshJWTForUser(String original_jwt, String new_jwt, User u){
+        if(this.redis_template.hasKey(original_jwt)){//没有，那就设置一个新的
+            this.redis_template.delete(original_jwt);
+        }
+        this.redis_template.opsForValue().set(new_jwt, u, 30, TimeUnit.MINUTES);
     }
 }

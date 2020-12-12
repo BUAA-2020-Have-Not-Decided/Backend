@@ -21,7 +21,7 @@ public class JWTBasicFilter extends BasicHttpAuthenticationFilter {
 
     @Override
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
-        System.out.println("preHandle!");
+        // System.out.println("preHandle!");
         HttpServletRequest req= (HttpServletRequest) request;
         HttpServletResponse res= (HttpServletResponse) response;
         res.setHeader("Access-control-Allow-Origin",req.getHeader("Origin"));
@@ -37,12 +37,13 @@ public class JWTBasicFilter extends BasicHttpAuthenticationFilter {
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue){
-        System.out.println("isAccessAllowed!");
+        // System.out.println("isAccessAllowed!");
         return true;
     }
 
     @Override
     protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
+        System.out.println("testing!");
         HttpServletRequest req= (HttpServletRequest) request;
         String token=req.getHeader("Authorization");
         return token !=null;
@@ -50,6 +51,8 @@ public class JWTBasicFilter extends BasicHttpAuthenticationFilter {
 
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response)throws Exception{
-        return false;
+        JWTToken token = new JWTToken(((HttpServletRequest)request).getHeader("Authorization"));
+        getSubject(request, response).login(token);
+        return true;
     }
 }

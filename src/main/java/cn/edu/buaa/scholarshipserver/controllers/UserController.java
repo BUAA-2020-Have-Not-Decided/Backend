@@ -160,7 +160,7 @@ public class UserController {
             String jwt = JwtUtil.createToken(u.getEmail(), new Date().getTime());
             response.setHeader("Authorization",jwt);
             response.setHeader("Access-Control-Expose-Headers", "Authorization");
-            redis_util.setUserAndCode(u, jwt);
+            redis_util.setUserAndJWT(u, jwt);
         }
         return res;
     }
@@ -170,7 +170,7 @@ public class UserController {
     @ResponseBody
     public String tryLogin(@RequestParam("Test")int test)
     {
-        return "登陆成功";
+        return (SecurityUtils.getSubject().getPrincipal()).toString();
     }
 
     //尝试进行jwt_scholar登录
@@ -189,7 +189,7 @@ public class UserController {
         return "登陆成功";
     }
     //用来显示没有权限
-    @RequestMapping("/unauthorized")
+    @PostMapping("/unauthorized")
     @ResponseBody
     public String unauthorized(){
         return "unauthorized!";
