@@ -1,11 +1,9 @@
 package cn.edu.buaa.scholarshipserver.controllers;
 
+import cn.edu.buaa.scholarshipserver.dao.UserMapper;
 import cn.edu.buaa.scholarshipserver.models.User;
 import cn.edu.buaa.scholarshipserver.services.users.UserService;
-import cn.edu.buaa.scholarshipserver.utils.DigestUtil;
-import cn.edu.buaa.scholarshipserver.utils.EmailSender;
-import cn.edu.buaa.scholarshipserver.utils.JwtUtil;
-import cn.edu.buaa.scholarshipserver.utils.RedisUtil;
+import cn.edu.buaa.scholarshipserver.utils.*;
 import io.swagger.annotations.Api;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -37,104 +35,141 @@ public class UserController {
     @Autowired
     private RedisUtil redis_util;
 
+    @Autowired
+    private UserMapper user_mapper;
+
     //判断这个用户名用过没有
     @PostMapping("/nameUsed")
-    public Map<String, Object> isNameUsed(@RequestParam("Username") String username){
+    public Response isNameUsed(@RequestParam("Username") String username){
         Map<String,Object> result = new TreeMap<>();
+        Response res = new Response(result);
         boolean used = user_service.usernameUsed(username);
+        if(used){
+            res.setCode(400);
+            res.setMessage("这个用户名已经被注册了");
+        }
+        else{
+            res.setCode(1001);
+            res.setMessage("这个用户名没被注册过");
+        }
         result.put("Used", used);
-        return result;
+        return res;
     }
 
     //判断这个邮箱用过没有
     @PostMapping("/emailUsed")
-    public Map<String, Object> isEmailUsed(@RequestParam("Email") String email){
+    public Response isEmailUsed(@RequestParam("Email") String email){
         Map<String,Object> result = new TreeMap<>();
+        Response res = new Response(result);
         boolean used = user_service.emailUsed(email);
+        if(used){
+            res.setCode(400);
+            res.setMessage("这个用户名已经被注册了");
+        }
+        else{
+            res.setCode(1001);
+            res.setMessage("这个用户名没被注册过");
+        }
         result.put("Used", used);
-        return result;
+        return res;
     }
 
     //注册：先接收前端发上来的东西，发送验证邮箱，然后把邮箱中的code保存在redis中，等待验证
     //返回一个验证链接已发至xxx邮箱
     @PostMapping("/register")
-    public Map<String, Object> register(@RequestParam("Name") String username, @RequestParam("Email") String email, @RequestParam("Password") String password){
+    public Response register(@RequestParam("Name") String username, @RequestParam("Email") String email, @RequestParam("Password") String password){
         Map<String, Object> result = new TreeMap<>();
+        Response res = new Response(result);
         if(user_service.emailUsed(email)){
-            result.put("Message", "这个邮箱已经被用过了");
+            res.setMessage("这个邮箱已经被使用过了");
+            res.setCode(401);
         }
         else if(user_service.usernameUsed(username)){
-            result.put("Message", "这个用户名已经被用过了");
+            res.setMessage("这个用户名已经被使用过了");
+            res.setCode(402);
         }
         else{
             try{
                 String code = digest_util.getRandMD5Code(email);
                 email_sender.sendEmail(email, code);
                 user_service.register(username, password, email, code);
-                result.put("Message", String.format("验证链接已发送到%s，链接10分钟内有效", email));
+                res.setMessage(String.format("验证链接已发送到%s，链接10分钟内有效", email));
+                res.setCode(1001);
                 result.put("Status",true);
-                return result;
+                return res;
             }
             catch(Exception e){
-                result.put("Message", "邮件发送失败");
+                res.setMessage("邮箱发送失败");
+                res.setCode(400);
                 result.put("Status", false);
-                return result;
+                return res;
             }
         }
         result.put("Status", false);
-        return result;
+        return res;
     }
+
     //用户验证的地方
     @PostMapping("/verify")
-    public Map<String, Object>verifyUser(@RequestParam("Code") String code){
+    public Response verifyUser(@RequestParam("Code") String code){
         Map<String, Object> result = new TreeMap<>();
+        Response res = new Response(result);
         int verify_status = user_service.verify(code);
         result.put("Status", verify_status > 0);
         switch(verify_status){
             case -1:
-                result.put("Message", "用户名被人抢注了");
+                res.setMessage("此用户名被人抢注了，请您重新注册");
+                res.setCode(401);
                 break;
             case 0:
-                result.put("Message", "验证链接有误");
+                res.setMessage("验证链接过期或错误，请重新验证");
+                res.setCode(400);
                 break;
             case 1:
-                result.put("Message", "邮箱已注册，请直接登录");
+                res.setMessage("验证已完成，请您直接登录");
+                res.setCode(1001);
                 break;
             case 2:
-                result.put("Message", "验证成功");
+                res.setMessage("验证成功");
+                res.setCode(1001);
                 break;
             default:
                 result.put("Message", "未知错误");
                 break;
         }
-        return result;
+        return res;
     }
 
     //用户登录的地方
     @PostMapping("/login")
-    public Map<String, Object> login(@RequestParam("Email") String email, @RequestParam("Password") String password, HttpServletResponse response){
-        Map<String, Object> result = new HashMap<>();
-        Subject sub = SecurityUtils.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken(email,password);
-        try{
-            sub.login(token);
-            User u = (User)SecurityUtils.getSubject().getPrincipal();
+    public Response login(@RequestParam("Email") String email, @RequestParam("Password") String password, HttpServletResponse response){
+        Map<String, Object> data = new HashMap<>();
+        Response res = new Response(data);
+        User u = this.user_mapper.getUserByEmail(email);
+        if(u == null){//用户不存在，500
+            data.put("success", false);
+            res.setCode(500);
+        }
+        else if(u.getPassword().compareTo(password)!=0){//密码错误，501
+            data.put("success",false);
+            res.setCode(501);
+        }
+        else{//成功1001
+            data.put("success", true);
+            res.setCode(1001);
             String jwt = JwtUtil.createToken(u.getEmail(), new Date().getTime());
             response.setHeader("Authorization",jwt);
             response.setHeader("Access-Control-Expose-Headers", "Authorization");
-            result.put("success", true);
             redis_util.setUserAndCode(u, jwt);
-            System.out.println(SecurityUtils.getSubject().getPrincipal());
-            return result;
-        }catch(UnknownAccountException e){
-            result.put("success", false);
-            result.put("msg", "账号有误");
-            return result;
-        }catch(IncorrectCredentialsException e){
-            result.put("success", false);
-            result.put("msg", "密码有误");
-            return result;
         }
+        return res;
+    }
+
+    //尝试进行jwt登录
+    @RequestMapping("/jwtLoginTest")
+    @ResponseBody
+    public String tryLogin(){
+        return "登陆成功";
     }
 
     //用来显示没有权限
