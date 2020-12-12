@@ -1,13 +1,13 @@
 #数据源
 spring:
   datasource:
-    username: root
-    password: qaz123wsx
-    url: jdbc:mysql://localhost:3306/buaase?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: dhz
+    password: dhzdhzdhz
+    url: jdbc:mysql://123.56.145.79:3306/buaase2020dhz?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
     redis:
       port:6379
-      host:localhost
+      host:182.92.223.226
   mail:
     protocol: smtps
     host: smtp.126.com
