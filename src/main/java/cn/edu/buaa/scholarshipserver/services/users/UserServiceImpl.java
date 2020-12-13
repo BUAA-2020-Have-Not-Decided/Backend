@@ -17,8 +17,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void register(String name, String password, String email, String code) {
-        //User u = new User(name, password, email);
-        User u = new User();
+        User u = new User(name, password, email);
+        //User u = new User();
         redis_util.setUserAndCode(u, code);
     }
 
