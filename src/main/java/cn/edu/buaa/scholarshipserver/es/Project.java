@@ -45,7 +45,7 @@ public class Project implements Serializable {
         private String supportTypeName;
         @Field(type=FieldType.Auto)
         private String chineseTitle;
-        @Field(type=FieldType.Auto)
+        @Field(type=FieldType.Text,fielddata = true)
         private String publishDate;
         @Field(type=FieldType.Auto)
         private String fundProjectNo;
