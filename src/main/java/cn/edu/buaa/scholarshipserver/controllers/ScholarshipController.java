@@ -2,7 +2,9 @@ package cn.edu.buaa.scholarshipserver.controllers;
 
 import cn.edu.buaa.scholarshipserver.es.CorrectPaper;
 import cn.edu.buaa.scholarshipserver.es.Paper;
+import cn.edu.buaa.scholarshipserver.es.Patent;
 import cn.edu.buaa.scholarshipserver.services.scholarship.PaperService;
+import cn.edu.buaa.scholarshipserver.services.scholarship.PatentService;
 import cn.edu.buaa.scholarshipserver.services.scholarship.ProjectService;
 import cn.edu.buaa.scholarshipserver.utils.Response;
 import io.swagger.annotations.*;
@@ -23,6 +25,9 @@ public class ScholarshipController {
 
     @Autowired
     private PaperService paperService;
+
+    @Autowired
+    private PatentService patentService;
 
     @GetMapping("/getProjectById/{projectId}")
     @ApiOperation(notes = "查看项目内容", value = "查看项目内容")
@@ -73,6 +78,16 @@ public class ScholarshipController {
         Map<String, Object> responseMap = new TreeMap<>();
         CorrectPaper correctPaper = paperService.getPaperByPaperId(paperId);
         responseMap.put("paper",correctPaper);
+        return ResponseEntity.ok(new Response(responseMap));
+
+    }
+
+    @GetMapping("/getPatentByPatentId/{patentId}")
+    @ApiOperation(notes = "查看专利内容", value = "查看专利内容")
+    public ResponseEntity<Response> getPatentByPatentId(@PathVariable("patentId") String patentId) {
+        Map<String, Object> responseMap = new TreeMap<>();
+        Patent patent = patentService.getPatentByPatentId(patentId);
+        responseMap.put("patent",patent);
         return ResponseEntity.ok(new Response(responseMap));
 
     }
