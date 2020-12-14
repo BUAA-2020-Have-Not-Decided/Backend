@@ -1,11 +1,17 @@
 package cn.edu.buaa.scholarshipserver.controllers;
 
+import cn.edu.buaa.scholarshipserver.es.CorrectPaper;
+import cn.edu.buaa.scholarshipserver.es.Paper;
+import cn.edu.buaa.scholarshipserver.services.scholarship.PaperService;
 import cn.edu.buaa.scholarshipserver.services.scholarship.ProjectService;
 import cn.edu.buaa.scholarshipserver.utils.Response;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+import java.util.TreeMap;
 
 @RestController
 @RequestMapping("/scholarship")
@@ -14,6 +20,9 @@ public class ScholarshipController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private PaperService paperService;
 
     @GetMapping("/getProjectById/{projectId}")
     @ApiOperation(notes = "查看项目内容", value = "查看项目内容")
@@ -55,6 +64,17 @@ public class ScholarshipController {
                                                           @RequestParam("size")String size) {
         return projectService.advancedSearchProjectSortByYear(organizationKeyword, authorKeyword,
                 journalKeyword,chineseTitleKeyword, startYear,endYear, page, size);
+    }
+
+
+    @GetMapping("/getPaperByPaperId/{paperId}")
+    @ApiOperation(notes = "查看文献内容", value = "查看文献内容")
+    public ResponseEntity<Response> getPaperByPaperId(@PathVariable("paperId") String paperId) {
+        Map<String, Object> responseMap = new TreeMap<>();
+        CorrectPaper correctPaper = paperService.getPaperByPaperId(paperId);
+        responseMap.put("paper",correctPaper);
+        return ResponseEntity.ok(new Response(responseMap));
+
     }
 
 }
