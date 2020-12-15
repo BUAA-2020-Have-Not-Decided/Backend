@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Document(indexName = "buaase2020")
+@Document(indexName = "paper")
 public class Paper implements Serializable {
         @Id
         @Field(type = FieldType.Auto)

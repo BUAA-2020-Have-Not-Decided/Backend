@@ -14,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Document(indexName = "buaase2020")
+@Document(indexName = "patent")
 public class Patent {
     @Id
     @Field(type = FieldType.Auto)

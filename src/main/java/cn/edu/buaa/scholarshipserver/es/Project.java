@@ -14,7 +14,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Document(indexName = "buaase2020")
+@Document(indexName = "project")
 public class Project implements Serializable {
         @Id
         @Field(type= FieldType.Auto)

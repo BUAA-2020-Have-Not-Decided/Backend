@@ -10,7 +10,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-//@Document(indexName = "")
+@Document(indexName = "article_field")
 public class Article_Field {
     @Id
     @Field(type = FieldType.Auto)

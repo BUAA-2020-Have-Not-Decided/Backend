@@ -11,7 +11,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Document(indexName = "buaase2020")
+@Document(indexName = "institution")
 public class Institution {
         @Id
         @Field(type = FieldType.Auto)
