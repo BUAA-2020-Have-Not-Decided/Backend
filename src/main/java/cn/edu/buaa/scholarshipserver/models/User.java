@@ -22,7 +22,7 @@ public class User implements Serializable {
     private String Email;
     /*用户简介*/
     private String BriefIntroduction;// 建议不展示
-    /*用户的身份：0-管理员，1-普通用户*/
+    /*用户的身份：0-管理员，1-普通用户，2-学者*/
     private Integer Identify;
 
     private static final long serialVersionUID = 1L;
