@@ -8,5 +8,5 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import java.util.List;
 
 public interface ProjectScholarDao extends ElasticsearchRepository<Project_Scholar,Long> {
-        public List<Project_Scholar> findByScholarId(Long scholarId);
+        public List<Project_Scholar> findByScholarId(Integer scholarId);
 }

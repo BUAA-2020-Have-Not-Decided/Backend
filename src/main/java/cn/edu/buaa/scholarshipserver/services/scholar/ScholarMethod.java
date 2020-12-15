@@ -16,7 +16,7 @@ public class ScholarMethod {
         @Autowired
         private ScholarDao scholarDao;
 
-        public Scholar getScholarById(Long id){
+        public Scholar getScholarById(Integer id){
                 return  scholarDao.findByScholarId(id);
         }
 

@@ -17,7 +17,7 @@ public class DataScholarMethod {
     public List<DataScholar> getDataScholarByNormalizedName(String normalizedName){
         return dataScholarDao.findByNormalizedName(normalizedName);
     }
-    public List<DataScholar> getDataScholarByScholarId(Long scholarId){
+    public List<DataScholar> getDataScholarByScholarId(Integer scholarId){
         return dataScholarDao.findByScholarId(scholarId);
     }
     public void updateDataScholar(DataScholar dataScholar){

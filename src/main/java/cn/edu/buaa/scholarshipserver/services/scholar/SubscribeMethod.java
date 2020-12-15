@@ -15,7 +15,7 @@ public class SubscribeMethod {
     public List<Subscribe> getSubscribeByFanId(Integer FanId){
         return subscribeDao.findByFanId(FanId);
     }
-    public Subscribe getSubscribeByFanIdAndScholarId(Integer FanId,Long ScholarId){
+    public Subscribe getSubscribeByFanIdAndScholarId(Integer FanId,Integer ScholarId){
         return subscribeDao.findByFanIdAndScholarId(FanId,ScholarId);
     }
     public void updateSubscribe(Subscribe subscribe){

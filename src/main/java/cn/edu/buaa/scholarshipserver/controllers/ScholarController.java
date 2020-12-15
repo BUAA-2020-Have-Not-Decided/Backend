@@ -32,7 +32,7 @@ public class ScholarController {
             @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path",dataType = "String")
     })
     public ResponseEntity<Response> GetScholar(@PathVariable("ScholarId") String scholarId) {
-        return scholarService.GetScholar(Long.parseLong(scholarId));
+        return scholarService.GetScholar(Integer.parseInt(scholarId));
     }
     @PostMapping("/image/{ScholarId}")
     @ApiOperation(value = "上传学者头像")
@@ -41,7 +41,7 @@ public class ScholarController {
             @ApiImplicitParam(name="base64Data",value = "图片的base64编码",required = true,paramType = "body",dataType = "String")
     })
     public ResponseEntity<Response> UploadImage(@PathVariable String ScholarId,@RequestBody String base64Data){
-        return uploadService.UploadImage(Long.parseLong(ScholarId),base64Data);
+        return uploadService.UploadImage(Integer.parseInt(ScholarId),base64Data);
     }
     @PutMapping("/{ScholarId}")
     @ApiOperation(value = "更新学者门户相关信息")
@@ -55,7 +55,7 @@ public class ScholarController {
             @ApiImplicitParam(name ="organization",value = "更改后的学者所属组织",required = false,paramType = "body",dataType = "String")
     })
     public ResponseEntity<Response> PutScholar(@PathVariable("ScholarId") String scholarId,@RequestBody Map<String,Object> params) {
-        return scholarService.PutScholar(Long.parseLong(scholarId),params);
+        return scholarService.PutScholar(Integer.parseInt(scholarId),params);
     }
     @PutMapping("/workExperience/{ScholarId}")
     @ApiOperation(value="更新学者工作简历")
@@ -64,7 +64,7 @@ public class ScholarController {
             @ApiImplicitParam(name = "workExperienceList",value = "学者所填工作经历列表",required = true,paramType = "body",dataType = "List<WorkExperience>")
     })
     public ResponseEntity<Response> PutWorkExperience(@PathVariable String ScholarId, @RequestBody List<WorkExperience> workExperienceList){
-        return scholarService.PutWorkExperience(Long.parseLong(ScholarId),workExperienceList);
+        return scholarService.PutWorkExperience(Integer.parseInt(ScholarId),workExperienceList);
     }
     @GetMapping("/sameName/{UserName}")
     @ApiOperation(value = "推送同名学者")
@@ -81,7 +81,7 @@ public class ScholarController {
             @ApiImplicitParam(name="scholarId",value="学者Id",required=true,paramType="body"),
     })
     public ResponseEntity<Response> GetScholar_DataScholar(@RequestParam String scholarId) {
-        return scholarService.GetScholar_DataScholar(Long.valueOf(scholarId));
+        return scholarService.GetScholar_DataScholar(Integer.valueOf(scholarId));
     }
 
     @PostMapping("/Scholar_DataScholar")
@@ -139,7 +139,7 @@ public class ScholarController {
     })
     public ResponseEntity<Response> PostSubscribe(@PathVariable("UserId") String userId, @PathVariable("ScholarId") String scholarId) {
         Integer UserId = Integer.valueOf(userId);
-        Long ScholarId = Long.valueOf(scholarId);
+        Integer ScholarId = Integer.valueOf(scholarId);
         return scholarService.PostSubscribe(UserId,ScholarId);
     }
 
@@ -151,7 +151,7 @@ public class ScholarController {
     })
     public ResponseEntity<Response> DeleteSubscribe(@PathVariable("UserId") String userId, @PathVariable("ScholarId") String scholarId) {
         Integer UserId = Integer.valueOf(userId);
-        Long ScholarId = Long.valueOf(scholarId);
+        Integer ScholarId = Integer.valueOf(scholarId);
         return scholarService.DeleteSubscribe(UserId,ScholarId);
     }
 

@@ -20,5 +20,5 @@ public class Patent_Scholar {
     @Field(type = FieldType.Auto)
     private Integer patentId;
     @Field(type = FieldType.Auto)
-    private Long scholarId;
+    private Integer scholarId;
 }

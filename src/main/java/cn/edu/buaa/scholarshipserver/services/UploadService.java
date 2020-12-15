@@ -17,7 +17,7 @@ import java.util.UUID;
 public class UploadService {
         @Autowired
         private ScholarDao scholarDao;
-        public ResponseEntity<Response> UploadImage(Long scholarId,String base64Data){
+        public ResponseEntity<Response> UploadImage(Integer scholarId,String base64Data){
                 String dataPrix = ""; //base64格式前头
                 String data = "";//实体部分数据
                 if(base64Data==null||"".equals(base64Data)){
