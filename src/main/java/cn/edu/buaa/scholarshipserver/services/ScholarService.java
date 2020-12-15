@@ -49,8 +49,10 @@ public class ScholarService {
     private FieldDao fieldDao;
     @Autowired
     private ArticleFieldDao articleFieldDao;
+    @Autowired
+    private SubscribeDao subscribeDao;
 
-    public ResponseEntity<Response> GetScholar(Integer id) {
+    public ResponseEntity<Response> GetScholar(Integer uid,Integer id) {
         Map<String, Object> responseMap = new TreeMap<>();
         //获取学者门户相关信息
         Scholar scholar = scholarMethod.getScholarById(id);
@@ -106,6 +108,11 @@ public class ScholarService {
                 //工作经历
                 List<WorkExperience>workExperienceList = workExperienceDao.findByScholarId(scholar.getScholarId());
                 responseMap.put("workExperience",workExperienceList);
+                boolean isSubscribed = false;
+                if(subscribeDao.findByFanIdAndScholarId(uid,id)!=null){
+                    isSubscribed = true;
+                }
+                responseMap.put("isSubscribed",isSubscribed);
                 return ResponseEntity.ok(new Response(responseMap));
         }
         public ResponseEntity<Response> PutScholar(Integer id,Map<String,Object> params){
