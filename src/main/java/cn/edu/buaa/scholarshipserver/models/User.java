@@ -31,6 +31,7 @@ public class User implements Serializable {
         this.Password = password;
         this.Name = name;
         this.Email = email;
+        this.Identify = 0;
     }
 
     public Integer getUserID() {

@@ -61,6 +61,12 @@ public class ShiroConfig {
         filterRuleMap.put("/register","anon");
         filterRuleMap.put("/user/jwtLoginUserTest", "jwt_user");
 
+        /*消息系统的过滤器*/
+
+        /*学术成果系统的过滤器*/
+
+        /*门户系统的过滤器*/
+
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return shiroFilterFactoryBean;
     }

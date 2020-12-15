@@ -157,6 +157,7 @@ public class UserController {
         else{//成功1001
             data.put("success", true);
             res.setCode(1001);
+            data.put("identification", u.getIdentify());
             String jwt = JwtUtil.createToken(u.getEmail(), new Date().getTime());
             response.setHeader("Authorization",jwt);
             response.setHeader("Access-Control-Expose-Headers", "Authorization");
