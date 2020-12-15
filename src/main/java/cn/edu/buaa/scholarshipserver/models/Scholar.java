@@ -56,7 +56,15 @@ public class Scholar implements Serializable {
 
     private Date lastknowntime;
 
+    private Integer uid;
+
     private static final long serialVersionUID = 1L;
+
+    public Scholar(int uid, String name, String email){
+        this.uid = uid;
+        this.name = name;
+        this.email = email;
+    }
 
     @Override
     public String toString() {

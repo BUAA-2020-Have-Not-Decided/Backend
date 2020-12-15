@@ -93,4 +93,6 @@ public interface ScholarMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(Scholar record);
+
+    Scholar selectByUID(@Param("target_user") Integer uid);
 }

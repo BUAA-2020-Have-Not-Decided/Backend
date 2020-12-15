@@ -364,7 +364,7 @@ create table Writer
    AuthorSequence       int not null,
    primary key (PaperId, ScholarId)
 );
-
+alter table Scholar add constraint FK_UserAndScholar foreign key (UID) references User(UserID);
 alter table AffiliationFieldRank add constraint FK_AffiliationFieldRank foreign key (FieldsId)
       references Fields (FieldsId) on delete restrict on update restrict;
 

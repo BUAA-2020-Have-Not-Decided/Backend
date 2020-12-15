@@ -26,6 +26,7 @@
     <result column="Activity" jdbcType="INTEGER" property="activity" />
     <result column="AvatarUrl" jdbcType="VARCHAR" property="avatarurl" />
     <result column="LastKnownTime" jdbcType="TIMESTAMP" property="lastknowntime" />
+    <result column="UID" jdbcType="TIMESTAMP" property="uid" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -129,6 +130,9 @@
     <include refid="Base_Column_List" />
     from Scholar
     where ScholarId = #{scholarid,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUID" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select * from Scholar where UID = #{target_user}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     <!--
