@@ -1,7 +1,6 @@
 package cn.edu.buaa.scholarshipserver.es;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.models.auth.In;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,48 +11,42 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.util.Date;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Document(indexName = "patent")
-public class Patent {
+@Document(indexName = "paper")
+public class CorrectPaper implements Serializable {
     @Id
     @Field(type = FieldType.Auto)
-    private Integer patentId;
+    private Long paperId;
     @Field(type = FieldType.Auto)
-    private String Abstract;
+    private String doi;
     @Field(type = FieldType.Auto)
-    private String applicationDate;
+    private String doctype;
     @Field(type = FieldType.Auto)
-    private String agency;
+    private String paperTitle;
     @Field(type = FieldType.Auto)
-    private String applicationNumber;
+    private String paper_abstract;
     @Field(type = FieldType.Auto)
-    private String agent;
+    private Long citationCount;
     @Field(type = FieldType.Auto)
-    private String content;
+    private String date;
     @Field(type = FieldType.Auto)
-    private String province;
+    private String journal;
     @Field(type = FieldType.Auto)
-    private String location;
+    private String conference;
     @Field(type = FieldType.Auto)
-    private String classificationNumber;
+    private String volume;
     @Field(type = FieldType.Auto)
-    private String mainClassificationNumber;
+    private String issue;
     @Field(type = FieldType.Auto)
-    private String inventor;
+    private String firstPage;
     @Field(type = FieldType.Auto)
-    private String publishDate;
+    private String lastPage;
     @Field(type = FieldType.Auto)
-    private String applicant;
-    @Field(type = FieldType.Auto)
-    private String currentObligee;
-    @Field(type = FieldType.Auto)
-    private String publishNumber;
-    @Field(type = FieldType.Auto)
-    private String title;
-    @Field(type = FieldType.Auto)
-    private String state;
+    private String sourceUrl;
+
+    private static final long serialVersionUID = 1L;
 }

@@ -11,7 +11,7 @@ import java.util.List;
 public class DataScholarMethod {
     @Autowired
     private DataScholarDao dataScholarDao;
-    public DataScholar getDataScholarByAuthorId(Integer authorId){
+    public DataScholar getDataScholarByAuthorId(Long authorId){
         return dataScholarDao.findByAuthorId(authorId);
     }
     public List<DataScholar> getDataScholarByNormalizedName(String normalizedName){

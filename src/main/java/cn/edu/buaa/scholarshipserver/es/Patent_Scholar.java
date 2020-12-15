@@ -12,7 +12,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-//@Document(indexName = )
+@Document(indexName = "buaase2020")
 public class Patent_Scholar {
     @Id
     @Field(type = FieldType.Auto)

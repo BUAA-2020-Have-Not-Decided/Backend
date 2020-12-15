@@ -6,5 +6,5 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import java.util.List;
 
 public interface CooperationDao extends ElasticsearchRepository<Cooperation,Long> {
-        public List<Cooperation> findByAuthorId1(Integer authorId1);
+        public List<Cooperation> findByAuthorId1(Long authorId1);
 }

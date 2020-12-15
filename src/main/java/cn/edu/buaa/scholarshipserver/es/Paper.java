@@ -1,5 +1,6 @@
 package cn.edu.buaa.scholarshipserver.es;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-//@Document(indexName = "")
+@Document(indexName = "paper")
 public class Paper implements Serializable {
         @Id
         @Field(type = FieldType.Auto)
@@ -29,6 +30,7 @@ public class Paper implements Serializable {
         @Field(type = FieldType.Auto)
         private Long citationCount;
         @Field(type = FieldType.Auto)
+        @JsonFormat(pattern="yyyy-MM-dd")
         private Date date;
         @Field(type = FieldType.Auto)
         private String journal;
