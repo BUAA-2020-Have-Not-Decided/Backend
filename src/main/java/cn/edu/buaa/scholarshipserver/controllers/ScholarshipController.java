@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -44,29 +45,43 @@ public class ScholarshipController {
     }
 
     @GetMapping("/advancedSearchProject")
-    @ApiOperation(notes = "通过关键词查找项目(高级检索)", value = "通过关键词查找项目(高级检索)")
-    public ResponseEntity<Response> advancedSearchProject(@RequestParam("organizationKeyword") String organizationKeyword,
-                                                          @RequestParam("authorKeyword") String authorKeyword,
-                                                          @RequestParam("journalKeyword") String journalKeyword,
-                                                          @RequestParam("chineseTitleKeyword")String chineseTitleKeyword,
-                                                          @RequestParam("startYear")String startYear,
-                                                          @RequestParam("endYear")String endYear,
+    @ApiOperation(notes = "高级检索项目（相关度排序）", value = "高级检索项目（相关度排序）")
+    public ResponseEntity<Response> advancedSearchProject(@RequestParam("titleKW")String titleKW,
+                                                          @RequestParam("abstractKW")String abstractKW,
+                                                          @RequestParam("organizationKW") String organizationKW,
+                                                          @RequestParam("authorKW") String authorKW,
+                                                          @RequestParam("startDate")String startDate,
+                                                          @RequestParam("endDate")String endDate,
                                                           @RequestParam("page")String page,
                                                           @RequestParam("size")String size) {
+        String organizationKeyword = organizationKW;
+        String authorKeyword = authorKW;
+        String journalKeyword = "";
+        String chineseTitleKeyword = titleKW;
+        String startYear = startDate.substring(0,4);
+        String endYear = endDate.substring(0,4);
+        //需要保证data格式为yyyy
         return projectService.advancedSearchProject(organizationKeyword, authorKeyword,
                 journalKeyword,chineseTitleKeyword, startYear,endYear, page, size);
     }
 
-    @GetMapping("/advancedSearchProjectSortByYear")
-    @ApiOperation(notes = "通过关键词查找项目(高级检索)", value = "通过关键词查找项目(高级检索)")
-    public ResponseEntity<Response> advancedSearchProjectSortByYear(@RequestParam("organizationKeyword") String organizationKeyword,
-                                                          @RequestParam("authorKeyword") String authorKeyword,
-                                                          @RequestParam("journalKeyword") String journalKeyword,
-                                                          @RequestParam("chineseTitleKeyword")String chineseTitleKeyword,
-                                                          @RequestParam("startYear")String startYear,
-                                                          @RequestParam("endYear")String endYear,
-                                                          @RequestParam("page")String page,
-                                                          @RequestParam("size")String size) {
+    @GetMapping("/advancedSearchProjectSortByDate")
+    @ApiOperation(notes = "高级检索项目（日期排序）", value = "高级检索项目（日期排序）")
+    public ResponseEntity<Response> advancedSearchProjectSortByDate(@RequestParam("titleKW")String titleKW,
+                                                                    @RequestParam("abstractKW")String abstractKW,
+                                                                    @RequestParam("organizationKW") String organizationKW,
+                                                                    @RequestParam("authorKW") String authorKW,
+                                                                    @RequestParam("startDate")String startDate,
+                                                                    @RequestParam("endDate")String endDate,
+                                                                    @RequestParam("page")String page,
+                                                                    @RequestParam("size")String size) {
+        String organizationKeyword = organizationKW;
+        String authorKeyword = authorKW;
+        String journalKeyword = "";
+        String chineseTitleKeyword = titleKW;
+        String startYear = startDate.substring(0,4);
+        String endYear = endDate.substring(0,4);
+        //需要保证data格式为yyyy
         return projectService.advancedSearchProjectSortByYear(organizationKeyword, authorKeyword,
                 journalKeyword,chineseTitleKeyword, startYear,endYear, page, size);
     }
@@ -79,7 +94,6 @@ public class ScholarshipController {
         CorrectPaper correctPaper = paperService.getPaperByPaperId(paperId);
         responseMap.put("paper",correctPaper);
         return ResponseEntity.ok(new Response(responseMap));
-
     }
 
     @GetMapping("/getPatentByPatentId/{patentId}")
@@ -91,5 +105,49 @@ public class ScholarshipController {
         return ResponseEntity.ok(new Response(responseMap));
 
     }
+
+    @GetMapping("/advancedSearchPaper")
+    @ApiOperation(notes = "高级检索文献（相关度排序）", value = "高级检索文献（相关度排序")
+    public ResponseEntity<Response> advancedSearchPaper(@RequestParam("titleKW")String titleKW,
+                                                        @RequestParam("abstractKW")String abstractKW,
+                                                        @RequestParam("organizationKW") String organizationKW,
+                                                        @RequestParam("authorKW") String authorKW,
+                                                        @RequestParam("startYear")String startYear,
+                                                        @RequestParam("endYear")String endYear,
+                                                        @RequestParam("page")String page,
+                                                        @RequestParam("size")String size){
+        return null;
+    }
+
+    @GetMapping("/advancedSearchPatent")
+    @ApiOperation(notes = "高级检索专利（相关度排序）", value = "高级检索专利（相关度排序")
+    public ResponseEntity<Response> advancedSearchPatent(@RequestParam("titleKW")String titleKW,
+                                                         @RequestParam("abstractKW")String abstractKW,
+                                                         @RequestParam("organizationKW") String organizationKW,
+                                                         @RequestParam("authorKW") String authorKW,
+                                                         @RequestParam("startDate")String startDate,
+                                                         @RequestParam("endDate")String endDate,
+                                                         @RequestParam("page")String page,
+                                                         @RequestParam("size")String size){
+        //需要保证date格式为yyyyMMdd
+        return patentService.advancedSearchPatent(titleKW,abstractKW,organizationKW,authorKW,startDate,endDate,page,size);
+    }
+    @GetMapping("/advancedSearchPatentSortByDate")
+    @ApiOperation(notes = "高级检索专利（时间排序）", value = "高级检索专利（时间排序")
+    public ResponseEntity<Response> advancedSearchPatentSortByDate(@RequestParam("titleKW")String titleKW,
+                                                         @RequestParam("abstractKW")String abstractKW,
+                                                         @RequestParam("organizationKW") String organizationKW,
+                                                         @RequestParam("authorKW") String authorKW,
+                                                         @RequestParam("startDate")String startDate,
+                                                         @RequestParam("endDate")String endDate,
+                                                         @RequestParam("page")String page,
+                                                         @RequestParam("size")String size){
+
+        //需要保证date格式为yyyyMMdd
+        return patentService.advancedSearchPatentSortByDate(titleKW,abstractKW,organizationKW,authorKW,startDate,endDate,page,size);
+    }
+
+
+
 
 }

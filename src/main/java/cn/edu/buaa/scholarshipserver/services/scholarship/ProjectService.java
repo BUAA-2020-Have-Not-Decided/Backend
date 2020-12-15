@@ -114,7 +114,7 @@ public class ProjectService {
                         , new HighlightBuilder.Field("authors")
                         , new HighlightBuilder.Field("journal")
                         , new HighlightBuilder.Field("chineseTitle"))
-                .withHighlightBuilder(new HighlightBuilder().preTags("<span style='color:red'>").postTags("</span>"))
+                .withHighlightBuilder(new HighlightBuilder().preTags("<span class='highlight'>").postTags("</span>"))
                 .build();
         //取消10000最大数量限制
         searchQuery.setTrackTotalHits(true);
@@ -171,7 +171,7 @@ public class ProjectService {
                         , new HighlightBuilder.Field("authors")
                         , new HighlightBuilder.Field("journal")
                         , new HighlightBuilder.Field("chineseTitle"))
-                .withHighlightBuilder(new HighlightBuilder().preTags("<span style='color:red'>").postTags("</span>"))
+                .withHighlightBuilder(new HighlightBuilder().preTags("<span class='highlight'>").postTags("</span>"))
                 .build();
         //取消10000最大数量限制
         searchQuery.setTrackTotalHits(true);
