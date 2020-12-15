@@ -47,4 +47,7 @@
   <update id="updateImagePath" parameterType="map">
     update User set UserImagePath=#{Path} where UserID=#{ID}
   </update>
+  <update id="updateIdentify" parameterType="map">
+    update User set UserImagePath=#{new_identify} where UserID=#{ID}
+  </update>
 </mapper>

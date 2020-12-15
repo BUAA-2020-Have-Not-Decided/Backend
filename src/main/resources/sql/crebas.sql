@@ -268,7 +268,7 @@ create table Project_Possess
 /*==============================================================*/
 create table Scholar
 (
-   ScholarId            int not null,
+   ScholarId            int not null auto_increment,
    InstitutionId        int,
    EnglishName          varchar(127) not null,
    Name                 varchar(20),
