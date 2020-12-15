@@ -255,7 +255,7 @@ public class ScholarService {
             subscribe = new Subscribe();
             subscribe.setFanId(UserId);
             subscribe.setScholarId(ScholarId);
-            subscribe.setSubscribeDatetime(new DateTime());
+            subscribe.setSubscribeDatetime(new DateTime().toString());
             subscribeMethod.updateSubscribe(subscribe);
             return ResponseEntity.ok(new Response(1001, "success", ""));
         } else return ResponseEntity.ok(new Response(400, "该关注关系已存在", ""));
