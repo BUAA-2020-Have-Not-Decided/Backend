@@ -20,17 +20,19 @@ public class TestController {
         @PutMapping("/test1")
         public ResponseEntity<Response> test(){
                 Scholar scholar = new Scholar();
-                scholar.setScholarId(1);
-                scholar.setEnglishName("Yuan CZ.");
+                scholar.setScholarId(1L);
+                scholar.setEnglishName("yuan cangzhou");
                 scholar.setName("原仓周");
                 scholar.setTitle("副教授");
                 scholar.setOrganization("BUAA");
                 scholar.setFans(0);
+                System.out.println(scholar);
                 scholarDao.save(scholar);
                 return ResponseEntity.ok(new Response("ok"));
         }
         @GetMapping("/test1")
         public ResponseEntity<Response> test1(){
-                return ResponseEntity.ok(new Response(scholarDao.findByScholarId(1)));
+
+                return ResponseEntity.ok(new Response(scholarDao.findAll()));
         }
 }

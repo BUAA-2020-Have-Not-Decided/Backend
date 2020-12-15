@@ -19,7 +19,7 @@ public class Subscribe {
     @Field(type = FieldType.Auto)
     private Integer fanId;
     @Field(type = FieldType.Auto)
-    private Integer scholarId;
+    private Long scholarId;
     @Field(type = FieldType.Auto)
     private DateTime SubscribeDatetime;
 }

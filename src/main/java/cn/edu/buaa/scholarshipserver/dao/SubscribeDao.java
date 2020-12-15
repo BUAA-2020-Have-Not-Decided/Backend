@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface SubscribeDao extends ElasticsearchRepository<Subscribe,Long> {
     List<Subscribe> findByFanId(int fanId);
-    Subscribe findByFanIdAndScholarId(int fanId,int scholarId);
+    Subscribe findByFanIdAndScholarId(int fanId,Long scholarId);
 }
 

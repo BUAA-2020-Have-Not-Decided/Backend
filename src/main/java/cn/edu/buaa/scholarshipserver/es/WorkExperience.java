@@ -16,7 +16,7 @@ public class WorkExperience  {
         @Field(type = FieldType.Auto)
         private Integer id;
         @Field(type = FieldType.Auto)
-        private Integer scholarId;
+        private Long scholarId;
         @Field(type = FieldType.Auto)
         private String  introduction;
         @Field(type = FieldType.Auto)

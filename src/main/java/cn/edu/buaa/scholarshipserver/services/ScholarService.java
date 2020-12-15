@@ -50,7 +50,7 @@ public class ScholarService {
     @Autowired
     private ArticleFieldDao articleFieldDao;
 
-    public ResponseEntity<Response> GetScholar(Integer id) {
+    public ResponseEntity<Response> GetScholar(Long id) {
         Map<String, Object> responseMap = new TreeMap<>();
         //获取学者门户相关信息
         Scholar scholar = scholarMethod.getScholarById(id);
@@ -108,7 +108,7 @@ public class ScholarService {
                 responseMap.put("workExperience",workExperienceList);
                 return ResponseEntity.ok(new Response(responseMap));
         }
-        public ResponseEntity<Response> PutScholar(Integer id,Map<String,Object> params){
+        public ResponseEntity<Response> PutScholar(Long id,Map<String,Object> params){
                 Scholar scholar = scholarMethod.getScholarById(id);
                 //scholar.setAvatarUrl((String)params.get("avatarUrl"));
                 for(Map.Entry<String,Object>entry : params.entrySet()){
@@ -158,14 +158,14 @@ public class ScholarService {
         return ResponseEntity.ok(new Response(tem1));
     }
 
-    public ResponseEntity<Response> PutWorkExperience (Integer scholarId, List < WorkExperience > workExperienceList)
+    public ResponseEntity<Response> PutWorkExperience (Long scholarId, List < WorkExperience > workExperienceList)
     {
         workExperienceDao.deleteAll(workExperienceDao.findByScholarId(scholarId));
         workExperienceDao.saveAll(workExperienceList);
         return ResponseEntity.ok(new Response(1001, "success", ""));
     }
 
-    public ResponseEntity<Response> GetScholar_DataScholar (Integer scholarId){
+    public ResponseEntity<Response> GetScholar_DataScholar (Long scholarId){
         List<DataScholar> dataScholars = dataScholarMethod.getDataScholarByScholarId(scholarId);
         if (dataScholars.size()!=0) {
             return ResponseEntity.ok(new Response(1001,dataScholars));
@@ -207,7 +207,7 @@ public class ScholarService {
     public ResponseEntity<Response> GetAdminScholar (String ScholarName, String ScholarId){
         List<Map<String, String>> res = new ArrayList<Map<String, String>>();
         if (ScholarId.length() != 0) {
-            Integer scholarId = Integer.valueOf(ScholarId);
+            Long scholarId = Long.valueOf(ScholarId);
             Scholar scholar = scholarMethod.getScholarById(scholarId);
             if (scholar != null) {
                 if (ScholarName.length() != 0 && scholar.getName().equals(ScholarName)) {
@@ -238,7 +238,7 @@ public class ScholarService {
         List<Subscribe> subscribes = subscribeMethod.getSubscribeByFanId(fanId);
         for (int i = 0; i < subscribes.size(); i++) {
             Map<String, String> ins = new HashMap<String, String>();
-            int scholarId = subscribes.get(0).getScholarId();
+            Long scholarId = subscribes.get(0).getScholarId();
             Scholar scholar = scholarMethod.getScholarById(scholarId);
             ins.put("AvatarUrl", scholar.getAvatarUrl());
             ins.put("Name", scholar.getName());
@@ -249,7 +249,7 @@ public class ScholarService {
         return ResponseEntity.ok(new Response(1001, res));
     }
 
-    public ResponseEntity<Response> PostSubscribe (Integer UserId, Integer ScholarId){
+    public ResponseEntity<Response> PostSubscribe (Integer UserId, Long ScholarId){
         Subscribe subscribe = subscribeMethod.getSubscribeByFanIdAndScholarId(UserId, ScholarId);
         if (subscribe == null) {
             subscribe = new Subscribe();
@@ -261,7 +261,7 @@ public class ScholarService {
         } else return ResponseEntity.ok(new Response(400, "该关注关系已存在", ""));
     }
 
-    public ResponseEntity<Response> DeleteSubscribe (Integer UserId, Integer ScholarId){
+    public ResponseEntity<Response> DeleteSubscribe (Integer UserId, Long ScholarId){
         Subscribe subscribe = subscribeMethod.getSubscribeByFanIdAndScholarId(UserId, ScholarId);
         if (subscribe != null) {
             subscribeMethod.deleteSubscribe(subscribe);

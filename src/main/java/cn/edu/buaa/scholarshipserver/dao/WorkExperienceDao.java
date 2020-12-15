@@ -6,5 +6,5 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import java.util.List;
 
 public interface WorkExperienceDao extends ElasticsearchRepository<WorkExperience,Long> {
-        public List<WorkExperience> findByScholarId(Integer scholarId);
+        public List<WorkExperience> findByScholarId(Long scholarId);
 }

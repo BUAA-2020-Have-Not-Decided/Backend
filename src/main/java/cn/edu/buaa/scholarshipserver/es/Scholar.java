@@ -1,5 +1,6 @@
 package cn.edu.buaa.scholarshipserver.es;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,9 +19,9 @@ import java.util.Date;
 public class Scholar implements Serializable {
         @Id
         @Field(type = FieldType.Auto)
-        private Integer id;
+        private String id;
         @Field(type = FieldType.Auto)
-        private Integer scholarId;
+        private Long scholarId;
         @Field(type = FieldType.Auto)
         private Integer institutionId;
         @Field(type = FieldType.Auto)
@@ -58,7 +59,7 @@ public class Scholar implements Serializable {
         @Field(type = FieldType.Auto)
         private String avatarUrl;
         @Field(type = FieldType.Auto)
-        private Date lastKnownTime;
+        private String lastKnownTime;
 
         private static final long serialVersionUID = 1L;
 }

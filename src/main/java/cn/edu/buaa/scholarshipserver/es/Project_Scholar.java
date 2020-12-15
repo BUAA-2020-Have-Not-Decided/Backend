@@ -20,5 +20,5 @@ public class Project_Scholar {
         @Field(type = FieldType.Auto)
         private Integer projectId;
         @Field(type = FieldType.Auto)
-        private Integer scholarId;
+        private Long scholarId;
 }
