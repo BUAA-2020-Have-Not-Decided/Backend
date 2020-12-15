@@ -32,6 +32,7 @@ public class TestController {
         }
         @GetMapping("/test1")
         public ResponseEntity<Response> test1(){
+
                 return ResponseEntity.ok(new Response(scholarDao.findAll()));
         }
 }
