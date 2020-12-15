@@ -75,8 +75,8 @@ public class ScholarController {
        return scholarService.GetSameNameUser(userName);
     }
 
-    @GetMapping("/Scholar_DataScholar")
-    @ApiOperation(value = "为ScholarId的门户中添加一个数据库门户authorId")
+    @GetMapping("/Scholar_DataScholar/{scholarId}")
+    @ApiOperation(value = "")
     @ApiImplicitParams({
             @ApiImplicitParam(name="scholarId",value="学者Id",required=true,paramType="body"),
     })
