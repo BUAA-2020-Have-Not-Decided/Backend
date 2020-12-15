@@ -76,7 +76,7 @@ public class ScholarService {
                 responseMap.put("paper",paperList);
                 List<Project>projectList = new ArrayList<>();
                 List<Patent>patentList = new ArrayList<>();
-                List<Project_Scholar>projectScholarList = projectScholarDao.findByScholarId(scholar.getScholarId());
+                List<Project_Scholar> projectScholarList = projectScholarDao.findByScholarId(scholar.getScholarId());
                 for(Project_Scholar projectScholar : projectScholarList){
                         projectList.add(projectDao.findByProjectId(projectScholar.getProjectId()));
                 }
@@ -140,18 +140,22 @@ public class ScholarService {
     public ResponseEntity<Response> GetSameNameUser (String username){
         List<DataScholar> dataScholarList = dataScholarMethod.getDataScholarByNormalizedName(username);
         //如果dataScholar的学者ID不为空，放在前面。
+        Map<String,Object> tem1 = new LinkedHashMap<>();
+
         List<DataScholar> tem = new ArrayList<>();
         for (DataScholar dataScholar : dataScholarList) {
             if (null == dataScholar.getScholarId()) {
                 tem.add(dataScholar);
             }
         }
+        tem1.put("pos",tem.size());
         for (DataScholar dataScholar : dataScholarList) {
             if (null != dataScholar.getScholarId()) {
                 tem.add(dataScholar);
             }
         }
-        return ResponseEntity.ok(new Response(tem));
+        tem1.put("dataScholar",tem);
+        return ResponseEntity.ok(new Response(tem1));
     }
 
     public ResponseEntity<Response> PutWorkExperience (Integer scholarId, List < WorkExperience > workExperienceList)
