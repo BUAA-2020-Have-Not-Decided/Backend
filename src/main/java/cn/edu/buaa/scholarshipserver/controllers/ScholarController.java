@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/schlorship")
+@RequestMapping("/scholar")
 @Api(tags = {"学者门户相关接口"})
 
 public class ScholarController {

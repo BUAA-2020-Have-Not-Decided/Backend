@@ -2,8 +2,8 @@
 spring:
   datasource:
     username: root
-    password: qaz123wsx
-    url: jdbc:mysql://localhost:3306/buaase?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    password: buaase2020.
+    url: jdbc:mysql://123.56.145.79:3306/buaase2020?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
     redis:
       port:6379
