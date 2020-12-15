@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -123,24 +126,9 @@ public class ScholarshipController {
                                                         @RequestParam("startDate") String startDate,
                                                         @RequestParam("endDate") String endDate,
                                                         @RequestParam("page") String page,
-                                                        @RequestParam("size") String size) {
+                                                        @RequestParam("size") String size){
         if (doctype < 0 || doctype > 2) {
             return ResponseEntity.ok(new Response(400, "文献类型不正确", 400));
-        }
-        String yyyy;
-        String MM;
-        String dd;
-        if (!startDate.equals("")) {
-            yyyy = startDate.substring(0, 4);
-            MM = startDate.substring(4, 6);
-            dd = startDate.substring(6, 8);
-            startDate = yyyy + '-' + MM + '-' + dd + "T00:00:00.0000000";
-        }
-        if (!endDate.equals("")) {
-            yyyy = endDate.substring(0, 4);
-            MM = endDate.substring(4, 6);
-            dd = endDate.substring(6, 8);
-            endDate = yyyy + '-' + MM + '-' + dd + "T00:00:00.0000000";
         }
         return paperService.advancedSearchPaper(titleKW, abstractKW, doctype, organizationKW, authorKW, startDate, endDate, page, size);
     }
@@ -149,13 +137,17 @@ public class ScholarshipController {
     @ApiOperation(notes = "高级检索文献（日期排序）", value = "高级检索文献（日期排序")
     public ResponseEntity<Response> advancedSearchPaperSortByDate(@RequestParam("titleKW") String titleKW,
                                                                   @RequestParam("abstractKW") String abstractKW,
+                                                                  @RequestParam("doctype") int doctype,
                                                                   @RequestParam("organizationKW") String organizationKW,
                                                                   @RequestParam("authorKW") String authorKW,
                                                                   @RequestParam("startDate") String startDate,
                                                                   @RequestParam("endDate") String endDate,
                                                                   @RequestParam("page") String page,
                                                                   @RequestParam("size") String size) {
-        return null;
+        if (doctype < 0 || doctype > 2) {
+            return ResponseEntity.ok(new Response(400, "文献类型不正确", 400));
+        }
+        return paperService.advancedSearchPaperSortByDate(titleKW, abstractKW, doctype, organizationKW, authorKW, startDate, endDate, page, size);
     }
 
     @GetMapping("/advancedSearchPatent")
