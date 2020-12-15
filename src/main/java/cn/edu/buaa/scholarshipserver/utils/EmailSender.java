@@ -19,7 +19,7 @@ public class EmailSender {
         MimeMessageHelper helper = new MimeMessageHelper(message,true);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String text = "请点击以下链接确认注册，激活账户\n"+
-                "http://localhost:8086/user/verify/"+code+"\n"
+                "http://localhost:8080/#/user/verify/"+code+"\n"
                 +"激活链接将在"+df.format(new Date(new Date().getTime()+(long)10*60*1000))+"失效";
         helper.setFrom("notdecidedyet@126.com");
         helper.setTo(receiver);
