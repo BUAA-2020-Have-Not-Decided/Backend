@@ -158,6 +158,8 @@ public class UserController {
             data.put("success", true);
             res.setCode(1001);
             data.put("identification", u.getIdentify());
+            data.put("username", u.getName());
+            data.put("avatar", u.getUserImagePath());
             String jwt = JwtUtil.createToken(u.getEmail(), new Date().getTime());
             response.setHeader("Authorization",jwt);
             response.setHeader("Access-Control-Expose-Headers", "Authorization");
