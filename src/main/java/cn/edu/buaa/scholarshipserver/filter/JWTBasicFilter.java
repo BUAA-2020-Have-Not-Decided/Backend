@@ -52,7 +52,15 @@ public class JWTBasicFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response)throws Exception{
         JWTToken token = new JWTToken(((HttpServletRequest)request).getHeader("Authorization"));
-        getSubject(request, response).login(token);
+        System.out.println("before login!");
+        try{
+            getSubject(request, response).login(token);
+        }
+        catch(Exception e){
+            System.out.println("executeLogin:caught!");
+            return false;
+        }
+        System.out.println("after login");
         return true;
     }
 }
