@@ -80,7 +80,7 @@ public class ScholarController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="scholarId",value="学者Id",required=true,paramType="body"),
     })
-    public ResponseEntity<Response> GetScholar_DataScholar(@RequestParam String scholarId) {
+    public ResponseEntity<Response> GetScholar_DataScholar(@PathVariable("scholarId") String scholarId) {
         return scholarService.GetScholar_DataScholar(Integer.valueOf(scholarId));
     }
 
