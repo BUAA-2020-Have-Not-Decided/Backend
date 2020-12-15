@@ -268,7 +268,7 @@ create table Project_Possess
 /*==============================================================*/
 create table Scholar
 (
-   ScholarId            int not null,
+   ScholarId            int not null auto_increment,
    InstitutionId        int,
    EnglishName          varchar(127) not null,
    Name                 varchar(20),
@@ -288,6 +288,7 @@ create table Scholar
    Activity             int,
    AvatarUrl            varchar(200),
    LastKnownTime        datetime not null,
+   UID                  int,
    primary key (ScholarId)
 );
 
@@ -364,7 +365,7 @@ create table Writer
    AuthorSequence       int not null,
    primary key (PaperId, ScholarId)
 );
-
+alter table Scholar add constraint FK_UserAndScholar foreign key (UID) references User(UserID);
 alter table AffiliationFieldRank add constraint FK_AffiliationFieldRank foreign key (FieldsId)
       references Fields (FieldsId) on delete restrict on update restrict;
 

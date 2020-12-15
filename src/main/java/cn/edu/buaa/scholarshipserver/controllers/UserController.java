@@ -1,23 +1,18 @@
 package cn.edu.buaa.scholarshipserver.controllers;
 
+import cn.edu.buaa.scholarshipserver.dao.ScholarMapper;
 import cn.edu.buaa.scholarshipserver.dao.UserMapper;
+import cn.edu.buaa.scholarshipserver.models.Scholar;
 import cn.edu.buaa.scholarshipserver.models.User;
 import cn.edu.buaa.scholarshipserver.services.users.UserService;
 import cn.edu.buaa.scholarshipserver.utils.*;
 import io.swagger.annotations.Api;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 @RestController
 @RequestMapping("/user")
@@ -37,6 +32,9 @@ public class UserController {
 
     @Autowired
     private UserMapper user_mapper;
+
+    @Autowired
+    private ScholarMapper scholar_mapper;
 
     //判断这个用户名用过没有
     @PostMapping("/nameUsed")
@@ -168,6 +166,16 @@ public class UserController {
         return res;
     }
 
+    @PostMapping("/toBeScholar")
+    public Response beScholar(@RequestParam("OrgEmail")String email,@RequestParam("RealName") String real_name){
+        HashMap<String, Object> data = new HashMap<>();
+        Response res = new Response(data);
+        User u = (User)SecurityUtils.getSubject().getPrincipal();
+        Scholar s = new Scholar(u.getUserID(), real_name, email);
+        this.scholar_mapper.insert(s);
+        res.setMessage("认证成功");
+        return res;
+    }
     //尝试进行jwt_user登录
     @PostMapping("/jwtLoginUserTest")
     @ResponseBody
@@ -192,9 +200,12 @@ public class UserController {
         return "登陆成功";
     }
     //用来显示没有权限
-    @PostMapping("/unauthorized")
+    @GetMapping("/unauthorized")
     @ResponseBody
-    public String unauthorized(){
-        return "unauthorized!";
+    public Response unauthorized(){
+        Response res = new Response(null);
+        res.setCode(-1);
+        res.setMessage("Not authorized");
+        return res;
     }
 }

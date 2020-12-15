@@ -60,6 +60,7 @@ public class ShiroConfig {
         filterRuleMap.put("/user/login","jwt_basic");
         filterRuleMap.put("/register","anon");
         filterRuleMap.put("/user/jwtLoginUserTest", "jwt_user");
+        filterRuleMap.put("/user/toBeScholar", "jwt_user");
 
         /*消息系统的过滤器*/
 
