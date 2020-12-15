@@ -25,9 +25,9 @@ public class CorrectPaper implements Serializable {
     private String doi;
     @Field(type = FieldType.Auto)
     private String doctype;
-    @Field(type = FieldType.Auto)
+    @Field(type = FieldType.Auto,analyzer = "ik_max_word", searchAnalyzer = "ik_max_word")
     private String paperTitle;
-    @Field(type = FieldType.Auto)
+    @Field(type = FieldType.Auto,analyzer = "ik_max_word", searchAnalyzer = "ik_max_word")
     private String paper_abstract;
     @Field(type = FieldType.Auto)
     private Long citationCount;

@@ -21,5 +21,5 @@ public class Subscribe {
     @Field(type = FieldType.Auto)
     private Integer scholarId;
     @Field(type = FieldType.Auto)
-    private DateTime SubscribeDatetime;
+    private String SubscribeDatetime;
 }
