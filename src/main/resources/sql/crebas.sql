@@ -288,6 +288,7 @@ create table Scholar
    Activity             int,
    AvatarUrl            varchar(200),
    LastKnownTime        datetime not null,
+   UID                  int,
    primary key (ScholarId)
 );
 

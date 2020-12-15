@@ -64,6 +64,10 @@ public class Scholar implements Serializable {
         this.uid = uid;
         this.name = name;
         this.email = email;
+        this.englishname = "";
+        this.papers = 0;
+        this.lastknowntime = new Date();
+        this.fans = 0;
     }
 
     @Override

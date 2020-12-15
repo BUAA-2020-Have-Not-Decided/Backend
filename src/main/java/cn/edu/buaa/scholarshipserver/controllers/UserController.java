@@ -1,17 +1,13 @@
 package cn.edu.buaa.scholarshipserver.controllers;
 
-import cn.edu.buaa.scholarshipserver.dao.ScholarDao;
+import cn.edu.buaa.scholarshipserver.dao.ScholarMapper;
 import cn.edu.buaa.scholarshipserver.dao.UserMapper;
-import cn.edu.buaa.scholarshipserver.es.Scholar;
+import cn.edu.buaa.scholarshipserver.models.Scholar;
 import cn.edu.buaa.scholarshipserver.models.User;
 import cn.edu.buaa.scholarshipserver.services.users.UserService;
 import cn.edu.buaa.scholarshipserver.utils.*;
 import io.swagger.annotations.Api;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +34,7 @@ public class UserController {
     private UserMapper user_mapper;
 
     @Autowired
-    private ScholarDao scholar_dao;
+    private ScholarMapper scholar_mapper;
 
     //判断这个用户名用过没有
     @PostMapping("/nameUsed")
@@ -174,13 +170,10 @@ public class UserController {
     public Response beScholar(@RequestParam("OrgEmail")String email,@RequestParam("RealName") String real_name){
         HashMap<String, Object> data = new HashMap<>();
         Response res = new Response(data);
-        Scholar s = new Scholar();
-        s.setEmail(email);
-        s.setName(real_name);
-        User current_user = (User)SecurityUtils.getSubject().getPrincipal();
-        System.out.println(current_user);
-        //this.scholar_dao.save(s);
-        System.out.println(this.scholar_dao.save(s));
+        User u = (User)SecurityUtils.getSubject().getPrincipal();
+        Scholar s = new Scholar(u.getUserID(), real_name, email);
+        this.scholar_mapper.insert(s);
+        res.setMessage("认证成功");
         return res;
     }
     //尝试进行jwt_user登录
