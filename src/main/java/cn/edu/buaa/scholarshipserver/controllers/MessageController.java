@@ -47,7 +47,7 @@ public class MessageController {
     public ResponseEntity<Response> makeAppeal(Integer userId,
                                                Long scholarshipId,
                                                String scholarshipType,
-                                               MultipartFile complaintMaterial,
+                                               String complaintMaterial,
                                                String messageTitle,
                                                String messageContent) {
         return messageService.makeAppeal(userId, scholarshipId, scholarshipType, complaintMaterial, messageTitle, messageContent);
