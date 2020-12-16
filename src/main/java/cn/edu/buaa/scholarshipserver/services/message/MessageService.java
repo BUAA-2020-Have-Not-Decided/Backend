@@ -22,6 +22,8 @@ public class MessageService {
     private final MessageMapper messageMapper;
     @Value("${files.path}")
     private String filePath;
+    @Value("${files.host}")
+    private String fileHost;
 
     MessageService(MessageMapper messageMapper) {
         this.messageMapper = messageMapper;
@@ -100,7 +102,7 @@ public class MessageService {
                     newMessage.setProjectid(scholarshipId);
                     break;
                 default:
-                    System.out.println("wrong parameter name");
+                    return ResponseEntity.ok(new Response(400, "wrong scholarship type", ""));
             }
             if (complaintMaterial != null) {
                 try {
@@ -163,7 +165,7 @@ public class MessageService {
             out.write(b);
             out.flush();
             out.close();
-            return "http://localhost:8086/pictures/" + newFileName;
+            return "http://" + fileHost + "/pictures/" + newFileName;
         } catch (IOException e) {
             e.printStackTrace();
             throw new Exception("IOException occurred");
