@@ -112,4 +112,10 @@ public class MessageService {
         return appeals;
     }
 
+    public int updateAppealMessageStatus(Integer messageId, Integer messageStatus) {
+        Message message = messageMapper.selectByPrimaryKey(messageId);
+        message.setMsgstatus(messageStatus);
+        return messageMapper.updateByPrimaryKeySelective(message);
+    }
+
 }

@@ -59,4 +59,9 @@ public class MessageController {
         return messageService.getAppeals();
     }
 
+    @PutMapping("/appeal/one")
+    public int updateAppealMessageStatus(Integer messageId, Integer messageStatus) {
+        return messageService.updateAppealMessageStatus(messageId, messageStatus);
+    }
+
 }
