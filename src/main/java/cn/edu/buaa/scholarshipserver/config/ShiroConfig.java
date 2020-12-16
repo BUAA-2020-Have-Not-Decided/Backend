@@ -70,6 +70,19 @@ public class ShiroConfig {
         /*消息系统的过滤器*/
 
         /*学术成果系统的过滤器*/
+        filterRuleMap.put("/scholarship/getProjectById/**","anon");
+        filterRuleMap.put("/scholarship/advancedSearchProject","anon");
+        filterRuleMap.put("/scholarship/advancedSearchProjectSortByDate","anon");
+
+        filterRuleMap.put("/scholarship/getPaperByPaperId/**","anon");
+        filterRuleMap.put("/scholarship/advancedSearchPaper","anon");
+        filterRuleMap.put("/scholarship/advancedSearchPaperSortByDate","anon");
+        filterRuleMap.put("/scholarship/advancedSearchPaperSortByCitationCount","anon");
+
+        filterRuleMap.put("/scholarship/getPatentByPatentId/**","anon");
+        filterRuleMap.put("/scholarship/advancedSearchPatent","anon");
+        filterRuleMap.put("/scholarship/advancedSearchPatentSortByDate","anon");
+
 
         /*门户系统的过滤器*/
         filterRuleMap.put("/scholar/info/**","jwt_user");
