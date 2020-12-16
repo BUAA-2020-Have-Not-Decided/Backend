@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -99,10 +100,11 @@ public class ScholarshipController {
 
     @GetMapping("/getPaperByPaperId/{paperId}")
     @ApiOperation(notes = "查看文献内容", value = "查看文献内容")
-    public ResponseEntity<Response> getPaperByPaperId(@PathVariable("paperId") String paperId) {
+    public ResponseEntity<Response> getPaperByPaperId(@PathVariable("paperId") String paperId) throws IOException {
         Map<String, Object> responseMap = new TreeMap<>();
         CorrectPaper correctPaper = paperService.getPaperByPaperId(paperId);
         responseMap.put("paper", correctPaper);
+        responseMap.put("paperMap",paperService.paperMap(paperId));
         return ResponseEntity.ok(new Response(responseMap));
     }
 
