@@ -89,7 +89,7 @@ public class UserController {
         else{
             try{
                 String code = digest_util.getRandMD5Code(email);
-                email_sender.sendEmail(email, code);
+                email_sender.sendEmail(email, "/#/user/verify/",code);
                 user_service.register(username, password, email, code);
                 res.setMessage(String.format("验证链接已发送到%s，链接10分钟内有效", email));
                 res.setCode(1001);
@@ -220,7 +220,7 @@ public class UserController {
         else{//如果不一样，那就发送邮件，并且把相关的东西存在redis中
             try{
                 String rand_code = this.digest_util.getRandMD5Code(email);
-                this.email_sender.sendEmail(email, rand_code);
+                this.email_sender.sendEmail(email, "/#/user/scholarVerify/",rand_code);
                 this.redis_util.setScholarAndCode(s, rand_code);
                 res.setMessage(String.format("验证邮件已发送到%s，连接在10分钟内有效", email));
                 return res;
