@@ -47,6 +47,7 @@ public class PaperService {
     public CorrectPaper getPaperByPaperId(String paperId) {
         Long id = Long.parseLong(paperId);
         CorrectPaper correctPaper = correctPaperDao.findByPaperId(id);
+
         return correctPaper;
     }
 
@@ -84,6 +85,8 @@ public class PaperService {
                     == null ? searchHit.getContent().getPaperTitle() : highlightFields.get("paperTitle").get(0));
             searchHit.getContent().setPaper_abstract(highlightFields.get("paper_abstract")
                     == null ? searchHit.getContent().getPaper_abstract() : highlightFields.get("paper_abstract").get(0));
+            //格式化日期
+            searchHit.getContent().setDate(searchHit.getContent().getDate().substring(0,10));
             //放到实体类中
             correctPapers.add(searchHit.getContent());
         }
@@ -135,6 +138,8 @@ public class PaperService {
                     == null ? searchHit.getContent().getPaperTitle() : highlightFields.get("paperTitle").get(0));
             searchHit.getContent().setPaper_abstract(highlightFields.get("paper_abstract")
                     == null ? searchHit.getContent().getPaper_abstract() : highlightFields.get("paper_abstract").get(0));
+            //格式化日期
+            searchHit.getContent().setDate(searchHit.getContent().getDate().substring(0,10));
             //放到实体类中
             correctPapers.add(searchHit.getContent());
         }
@@ -183,6 +188,8 @@ public class PaperService {
                     == null ? searchHit.getContent().getPaperTitle() : highlightFields.get("paperTitle").get(0));
             searchHit.getContent().setPaper_abstract(highlightFields.get("paper_abstract")
                     == null ? searchHit.getContent().getPaper_abstract() : highlightFields.get("paper_abstract").get(0));
+            //格式化日期
+            searchHit.getContent().setDate(searchHit.getContent().getDate().substring(0,10));
             //放到实体类中
             correctPapers.add(searchHit.getContent());
         }
