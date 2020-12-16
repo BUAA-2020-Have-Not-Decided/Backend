@@ -35,6 +35,10 @@ public class ScholarController {
     public ResponseEntity<Response> GetScholar(@PathVariable("UserId") String userId,@PathVariable("ScholarId") String scholarId) {
         return scholarService.GetScholar(Integer.parseInt(userId),Integer.parseInt(scholarId));
     }
+    @GetMapping("/dataScholar/{AuthorId}")
+    public ResponseEntity<Response> GetDataScholar(@PathVariable("AuthorId") String authorId){
+        return scholarService.GetDataScholar(Long.parseLong(authorId));
+    }
     @PostMapping("/image/{ScholarId}")
     @ApiOperation(value = "上传学者头像")
     @ApiImplicitParams({
@@ -67,13 +71,13 @@ public class ScholarController {
     public ResponseEntity<Response> PutWorkExperience(@PathVariable String ScholarId, @RequestBody List<WorkExperience> workExperienceList){
         return scholarService.PutWorkExperience(Integer.parseInt(ScholarId),workExperienceList);
     }
-    @GetMapping("/sameName/{UserName}")
+    @GetMapping("/sameName/{UserName}/{ScholarId}")
     @ApiOperation(value = "推送同名学者")
     @ApiImplicitParams({
             @ApiImplicitParam(name="UserName",value="学者名字",required=true,paramType="path",dataType = "String")
     })
-    public ResponseEntity<Response> GetSameNameUser(@PathVariable("UserName") String userName) {
-       return scholarService.GetSameNameUser(userName);
+    public ResponseEntity<Response> GetSameNameUser(@PathVariable("UserName") String userName,@PathVariable("ScholarId") String scholarId) {
+       return scholarService.GetSameNameUser(userName,scholarId);
     }
 
     @GetMapping("/Scholar_DataScholar/{scholarId}")
