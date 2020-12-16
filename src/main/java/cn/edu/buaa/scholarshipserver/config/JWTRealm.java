@@ -30,7 +30,7 @@ public class JWTRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         JWTToken jwt_token = (JWTToken)authenticationToken;
-        User u = redis_util.getUserByString((String)jwt_token.getPrincipal());
+        User u = redis_util.getUserByJWT((String)jwt_token.getPrincipal());
         if(u == null){
             throw new UnknownAccountException();
         }
