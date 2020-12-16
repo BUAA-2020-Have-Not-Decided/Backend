@@ -3,10 +3,12 @@ package cn.edu.buaa.scholarshipserver.services;
 import cn.edu.buaa.scholarshipserver.dao.*;
 import cn.edu.buaa.scholarshipserver.es.*;
 import cn.edu.buaa.scholarshipserver.es.Paper;
+import cn.edu.buaa.scholarshipserver.models.User;
 import cn.edu.buaa.scholarshipserver.services.scholar.DataScholarMethod;
 import cn.edu.buaa.scholarshipserver.services.scholar.ScholarMethod;
 import cn.edu.buaa.scholarshipserver.services.scholar.SubscribeMethod;
 import cn.edu.buaa.scholarshipserver.utils.Response;
+import org.apache.shiro.SecurityUtils;
 import org.joda.time.DateTime;
 
 import org.springframework.http.ResponseEntity;
@@ -50,6 +52,10 @@ public class ScholarService {
 
     public ResponseEntity<Response> GetScholar(Integer uid,Integer id) {
         Map<String, Object> responseMap = new TreeMap<>();
+        User u = (User) SecurityUtils.getSubject().getPrincipal();
+        if(u.getUserID()!=uid){
+            return ResponseEntity.ok(new Response(405,"Method Not Allowed",""));
+        }
         //获取学者门户相关信息
         Scholar scholar = scholarMethod.getScholarById(id);
         if(scholar == null){
