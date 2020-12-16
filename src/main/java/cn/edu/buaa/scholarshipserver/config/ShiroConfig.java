@@ -1,6 +1,8 @@
 package cn.edu.buaa.scholarshipserver.config;
 
+import cn.edu.buaa.scholarshipserver.filter.JWTAdminFilter;
 import cn.edu.buaa.scholarshipserver.filter.JWTBasicFilter;
+import cn.edu.buaa.scholarshipserver.filter.JWTScholarFilter;
 import cn.edu.buaa.scholarshipserver.filter.JWTUserFilter;
 import org.apache.shiro.authc.Authenticator;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
@@ -49,10 +51,12 @@ public class ShiroConfig {
 
         shiroFilterFactoryBean.setUnauthorizedUrl("/unauthorized");
 
-        //设置过滤器
+        //设置过滤器类型
         Map<String, Filter> filterMap = new HashMap<>();
         filterMap.put("jwt_basic", new JWTBasicFilter());
         filterMap.put("jwt_user", new JWTUserFilter());
+        filterMap.put("jwt_admin", new JWTAdminFilter());
+        filterMap.put("jwt_scholar", new JWTScholarFilter());
         shiroFilterFactoryBean.setFilters(filterMap);
 
         Map<String,String> filterRuleMap = new HashMap<>();
