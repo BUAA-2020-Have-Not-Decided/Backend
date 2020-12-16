@@ -52,6 +52,9 @@ public class ScholarService {
         Map<String, Object> responseMap = new TreeMap<>();
         //获取学者门户相关信息
         Scholar scholar = scholarMethod.getScholarById(id);
+        if(scholar == null){
+            return ResponseEntity.ok(new Response(404,"该学者门户不存在",""));
+        }
         responseMap.put("scholar", scholar);
         //获取学者门户对应的数据库门户
         //获取paper
@@ -113,6 +116,24 @@ public class ScholarService {
         return ResponseEntity.ok(new Response(responseMap));
     }
 
+    public ResponseEntity<Response> GetDataScholar(Long authorId){
+            Map<String, Object> responseMap = new TreeMap<>();
+            DataScholar dataScholar =dataScholarMethod.getDataScholarByAuthorId(authorId);
+            if(dataScholar == null){
+                return ResponseEntity.ok(new Response(404,"该数据库门户不存在",""));
+            }
+            responseMap.put("dataScholar",dataScholar);
+            Set<Paper> paperSet = new LinkedHashSet<>();
+            List<Paper_DataScholar> paperDataScholarList = paperDataScholarDao.findByAuthorId(dataScholar.getAuthorId());
+            for (Paper_DataScholar paperDataScholar : paperDataScholarList) {
+                Paper paper = paperDao.findByPaperId(paperDataScholar.getPaperId());
+                paperSet.add(paper);
+            }
+            List<Paper>paperList = new ArrayList<>(paperSet);
+            responseMap.put("paperNum",paperList.size());
+            responseMap.put("paper",paperList);
+            return ResponseEntity.ok(new Response(responseMap));
+    }
     public ResponseEntity<Response> PutScholar(Integer id,Map<String,Object> params){
         Scholar scholar = scholarMethod.getScholarById(id);
                 //scholar.setAvatarUrl((String)params.get("avatarUrl"));
@@ -142,7 +163,7 @@ public class ScholarService {
         return ResponseEntity.ok(new Response(1001,"修改提交成功",""));
 
     }
-    public ResponseEntity<Response> GetSameNameUser (String username){
+    public ResponseEntity<Response> GetSameNameUser (String username,String scholarId){
         List<DataScholar> dataScholarList = dataScholarMethod.getDataScholarByNormalizedName(username);
         //如果dataScholar的学者ID不为空，放在前面。
         Map<String,Object> tem1 = new LinkedHashMap<>();
@@ -155,7 +176,7 @@ public class ScholarService {
         }
         tem1.put("pos",tem.size());
         for (DataScholar dataScholar : dataScholarList) {
-            if (null != dataScholar.getScholarId()) {
+            if (null != dataScholar.getScholarId() && dataScholar.getScholarId() == Integer.parseInt(scholarId)) {
                 tem.add(dataScholar);
             }
         }
