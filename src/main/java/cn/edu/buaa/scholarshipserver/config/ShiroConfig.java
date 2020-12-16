@@ -72,7 +72,16 @@ public class ShiroConfig {
         /*学术成果系统的过滤器*/
 
         /*门户系统的过滤器*/
-
+        filterRuleMap.put("/scholar/info/**","jwt_user");
+        filterRuleMap.put("/scholar/dataScholar/**","anon");
+        filterRuleMap.put("/scholar/image/**","jwt_scholar");
+        filterRuleMap.put("/scholar/infoUpdate/**","jwt_scholar");
+        filterRuleMap.put("/scholar/workExperience/**","jwt_scholar");
+        filterRuleMap.put("/scholar/sameName/**","jwt_scholar");
+        filterRuleMap.put("/scholar/Scholar_DataScholar/**","jwt_scholar");
+        filterRuleMap.put("/scholar/admin/**","jwt_admin");
+        filterRuleMap.put("/scholar/subscribe/**","jwt_user");
+        filterRuleMap.put("/scholar/Scholar/Search/**","anon");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return shiroFilterFactoryBean;
     }

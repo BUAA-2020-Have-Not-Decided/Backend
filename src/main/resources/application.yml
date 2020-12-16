@@ -21,5 +21,6 @@ spring:
       maxFileSize: 30MB
 mybatis:
   mapper-locations: classpath:Mapper/*.xml
+ 
 files:
   path: D:/Files/
