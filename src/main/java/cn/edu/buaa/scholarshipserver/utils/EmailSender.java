@@ -13,7 +13,7 @@ import java.util.Date;
 
 @Service
 public class EmailSender {
-    @Value("${server.address}")
+    @Value("${myserver.address}")
     String address;
     @Resource
     JavaMailSenderImpl JavaMailSender;
