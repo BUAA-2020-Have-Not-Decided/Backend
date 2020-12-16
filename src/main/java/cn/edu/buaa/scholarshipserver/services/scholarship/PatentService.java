@@ -87,6 +87,9 @@ public class PatentService {
             searchHit.getContent().setInventor(highlightFields.get("inventor") == null ? searchHit.getContent().getInventor() : highlightFields.get("inventor").get(0));
             searchHit.getContent().setAgent(highlightFields.get("agent") == null ? searchHit.getContent().getAgent() : highlightFields.get("agent").get(0));
             searchHit.getContent().setApplicant(highlightFields.get("applicant") == null ? searchHit.getContent().getApplicant() : highlightFields.get("applicant").get(0));
+            //格式化日期
+            String temp = searchHit.getContent().getApplicationDate();
+            searchHit.getContent().setApplicationDate(temp.substring(0,4)+'-'+temp.substring(4,6)+'-'+temp.substring(6,8));
             //放到实体类中
             patents.add(searchHit.getContent());
         }
@@ -138,6 +141,9 @@ public class PatentService {
             searchHit.getContent().setInventor(highlightFields.get("inventor") == null ? searchHit.getContent().getInventor() : highlightFields.get("inventor").get(0));
             searchHit.getContent().setAgent(highlightFields.get("agent") == null ? searchHit.getContent().getAgent() : highlightFields.get("agent").get(0));
             searchHit.getContent().setApplicant(highlightFields.get("applicant") == null ? searchHit.getContent().getApplicant() : highlightFields.get("applicant").get(0));
+            //格式化日期
+            String temp = searchHit.getContent().getApplicationDate();
+            searchHit.getContent().setApplicationDate(temp.substring(0,4)+'-'+temp.substring(4,6)+'-'+temp.substring(6,8));
             //放到实体类中
             patents.add(searchHit.getContent());
         }
