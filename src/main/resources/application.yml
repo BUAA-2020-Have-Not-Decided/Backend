@@ -24,7 +24,8 @@ mybatis:
   mapper-locations: classpath:Mapper/*.xml
 # 网络设置
 server:
-  port:8086
+  port: 8086
+  maxHttpHeaderSize: 1048576
 
 files:
   path: D:/Files/
