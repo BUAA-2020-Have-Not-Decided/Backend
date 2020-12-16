@@ -25,13 +25,13 @@ public interface CollectMapper {
     Collect_Project getCollectProject(Integer userId, Long paperId);
 
     @Select("select * from Collect_Article where WatcherID=#{userId}")
-    List<Collect_Article> getAllCollectPaper(Integer userId, Long paperId);
+    List<Collect_Article> getAllCollectPaper(Integer userId);
 
     @Select("select * from Collect_Patent where WatcherID=#{userId}")
-    List<Collect_Patent> getAllCollectPatent(Integer userId, Long paperId);
+    List<Collect_Patent> getAllCollectPatent(Integer userId);
 
     @Select("select * from Collect_Project where WatcherID=#{userId}")
-    List<Collect_Project> getAllCollectProject(Integer userId, Long paperId);
+    List<Collect_Project> getAllCollectProject(Integer userId);
 
     @Delete("delete from Collect_Article where WatcherID=#{userId} and PaperId=#{paperId}")
     int cancelCollectPaper(Integer userId, Long paperId);
