@@ -248,11 +248,17 @@ public class UserController {
     }
 
     @PostMapping("/modifyPassword")
-    public Response modifyPassword(@RequestParam("NewPassword") String new_password){
+    public Response modifyPassword(@RequestParam("NewPassword") String new_password, @RequestParam("OldPassword")String old_password){
         User current_user = (User)SecurityUtils.getSubject().getPrincipal();
-        this.user_mapper.updatePassword(current_user.getUserID(), new_password);
+
         HashMap<String, Object> data = new HashMap<>();
         Response res = new Response(data);
+        if(current_user.getPassword().compareTo(old_password)!=0){
+            res.setCode(500);
+            res.setMessage("密码有误");
+            return res;
+        }
+        this.user_mapper.updatePassword(current_user.getUserID(), new_password);
         data.put("success", true);
         return res;
     }
