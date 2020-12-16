@@ -15,7 +15,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 public class Paper_DataScholar {
         @Id
         @Field(type = FieldType.Auto)
-        private Integer id;
+        private String id;
         @Field(type = FieldType.Auto)
         private Long PaperId;
         @Field(type = FieldType.Auto)

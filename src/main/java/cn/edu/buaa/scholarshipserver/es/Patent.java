@@ -21,7 +21,7 @@ import java.util.Date;
 public class Patent {
     @Id
     @Field(type = FieldType.Auto)
-    private Integer patentId;
+    private Long id;
     @Field(type = FieldType.Auto)
     private String Abstract;
     @Field(type = FieldType.Auto)
@@ -56,4 +56,5 @@ public class Patent {
     private String title;
     @Field(type = FieldType.Auto)
     private String state;
+
 }

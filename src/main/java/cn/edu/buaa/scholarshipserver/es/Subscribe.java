@@ -15,7 +15,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 public class Subscribe {
     @Id
     @Field(type = FieldType.Auto)
-    private Integer subscribeId;
+    private String subscribeId;
     @Field(type = FieldType.Auto)
     private Integer fanId;
     @Field(type = FieldType.Auto)
