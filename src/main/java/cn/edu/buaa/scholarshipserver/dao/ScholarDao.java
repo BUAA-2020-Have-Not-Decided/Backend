@@ -8,5 +8,6 @@ public interface ScholarDao extends ElasticsearchRepository<Scholar,Long> {
     public List<Scholar> findByName(String name);
     public List<Scholar> findByOrganization (String organization);
     public List<Scholar> findByNameAndOrganization (String Name,String organization);
+    public List<Scholar> findByNameIsLike (String organization);
 }
 

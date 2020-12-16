@@ -47,6 +47,8 @@ public class ScholarService {
     private ArticleFieldDao articleFieldDao;
     @Autowired
     private SubscribeDao subscribeDao;
+    @Autowired
+    private ScholarDao scholarDao;
 
     public ResponseEntity<Response> GetScholar(Integer uid,Integer id) {
         Map<String, Object> responseMap = new TreeMap<>();
@@ -246,7 +248,7 @@ public class ScholarService {
                 } else return ResponseEntity.ok(new Response(400, "scholarId与ScholarName不对应", ""));
             } else return ResponseEntity.ok(new Response(400, "scholarId不存在", ""));
         } else if (ScholarName.length() != 0) {
-            List<Scholar> scholars = scholarMethod.getScholarByName(ScholarName);
+            List<Scholar> scholars = scholarDao.findByName(ScholarName);
             for (int i = 0; i < scholars.size(); i++) {
                 Map<String, String> ins = new HashMap<String, String>();
                 ins.put("AvatarUrl", scholars.get(i).getAvatarUrl());
@@ -295,16 +297,16 @@ public class ScholarService {
         } else return ResponseEntity.ok(new Response(400, "该关注关系不存在", ""));
     }
 
-    public ResponseEntity<Response> Search (String ScholarName, String Institution){
-        List<Map<String, Object>> res = new ArrayList<Map<String, Object>>();
+    public ResponseEntity<Response> Search (String ScholarName, String Institution,Integer OrderType,Integer pageNumber){
+        Map<String, Object> res = new HashMap<String, Object>();
         List<Scholar> scholars;
+        Integer totalPage=0;
         if (ScholarName.length() != 0 && Institution.length() != 0) {
-            scholars = scholarMethod.getScholarByNameAndOrganization(ScholarName, Institution);
+            scholars = scholarMethod.getScholarByNameAndOrganization(ScholarName, Institution,OrderType,pageNumber,totalPage);
         } else if (ScholarName.length() != 0) {
-            scholars = scholarMethod.getScholarByName(ScholarName);
-        } else if (Institution.length() != 0) {
-            scholars = scholarMethod.getScholarByOrganization(Institution);
-        } else return ResponseEntity.ok(new Response(400, "两个参数都为空", ""));
+            scholars = scholarMethod.getScholarByName(ScholarName,OrderType,pageNumber,totalPage);
+        }  else return ResponseEntity.ok(new Response(400, "两个参数都为空", ""));
+        List<Map<String,Object> > SS = new ArrayList<Map<String,Object>>();
         for (Scholar scholar : scholars) {
             Map<String, Object> ins = new HashMap<String, Object>();
             ins.put("AvatarUrl", scholar.getAvatarUrl());
@@ -313,6 +315,7 @@ public class ScholarService {
             ins.put("Institution", scholar.getOrganization());
             ins.put("PaperCount", scholar.getPapers());
             ins.put("CitationCount", scholar.getCitations());
+            ins.put("hIndex", scholar.getHIndex());
             List<DataScholar> dataScholars = dataScholarMethod.getDataScholarByScholarId(scholar.getScholarId());
             for (DataScholar dataScholar : dataScholars){
                 List<Map<String,String>> fieldsIns = new ArrayList<Map<String, String>>();
@@ -330,8 +333,10 @@ public class ScholarService {
                 }
                 ins.put("Fields",fieldsIns);
             }
-            res.add(ins);
+            SS.add(ins);
         }
+        res.put("scholars",SS);
+        res.put("totalPage",totalPage);
         return ResponseEntity.ok(new Response(1001,res));
     }
 }
