@@ -107,7 +107,7 @@ public class UserController {
         return res;
     }
 
-    //用户验证的地方
+    //用来验证用户或者学者的地方
     @PostMapping("/verify")
     public Response verifyUser(@RequestParam("Code") String code){
         Map<String, Object> result = new TreeMap<>();
@@ -134,6 +134,22 @@ public class UserController {
             default:
                 result.put("Message", "未知错误");
                 break;
+        }
+        return res;
+    }
+
+    //用来验证学者的地方
+    @PostMapping("/scholar/verify")
+    public Response verifyScholar(@RequestParam("Code") String code){
+        HashMap<String, Object> data = new HashMap<>();
+        Response res = new Response(data);
+        try{
+            Scholar s = this.redis_util.getScholarByCode(code);
+            this.scholar_mapper.insert(s);
+            res.setMessage("认证学者成功");
+        }catch(Exception e){
+            res.setCode(500);
+            res.setMessage("服务器有点问题");
         }
         return res;
     }
@@ -167,26 +183,26 @@ public class UserController {
     }
 
     @PostMapping("/toBeScholar")
-    public Response beScholar(@RequestParam("OrgEmail")String email,@RequestParam("RealName") String real_name){
+    public Response beScholar(@RequestParam("OrgEmail")String email,@RequestParam("RealName") String real_name, @RequestParam("EnglishName")String english_name){
         HashMap<String, Object> data = new HashMap<>();
         Response res = new Response(data);
         User u = (User)SecurityUtils.getSubject().getPrincipal();
-        Scholar s = new Scholar(u.getUserID(), real_name, email);
+        Scholar s = new Scholar(u.getUserID(), real_name, email, english_name);
         if(u.getIdentify()==2){//这个用户已经是学者了
             res.setCode(501);
             res.setMessage("已经是学者了");
             return res;
         }
-        if(this.user_mapper.getUserByEmail(email)!=null||this.scholar_mapper.selectByEmail(email)!=null){//这个邮箱已经被用户使用过了
-            res.setCode(501);
-            res.setMessage("邮箱已被其他学者/用户认证了");
-            return res;
-        }
         if(u.getEmail().compareTo(s.getEmail())==0){//如果学者的邮箱和用户一样，那就直接搞定
             this.scholar_mapper.insert(s);
-            this.user_mapper.updateIdentify(u.getUserID(), 2);
+            this.user_mapper.updateIdentify(u.getUserID(), 1);
             res.setMessage("认证成功");
             res.setCode(1002);
+            return res;
+        }
+        else if(this.user_service.emailUsed(email)){
+            res.setCode(502);
+            res.setMessage("这个邮箱被用过了");
             return res;
         }
         else{//如果不一样，那就发送邮件，并且把相关的东西存在redis中
@@ -203,6 +219,7 @@ public class UserController {
             }
         }
     }
+
     //尝试进行jwt_user登录
     @PostMapping("/jwtLoginUserTest")
     @ResponseBody

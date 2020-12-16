@@ -1,6 +1,8 @@
 package cn.edu.buaa.scholarshipserver.services.users;
 
+import cn.edu.buaa.scholarshipserver.dao.ScholarMapper;
 import cn.edu.buaa.scholarshipserver.dao.UserMapper;
+import cn.edu.buaa.scholarshipserver.models.Scholar;
 import cn.edu.buaa.scholarshipserver.models.User;
 import cn.edu.buaa.scholarshipserver.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private RedisUtil redis_util;
+
+    @Autowired
+    private ScholarMapper scholar_mapper;
 
     @Override
     public void register(String name, String password, String email, String code) {
@@ -46,6 +51,7 @@ public class UserServiceImpl implements UserService{
     public boolean emailUsed(String email) {
         User u = user_mapper.getUserByEmail(email);
         System.out.println(u);
-        return u != null;
+        Scholar s = this.scholar_mapper.selectByEmail(email);
+        return u != null&&s!=null;
     }
 }

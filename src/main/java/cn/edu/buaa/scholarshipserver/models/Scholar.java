@@ -60,11 +60,11 @@ public class Scholar implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Scholar(int uid, String name, String email){
+    public Scholar(int uid, String name, String email, String english_name){
         this.uid = uid;
         this.name = name;
         this.email = email;
-        this.englishname = "";
+        this.englishname = english_name;
         this.papers = 0;
         this.lastknowntime = new Date();
         this.fans = 0;
