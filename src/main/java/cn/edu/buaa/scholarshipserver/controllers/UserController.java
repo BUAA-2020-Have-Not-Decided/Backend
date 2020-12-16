@@ -154,6 +154,18 @@ public class UserController {
         return res;
     }
 
+    @PostMapping("/getInfo")
+    public Response giveInfo(){
+        /*获取当前用户*/
+        User current_user = (User)SecurityUtils.getSubject().getPrincipal();
+        HashMap<String, Object> data = new HashMap<>();
+        Response res = new Response(data);
+        data.put("email", current_user.getEmail());
+        data.put("username", current_user.getName());
+        data.put("uid", current_user.getUserID());
+        data.put("isScholar", current_user.getIdentify()==1);
+        return res;
+    }
     //用户登录的地方
     @PostMapping("/login")
     public Response login(@RequestParam("Email") String email, @RequestParam("Password") String password, HttpServletResponse response){
