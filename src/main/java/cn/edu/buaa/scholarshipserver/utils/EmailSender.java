@@ -18,12 +18,12 @@ public class EmailSender {
         MimeMessage message = JavaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message,true);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String text = "请点击以下链接确认注册，激活账户\n"+
+        String text = "请点击以下链接验证邮箱\n"+
                 "http://localhost:8080/#/user/verify/"+code+"\n"
                 +"激活链接将在"+df.format(new Date(new Date().getTime()+(long)10*60*1000))+"失效";
         helper.setFrom("notdecidedyet@126.com");
         helper.setTo(receiver);
-        helper.setSubject("Register Confirm from BUAASE-2020");
+        helper.setSubject("Register Confirm from Not Decided Yet");
         helper.setText(text);
         JavaMailSender.send(message);
     }
