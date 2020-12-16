@@ -238,6 +238,11 @@ public class UserController {
         this.user_mapper.updateName(current_user.getUserID(), name);
         HashMap<String, Object> data = new HashMap<>();
         Response res = new Response(data);
+        if(this.user_service.usernameUsed(name)){
+            res.setCode(500);
+            res.setMessage("用户名重复了");
+            return res;
+        }
         data.put("success", true);
         return res;
     }
