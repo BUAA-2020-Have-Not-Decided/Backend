@@ -17,11 +17,11 @@ public class EmailSender {
     String address;
     @Resource
     JavaMailSenderImpl JavaMailSender;
-    public void sendEmail(String receiver, String suffix, String code)throws MessagingException {
+    public void sendEmail(String msg, String receiver, String suffix, String code)throws MessagingException {
         MimeMessage message = JavaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message,true);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String text = "请点击以下链接验证邮箱\n"+
+        String text = msg+"\n"+
                 address+suffix+code+"\n"
                 +"激活链接将在"+df.format(new Date(new Date().getTime()+(long)10*60*1000))+"失效";
         helper.setFrom("notdecidedyet@126.com");
