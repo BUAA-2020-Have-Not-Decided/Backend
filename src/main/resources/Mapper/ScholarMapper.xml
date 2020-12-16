@@ -26,7 +26,7 @@
     <result column="Activity" jdbcType="INTEGER" property="activity" />
     <result column="AvatarUrl" jdbcType="VARCHAR" property="avatarurl" />
     <result column="LastKnownTime" jdbcType="TIMESTAMP" property="lastknowntime" />
-    <result column="UID" jdbcType="TIMESTAMP" property="uid" />
+    <result column="UID" jdbcType="INTEGER" property="uid" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -134,6 +134,9 @@
   <select id="selectByUID" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select * from Scholar where UID = #{target_user}
   </select>
+  <select id="selectByEmail" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from Scholar where Email = #{email}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     <!--
       WARNING - @mbggenerated
@@ -163,14 +166,14 @@
       PersonalPage, Introduction, Papers, 
       Citations, HIndex, GIndex, 
       Sociability, Diversity, Activity, 
-      AvatarUrl, LastKnownTime)
+      AvatarUrl, LastKnownTime,UID)
     values (#{institutionid,jdbcType=INTEGER}, #{englishname,jdbcType=VARCHAR},
       #{name,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{organization,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{fans,jdbcType=INTEGER}, 
       #{personalpage,jdbcType=VARCHAR}, #{introduction,jdbcType=VARCHAR}, #{papers,jdbcType=INTEGER}, 
       #{citations,jdbcType=INTEGER}, #{hindex,jdbcType=INTEGER}, #{gindex,jdbcType=INTEGER}, 
       #{sociability,jdbcType=INTEGER}, #{diversity,jdbcType=INTEGER}, #{activity,jdbcType=INTEGER}, 
-      #{avatarurl,jdbcType=VARCHAR}, #{lastknowntime,jdbcType=TIMESTAMP})
+      #{avatarurl,jdbcType=VARCHAR}, #{lastknowntime,jdbcType=TIMESTAMP}, #{uid, jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.buaa.scholarshipserver.models.Scholar">
     <!--

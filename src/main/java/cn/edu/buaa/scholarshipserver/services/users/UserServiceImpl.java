@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService{
         else if(usernameUsed(u.getName()))return -1;
         else{
             user_mapper.insertNewUser(u);
-            redis_util.removeUserByKey(code);
+            redis_util.removeItemByKey(code);
             return 2;
         }
     }

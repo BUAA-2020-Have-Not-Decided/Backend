@@ -172,9 +172,36 @@ public class UserController {
         Response res = new Response(data);
         User u = (User)SecurityUtils.getSubject().getPrincipal();
         Scholar s = new Scholar(u.getUserID(), real_name, email);
-        this.scholar_mapper.insert(s);
-        res.setMessage("认证成功");
-        return res;
+        if(u.getIdentify()==2){//这个用户已经是学者了
+            res.setCode(501);
+            res.setMessage("已经是学者了");
+            return res;
+        }
+        if(this.user_mapper.getUserByEmail(email)!=null||this.scholar_mapper.selectByEmail(email)!=null){//这个邮箱已经被用户使用过了
+            res.setCode(501);
+            res.setMessage("邮箱已被其他学者/用户认证了");
+            return res;
+        }
+        if(u.getEmail().compareTo(s.getEmail())==0){//如果学者的邮箱和用户一样，那就直接搞定
+            this.scholar_mapper.insert(s);
+            this.user_mapper.updateIdentify(u.getUserID(), 2);
+            res.setMessage("认证成功");
+            res.setCode(1002);
+            return res;
+        }
+        else{//如果不一样，那就发送邮件，并且把相关的东西存在redis中
+            try{
+                String rand_code = this.digest_util.getRandMD5Code(email);
+                this.email_sender.sendEmail(email, rand_code);
+                this.redis_util.setScholarAndCode(s, rand_code);
+                res.setMessage(String.format("验证邮件已发送到%s，连接在10分钟内有效", email));
+                return res;
+            }catch(Exception e){
+                res.setMessage("邮件发送失败");
+                res.setCode(500);
+                return res;
+            }
+        }
     }
     //尝试进行jwt_user登录
     @PostMapping("/jwtLoginUserTest")
