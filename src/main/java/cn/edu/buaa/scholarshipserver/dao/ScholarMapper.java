@@ -100,4 +100,5 @@ public interface ScholarMapper {
     int updateByPrimaryKey(Scholar record);
 
     Scholar selectByUID(@Param("target_user") Integer uid);
+    Scholar selectByEmail(@Param("email") String email);
 }
