@@ -1,7 +1,6 @@
 package cn.edu.buaa.scholarshipserver.controllers;
 
-import cn.edu.buaa.scholarshipserver.dao.ProjectDao;
-import cn.edu.buaa.scholarshipserver.dao.ScholarDao;
+import cn.edu.buaa.scholarshipserver.dao.*;
 import cn.edu.buaa.scholarshipserver.es.Scholar;
 import cn.edu.buaa.scholarshipserver.models.Project;
 import cn.edu.buaa.scholarshipserver.services.UploadService;
@@ -17,6 +16,14 @@ import java.util.List;
 public class TestController {
         @Autowired
         private ScholarDao scholarDao;
+        @Autowired
+        private PaperDao paperDao;
+        @Autowired
+        private ProjectDao projectDao;
+        @Autowired
+        private PatentDao patentDao;
+        @Autowired
+        private WorkExperienceDao workExperienceDao;
         @PutMapping("/test1")
         public ResponseEntity<Response> test(){
                 Scholar scholar = new Scholar();
@@ -31,6 +38,18 @@ public class TestController {
         }
         @GetMapping("/test1")
         public ResponseEntity<Response> test1(){
-                return ResponseEntity.ok(new Response(scholarDao.findByScholarId(1)));
+                return ResponseEntity.ok(new Response(paperDao.findByPaperId(2892786837L)));
+        }
+        @GetMapping("/test2")
+        public ResponseEntity<Response> test2(){
+                return ResponseEntity.ok(new Response(projectDao.findById(1L)));
+        }
+        @GetMapping("/test3")
+        public ResponseEntity<Response> test3(){
+                return ResponseEntity.ok(new Response(patentDao.findById(1L)));
+        }
+        @GetMapping("/test4")
+        public ResponseEntity<Response> test4(){
+                return ResponseEntity.ok(new Response(workExperienceDao.findByScholarId(1)));
         }
 }

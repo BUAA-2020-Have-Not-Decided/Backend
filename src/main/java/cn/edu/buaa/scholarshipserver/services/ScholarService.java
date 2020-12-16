@@ -7,16 +7,12 @@ import cn.edu.buaa.scholarshipserver.services.scholar.DataScholarMethod;
 import cn.edu.buaa.scholarshipserver.services.scholar.ScholarMethod;
 import cn.edu.buaa.scholarshipserver.services.scholar.SubscribeMethod;
 import cn.edu.buaa.scholarshipserver.utils.Response;
-import io.swagger.models.auth.In;
 import org.joda.time.DateTime;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import cn.edu.buaa.scholarshipserver.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
 import java.util.*;
 
@@ -77,7 +73,7 @@ public class ScholarService {
                 responseMap.put("paperNum",paperList.size());
                 responseMap.put("paper",paperList);
                 List<Project>projectList = new ArrayList<>();
-                List<Patent>patentList = new ArrayList<>();
+                List<Optional<Patent>> patentList = new ArrayList<>();
                 List<Project_Scholar> projectScholarList = projectScholarDao.findByScholarId(scholar.getScholarId());
                 for(Project_Scholar projectScholar : projectScholarList){
                         projectList.add(projectDao.findByProjectId(projectScholar.getProjectId()));
@@ -86,7 +82,7 @@ public class ScholarService {
                 responseMap.put("project",projectList);
                 List<Patent_Scholar> patentScholarList = patentScholarDao.findByScholarId(scholar.getScholarId());
                 for(Patent_Scholar patentScholar : patentScholarList){
-                        patentList.add(patentDao.findByPatentId(patentScholar.getPatentId()));
+                        patentList.add(patentDao.findById(patentScholar.getPatentId()));
                 }
                 responseMap.put("patentNum",patentList.size());
                 responseMap.put("patent",patentList);

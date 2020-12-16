@@ -18,11 +18,11 @@ import java.util.Date;
 public class Patent {
     @Id
     @Field(type = FieldType.Auto)
-    private Integer patentId;
+    private Long id;
     @Field(type = FieldType.Auto)
     private String Abstract;
     @Field(type = FieldType.Auto)
-    private Date applicationDate;
+    private String applicationDate;
     @Field(type = FieldType.Auto)
     private String agency;
     @Field(type = FieldType.Auto)
@@ -42,7 +42,7 @@ public class Patent {
     @Field(type = FieldType.Auto)
     private String inventor;
     @Field(type = FieldType.Auto)
-    private Date publishDate;
+    private String publishDate;
     @Field(type = FieldType.Auto)
     private String applicant;
     @Field(type = FieldType.Auto)
@@ -53,4 +53,5 @@ public class Patent {
     private String title;
     @Field(type = FieldType.Auto)
     private String state;
+
 }

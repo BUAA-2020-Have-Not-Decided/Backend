@@ -29,7 +29,7 @@ public class Paper implements Serializable {
         @Field(type = FieldType.Auto)
         private Long citationCount;
         @Field(type = FieldType.Auto)
-        private Date date;
+        private String date;
         @Field(type = FieldType.Auto)
         private String journal;
         @Field(type = FieldType.Auto)
