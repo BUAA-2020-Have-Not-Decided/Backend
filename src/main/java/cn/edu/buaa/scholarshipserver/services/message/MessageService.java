@@ -163,7 +163,7 @@ public class MessageService {
             out.write(b);
             out.flush();
             out.close();
-            return "http://localhost:8086/" + newFileName;
+            return "http://localhost:8086/pictures/" + newFileName;
         } catch (IOException e) {
             e.printStackTrace();
             throw new Exception("IOException occurred");
