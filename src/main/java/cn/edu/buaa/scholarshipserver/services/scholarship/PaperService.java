@@ -2,13 +2,10 @@ package cn.edu.buaa.scholarshipserver.services.scholarship;
 
 import cn.edu.buaa.scholarshipserver.dao.PaperDao;
 import cn.edu.buaa.scholarshipserver.es.CorrectPaper;
-import cn.edu.buaa.scholarshipserver.es.CorrectPaperDao;
-import cn.edu.buaa.scholarshipserver.es.Paper;
-import cn.edu.buaa.scholarshipserver.es.Patent;
+import cn.edu.buaa.scholarshipserver.dao.CorrectPaperDao;
 import cn.edu.buaa.scholarshipserver.utils.Response;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
