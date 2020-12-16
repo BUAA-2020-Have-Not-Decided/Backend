@@ -3,11 +3,14 @@ package cn.edu.buaa.scholarshipserver.controllers;
 import cn.edu.buaa.scholarshipserver.es.CorrectPaper;
 import cn.edu.buaa.scholarshipserver.es.Paper;
 import cn.edu.buaa.scholarshipserver.es.Patent;
+import cn.edu.buaa.scholarshipserver.models.Scholar;
+import cn.edu.buaa.scholarshipserver.models.User;
 import cn.edu.buaa.scholarshipserver.services.scholarship.PaperService;
 import cn.edu.buaa.scholarshipserver.services.scholarship.PatentService;
 import cn.edu.buaa.scholarshipserver.services.scholarship.ProjectService;
 import cn.edu.buaa.scholarshipserver.utils.Response;
 import io.swagger.annotations.*;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -196,6 +199,46 @@ public class ScholarshipController {
 
         //需要保证date格式为yyyyMMdd
         return patentService.advancedSearchPatentSortByDate(titleKW, abstractKW, organizationKW, authorKW, startDate, endDate, page, size);
+    }
+
+    @PostMapping("/claimPatent/{patentId}")
+    @ApiOperation(notes = "认领专利", value = "认领专利")
+    public ResponseEntity<Response> claimPatent(@PathVariable("patentId")String patentId){
+        User u = (User) SecurityUtils.getSubject().getPrincipal();
+        Scholar scholar = patentService.getScholarByUserId(u.getUserID());
+        if(scholar==null){
+            return ResponseEntity.ok(new Response(4001,"你还未认证成为学者！",400));
+        }
+        Patent patent = patentService.getPatentByPatentId(patentId);
+
+        long patentid = patent.getId();
+        int scholarid = scholar.getScholarid();
+        if(patentService.haveClaimPatent(scholarid,patentid)){
+            return ResponseEntity.ok(new Response(4002,"你已经认领了该专利！",400));
+        }
+        patentService.addPatentPossess(scholarid,patentid);
+        return ResponseEntity.ok(new Response("认领成功！"));
+    }
+
+    @PostMapping("/backClaimPatent/{patentId}")
+    @ApiOperation(notes = "退领专利", value = "退领专利")
+    public ResponseEntity<Response> backClaimPatent(@PathVariable("patentId")String patentId) {
+        User u = (User) SecurityUtils.getSubject().getPrincipal();
+        System.out.println("===="+u.getUserID());
+        Scholar scholar = patentService.getScholarByUserId(u.getUserID());
+        if(scholar==null){
+            return ResponseEntity.ok(new Response(4001,"你还未认证成为学者！",400));
+        }
+        Patent patent = patentService.getPatentByPatentId(patentId);
+
+        long patentid = patent.getId();
+        int scholarid = scholar.getScholarid();
+        if(!patentService.haveClaimPatent(scholarid,patentid)){
+            return ResponseEntity.ok(new Response(4003,"你还未认领该专利！",400));
+        }
+
+        patentService.deletePatentPossess(scholarid,patentid);
+        return ResponseEntity.ok(new Response("退领成功！"));
     }
 
 }

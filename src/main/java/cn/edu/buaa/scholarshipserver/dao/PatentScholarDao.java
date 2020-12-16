@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface PatentScholarDao extends ElasticsearchRepository<Patent_Scholar,Long> {
         public List<Patent_Scholar> findByScholarId(Integer scholarId);
+        public Patent_Scholar findByScholarIdAndPatentId(int scholarId,Long patentId);
 }

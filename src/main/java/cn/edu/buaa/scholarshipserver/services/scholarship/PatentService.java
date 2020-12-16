@@ -1,9 +1,11 @@
 package cn.edu.buaa.scholarshipserver.services.scholarship;
 
 import cn.edu.buaa.scholarshipserver.dao.PatentDao;
-import cn.edu.buaa.scholarshipserver.es.CorrectPaper;
+import cn.edu.buaa.scholarshipserver.dao.PatentMapper;
+import cn.edu.buaa.scholarshipserver.dao.PatentScholarDao;
 import cn.edu.buaa.scholarshipserver.es.Patent;
-import cn.edu.buaa.scholarshipserver.models.Project;
+import cn.edu.buaa.scholarshipserver.es.Patent_Scholar;
+import cn.edu.buaa.scholarshipserver.models.Scholar;
 import cn.edu.buaa.scholarshipserver.utils.Response;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -26,10 +28,12 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Component
+@Service
 public class PatentService {
 
     @Autowired
@@ -41,6 +45,12 @@ public class PatentService {
 
     @Autowired
     private PatentDao patentDao;
+
+    @Autowired
+    private PatentMapper patentMapper;
+
+    @Autowired
+    private PatentScholarDao patentScholarDao;
 
     public Patent getPatentByPatentId(String patentId){
         long id = Long.parseLong(patentId);
@@ -183,4 +193,29 @@ public class PatentService {
     }
 
 
+    public Scholar getScholarByUserId(Integer UID) {
+        return patentMapper.getScholarByUserId(UID);
+    }
+
+    public boolean haveClaimPatent(int scholarid, long patentid) {
+        List<Patent_Scholar> psList = patentScholarDao.findByScholarId(scholarid);
+        for(int i = 0 ; i< psList.size();i++){
+            if(patentid==psList.get(i).getPatentId()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void addPatentPossess(int scholarid, long patentid) {
+        Patent_Scholar ps = new Patent_Scholar();
+        ps.setScholarId(scholarid);
+        ps.setPatentId(patentid);
+        patentScholarDao.save(ps);
+    }
+
+    public void deletePatentPossess(int scholarid, long patentid) {
+        Patent_Scholar ps = patentScholarDao.findByScholarIdAndPatentId(scholarid,patentid);
+        patentScholarDao.delete(ps);
+    }
 }

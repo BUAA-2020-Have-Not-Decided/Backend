@@ -82,6 +82,8 @@ public class ShiroConfig {
         filterRuleMap.put("/scholarship/getPatentByPatentId/**","anon");
         filterRuleMap.put("/scholarship/advancedSearchPatent","anon");
         filterRuleMap.put("/scholarship/advancedSearchPatentSortByDate","anon");
+        filterRuleMap.put("/scholarship/claimPatent/**","jwt_user");
+        filterRuleMap.put("/scholarship/backClaimPatent/**","jwt_user");
 
 
         /*门户系统的过滤器*/
