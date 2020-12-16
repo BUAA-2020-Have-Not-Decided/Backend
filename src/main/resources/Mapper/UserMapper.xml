@@ -50,4 +50,8 @@
   <update id="updateIdentify" parameterType="map">
     update User set Identify=#{new_identify} where UserID=#{ID}
   </update>
+
+  <update id="updateEmail" parameterType="map">
+    update User set Email=#{email} where UserID=#{ID}
+  </update>
 </mapper>

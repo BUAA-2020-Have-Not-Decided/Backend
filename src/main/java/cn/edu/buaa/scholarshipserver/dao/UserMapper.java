@@ -30,4 +30,6 @@ public interface UserMapper {
     void updateImagePath(@Param("ID") int user_id, @Param("Path") String new_path);
     /*修改用户权限*/
     void updateIdentify(@Param("ID") int user_id, @Param("new_identify") int i);
+    /*修改用户的邮箱*/
+    void updateEmail(@Param("ID")int user_id, @Param("email") String email);
 }

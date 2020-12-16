@@ -252,7 +252,6 @@ public class UserController {
         return res;
     }
 
-    //TODO 根据jwt修改邮箱
     @PostMapping("/modifyEmail")
     public Response modifyEmail(@RequestParam("Email")String email){
         User current_user = (User)SecurityUtils.getSubject().getPrincipal();
@@ -271,10 +270,23 @@ public class UserController {
     }
 
     //TODO 根据发上来的
-    /*@PostMapping("/link/modifyEmail")
+    @PostMapping("/link/modifyEmail")
     public Response linkModifyEmail(@RequestParam("Code")String code){
+        HashMap<String,Object> data = new HashMap<>();
+        Response res = new Response(data);
+        User modified = this.redis_util.getUserByString(code);
+        this.redis_util.removeItemByKey(code);
+        if(this.user_service.emailUsed(modified.getEmail())){
+            res.setCode(500);
+            res.setMessage("修改错误");
+        }
+        else{
+            this.user_mapper.updateEmail(modified.getUserID(), modified.getEmail());
+            res.setMessage("邮箱修改成功");
+        }
+        return res;
 
-    }*/
+    }
 
     //尝试进行jwt_user登录
     @PostMapping("/jwtLoginUserTest")
