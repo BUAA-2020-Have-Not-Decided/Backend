@@ -235,7 +235,6 @@ public class UserController {
     @PostMapping("/modifyUsername")
     public Response modifyUsername(@RequestParam("NewName")String name){
         User current_user = (User)SecurityUtils.getSubject().getPrincipal();
-        this.user_mapper.updateName(current_user.getUserID(), name);
         HashMap<String, Object> data = new HashMap<>();
         Response res = new Response(data);
         if(this.user_service.usernameUsed(name)){
@@ -243,6 +242,7 @@ public class UserController {
             res.setMessage("用户名重复了");
             return res;
         }
+        this.user_mapper.updateName(current_user.getUserID(), name);
         data.put("success", true);
         return res;
     }
