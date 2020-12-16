@@ -259,12 +259,17 @@ public class UserController {
         String code = this.digest_util.getRandMD5Code(email);
         HashMap<String, Object> data = new HashMap<>();
         Response res = new Response(data);
+        if(this.user_service.emailUsed(email)){
+            res.setMessage("这个邮箱被用过了");
+            res.setCode(501);
+            return res;
+        }
         try{
             this.email_sender.sendEmail("点击这个链接完成邮箱修改", email, "/user/link/modifyEmail/", code);
             this.redis_util.setUserAndCode(current_user, code);
         }catch(Exception e){
             res.setMessage("邮件发送失败");
-            res.setCode(501);
+            res.setCode(500);
         }
         return res;
     }
