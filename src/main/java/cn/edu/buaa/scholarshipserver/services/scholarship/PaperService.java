@@ -148,6 +148,53 @@ public class PaperService {
 
     }
 
+    public ResponseEntity<Response> advancedSearchPaperSortByCitationCount(String titleKW, String abstractKW, int doctype, String organizationKW, String authorKW, String startDate, String endDate, String page, String size) {
+        int pageNum = Integer.parseInt(page);
+        int sizeNum = Integer.parseInt(size);
+        Pageable pageable = PageRequest.of(pageNum - 1, sizeNum);
+        FunctionScoreQueryBuilder functionScoreQueryBuilder = getProjectFunctionScoreQueryBuilder(titleKW, abstractKW, doctype,
+                organizationKW, authorKW, startDate, endDate);
+
+
+        // 排序条件
+        FieldSortBuilder citationCountSort = SortBuilders.fieldSort("citationCount").order(SortOrder.DESC);
+
+        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withQuery(functionScoreQueryBuilder).withPageable(pageable)
+                .withSort(citationCountSort)
+                .withHighlightFields(
+                        new HighlightBuilder.Field("paperTitle")
+                        , new HighlightBuilder.Field("paper_abstract"))
+                .withHighlightBuilder(new HighlightBuilder().preTags("<span class='highlight'>").postTags("</span>"))
+                .build();
+        //取消10000最大数量限制
+        searchQuery.setTrackTotalHits(true);
+//        //限制查询结果为多少分以上
+//        searchQuery.setMinScore(0.5f);
+        //查询
+        SearchHits<CorrectPaper> search = elasticsearchRestTemplate.search(searchQuery, CorrectPaper.class);
+        //得到查询返回的内容
+        List<SearchHit<CorrectPaper>> searchHits = search.getSearchHits();
+        //设置一个最后需要返回的实体类集合
+        List<CorrectPaper> correctPapers = new ArrayList<>();
+        //遍历返回的内容进行处理
+        for (SearchHit<CorrectPaper> searchHit : searchHits) {
+            //高亮的内容
+            Map<String, List<String>> highlightFields = searchHit.getHighlightFields();
+            //将高亮的内容填充到content中
+            searchHit.getContent().setPaperTitle(highlightFields.get("paperTitle")
+                    == null ? searchHit.getContent().getPaperTitle() : highlightFields.get("paperTitle").get(0));
+            searchHit.getContent().setPaper_abstract(highlightFields.get("paper_abstract")
+                    == null ? searchHit.getContent().getPaper_abstract() : highlightFields.get("paper_abstract").get(0));
+            //放到实体类中
+            correctPapers.add(searchHit.getContent());
+        }
+        Map<String, Object> responseMap = new TreeMap<>();
+        responseMap.put("paperList", correctPapers);
+        responseMap.put("total", search.getTotalHits());
+        return ResponseEntity.ok(new Response(responseMap));
+    }
+
     public FunctionScoreQueryBuilder getProjectFunctionScoreQueryBuilder(String titleKW, String abstractKW, int doctype,
                                                                          String organizationKW, String authorKW,
                                                                          String startDate, String endDate) {

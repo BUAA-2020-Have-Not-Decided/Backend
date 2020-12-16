@@ -150,6 +150,23 @@ public class ScholarshipController {
         return paperService.advancedSearchPaperSortByDate(titleKW, abstractKW, doctype, organizationKW, authorKW, startDate, endDate, page, size);
     }
 
+    @GetMapping("/advancedSearchPaperSortByCitationCount")
+    @ApiOperation(notes = "高级检索文献（被引量排序）", value = "高级检索文献（被引量排序")
+    public ResponseEntity<Response> advancedSearchPaperSortByCitationCount(@RequestParam("titleKW") String titleKW,
+                                                                  @RequestParam("abstractKW") String abstractKW,
+                                                                  @RequestParam("doctype") int doctype,
+                                                                  @RequestParam("organizationKW") String organizationKW,
+                                                                  @RequestParam("authorKW") String authorKW,
+                                                                  @RequestParam("startDate") String startDate,
+                                                                  @RequestParam("endDate") String endDate,
+                                                                  @RequestParam("page") String page,
+                                                                  @RequestParam("size") String size) {
+        if (doctype < 0 || doctype > 2) {
+            return ResponseEntity.ok(new Response(400, "文献类型不正确", 400));
+        }
+        return paperService.advancedSearchPaperSortByCitationCount(titleKW, abstractKW, doctype, organizationKW, authorKW, startDate, endDate, page, size);
+    }
+
     @GetMapping("/advancedSearchPatent")
     @ApiOperation(notes = "高级检索专利（相关度排序）", value = "高级检索专利（相关度排序")
     public ResponseEntity<Response> advancedSearchPatent(@RequestParam("titleKW") String titleKW,
