@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 @Service
@@ -49,6 +50,8 @@ public class ScholarService {
     private SubscribeDao subscribeDao;
     @Autowired
     private ScholarDao scholarDao;
+    @Autowired
+    private InstitutionDao institutionDao;
 
     public ResponseEntity<Response> GetScholar(Integer uid,Integer id) {
         Map<String, Object> responseMap = new TreeMap<>();
@@ -206,6 +209,14 @@ public class ScholarService {
         DataScholar dataScholar = dataScholarMethod.getDataScholarByAuthorId((Long)params.get("authorId"));
         if (dataScholar != null) {
             if (dataScholar.getScholarId() == null) {
+                Scholar scholar = scholarDao.findByScholarId((int)params.get("scholarId"));
+                if(scholar!=null){
+                    if(scholar.getHIndex()<dataScholar.getHIndex()){
+                        scholar.setHIndex(dataScholar.getHIndex());
+                        scholarMethod.updateScholar(scholar);
+                    }
+                }
+                else return ResponseEntity.ok(new Response(400, "学者id不存在", ""));
                 dataScholar.setScholarId((Integer) params.get("scholarId"));
                 dataScholarMethod.updateDataScholar(dataScholar);
                 return ResponseEntity.ok(new Response(1001, "success", ""));
@@ -300,7 +311,7 @@ public class ScholarService {
     public ResponseEntity<Response> Search (String ScholarName, String Institution,Integer OrderType,Integer pageNumber){
         Map<String, Object> res = new HashMap<String, Object>();
         List<Scholar> scholars;
-        Integer totalPage=0;
+        AtomicInteger totalPage = new AtomicInteger();
         if (ScholarName.length() != 0 && Institution.length() != 0) {
             scholars = scholarMethod.getScholarByNameAndOrganization(ScholarName, Institution,OrderType,pageNumber,totalPage);
         } else if (ScholarName.length() != 0) {
@@ -336,6 +347,37 @@ public class ScholarService {
             SS.add(ins);
         }
         res.put("scholars",SS);
+        res.put("totalPage",totalPage);
+        return ResponseEntity.ok(new Response(1001,res));
+    }
+    public ResponseEntity<Response> SearchDataScholar (String ScholarName,Integer OrderType,Integer pageNumber){
+        Map<String, Object> res = new HashMap<String, Object>();
+        List<DataScholar> dataScholars;
+        AtomicInteger totalPage = new AtomicInteger();
+        if (ScholarName.length() != 0) {
+            dataScholars = dataScholarMethod.Search(ScholarName,OrderType,pageNumber,totalPage);
+        }  else return ResponseEntity.ok(new Response(400, "参数为空", ""));
+        List<Map<String,Object> > DS = new ArrayList<Map<String,Object>>();
+        for (DataScholar dataScholar : dataScholars) {
+            Map<String, Object> ins = new HashMap<String, Object>();
+            ins.put("scholarId", dataScholar.getScholarId());
+            ins.put("authorId", dataScholar.getAuthorId());
+            ins.put("normalizedName", dataScholar.getNormalizedName());
+            ins.put("displayName", dataScholar.getDisplayName());
+            ins.put("paperCount", dataScholar.getPaperCount());
+            ins.put("paperFamilyCount", dataScholar.getPaperFamilyCount());
+            ins.put("citationCount", dataScholar.getCitationCount());
+            ins.put("hIndex", dataScholar.getHIndex());
+            Institution institution = institutionDao.findByInstitutionId(dataScholar.getLastKnownAffiliationId());
+            if(institution!=null){
+                ins.put("institution",institution.getInstitutionName());
+            }
+            else {
+                ins.put("institution","null");
+            }
+            DS.add(ins);
+        }
+        res.put("dataScholars",DS);
         res.put("totalPage",totalPage);
         return ResponseEntity.ok(new Response(1001,res));
     }

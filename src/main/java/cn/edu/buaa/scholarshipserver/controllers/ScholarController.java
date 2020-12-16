@@ -160,7 +160,7 @@ public class ScholarController {
         return scholarService.DeleteSubscribe(UserId,ScholarId);
     }
 
-    @GetMapping("/Scholar/Search")
+    @GetMapping("/Search")
     @ApiOperation(value = "按照名字和机构查询学者")
     @ApiImplicitParams({
             @ApiImplicitParam(name="UserId",value="用户Id",required=true,paramType="path"),
@@ -171,6 +171,17 @@ public class ScholarController {
                                                 ,@RequestParam("orderType") Integer orderType
                                                 ,@RequestParam("pageNumber") Integer pageNumber) {
             return scholarService.Search(ScholarName,Institution,orderType,pageNumber);
+    }
+    @GetMapping("/SearchDataScholar")
+    @ApiOperation(value = "按照名字和机构查询学者")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="UserId",value="用户Id",required=true,paramType="path"),
+            @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path")
+    })
+    public ResponseEntity<Response> SearchDataScholar(@RequestParam("DataScholarName") String ScholarName
+            ,@RequestParam("orderType") Integer orderType
+            ,@RequestParam("pageNumber") Integer pageNumber) {
+        return scholarService.SearchDataScholar(ScholarName,orderType,pageNumber);
     }
 }
 

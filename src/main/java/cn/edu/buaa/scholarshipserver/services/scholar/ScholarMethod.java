@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class ScholarMethod {
@@ -38,7 +39,7 @@ public class ScholarMethod {
                 return scholarDao.save(scholar);
         }
 
-        public List<Scholar> getScholarByName(String Name, Integer OrderType, Integer pageNumber,Integer page){
+        public List<Scholar> getScholarByName(String Name, Integer OrderType, Integer pageNumber, AtomicInteger page){
 
                 BoolQueryBuilder builder = QueryBuilders.boolQuery();
                 //builder下有must、should以及mustNot 相当于sql中的and、or以及not
@@ -77,7 +78,7 @@ public class ScholarMethod {
 
 
                 //获取总条数(用于前端分页)
-                page = (int) pages.getTotalElements();
+                page.set((int) pages.getTotalElements());
                 return pages.getContent();
         }
 
@@ -85,7 +86,7 @@ public class ScholarMethod {
                 return  scholarDao.findByOrganization(Organization);
         }
 
-        public List<Scholar> getScholarByNameAndOrganization(String Name,String Organization,Integer OrderType, Integer pageNumber,Integer page){
+        public List<Scholar> getScholarByNameAndOrganization(String Name,String Organization,Integer OrderType, Integer pageNumber,AtomicInteger page){
                 BoolQueryBuilder builder = QueryBuilders.boolQuery();
                 //builder下有must、should以及mustNot 相当于sql中的and、or以及not
 
@@ -123,7 +124,7 @@ public class ScholarMethod {
 
                 //获取查询到的数据内容（返回给前端）
                 //获取总条数(用于前端分页)
-                page = (int) pages.getTotalElements();
+                page.set((int) pages.getTotalElements());
                 return pages.getContent();
         }
         /*
