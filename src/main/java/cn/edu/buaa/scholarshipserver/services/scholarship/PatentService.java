@@ -45,6 +45,10 @@ public class PatentService {
     public Patent getPatentByPatentId(String patentId){
         long id = Long.parseLong(patentId);
         Optional<Patent> patent = patentDao.findById(id);
+        //格式化日期
+        String temp = patent.get().getApplicationDate();
+        patent.get().setApplicationDate(temp.substring(0,4)+'-'+temp.substring(4,6)+'-'+temp.substring(6,8));
+
         return patent.get();
     }
 
