@@ -16,7 +16,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 public class Patent_Scholar {
     @Id
     @Field(type = FieldType.Auto)
-    private Integer id;
+    private String id;
     @Field(type = FieldType.Auto)
     private Long patentId;
     @Field(type = FieldType.Auto)

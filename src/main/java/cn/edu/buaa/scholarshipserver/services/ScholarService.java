@@ -68,78 +68,80 @@ public class ScholarService {
                                  */
 
                         }
-                }
-                List<Paper>paperList = new ArrayList<>(paperSet);
-                responseMap.put("paperNum",paperList.size());
-                responseMap.put("paper",paperList);
-                List<Project>projectList = new ArrayList<>();
-                List<Optional<Patent>> patentList = new ArrayList<>();
-                List<Project_Scholar> projectScholarList = projectScholarDao.findByScholarId(scholar.getScholarId());
-                for(Project_Scholar projectScholar : projectScholarList){
-                        projectList.add(projectDao.findByProjectId(projectScholar.getProjectId()));
-                }
-                responseMap.put("projectNum",projectList.size());
-                responseMap.put("project",projectList);
-                List<Patent_Scholar> patentScholarList = patentScholarDao.findByScholarId(scholar.getScholarId());
-                for(Patent_Scholar patentScholar : patentScholarList){
-                        patentList.add(patentDao.findById(patentScholar.getPatentId()));
-                }
-                responseMap.put("patentNum",patentList.size());
-                responseMap.put("patent",patentList);
-                //下面获取合作学者
-                Map<String,Integer>coAuthorsMap = new TreeMap<>();
-                for(DataScholar dataScholar :dataScholarList){
-                        List<Cooperation> cooperationList = cooperationDao.findByAuthorId1(dataScholar.getAuthorId());
-                        for(Cooperation cooperation : cooperationList){
-                                String authorName = dataScholarMethod.getDataScholarByAuthorId(cooperation.getAuthorId2()).getNormalizedName();
-                                if(null == coAuthorsMap.get(authorName)){
-                                        coAuthorsMap.put(authorName,cooperation.getTimes());
-                                }else{
-                                        Integer oldTimes = coAuthorsMap.get(authorName);
-                                        coAuthorsMap.put(authorName,oldTimes+cooperation.getTimes());
-                                }
-                        }
-                }
-                responseMap.put("coAuthors",coAuthorsMap);
-                //工作经历
-                List<WorkExperience>workExperienceList = workExperienceDao.findByScholarId(scholar.getScholarId());
-                responseMap.put("workExperience",workExperienceList);
-                boolean isSubscribed = false;
-                if(subscribeDao.findByFanIdAndScholarId(uid,id)!=null){
-                    isSubscribed = true;
-                }
-                responseMap.put("isSubscribed",isSubscribed);
-                return ResponseEntity.ok(new Response(responseMap));
         }
-        public ResponseEntity<Response> PutScholar(Integer id,Map<String,Object> params){
-                Scholar scholar = scholarMethod.getScholarById(id);
-                //scholar.setAvatarUrl((String)params.get("avatarUrl"));
-                for(Map.Entry<String,Object>entry : params.entrySet()){
-                        switch (entry.getKey()){
-                                case "name":
-                                        scholar.setName((String)entry.getValue());
-                                        break;
-                                case "email":
-                                        scholar.setEmail((String)entry.getValue());
-                                        break;
-                                case "phone":
-                                        scholar.setPhone((String)entry.getValue());
-                                        break;
-                                case "title":
-                                        scholar.setTitle((String)entry.getValue());
-                                        break;
-                                case "introduction":
-                                        scholar.setIntroduction((String)entry.getValue());
-                                        break;
-                                case "organization":
-                                        scholar.setOrganization((String)entry.getValue());
-                                        break;
-                        }
-                }
-                scholarMethod.updateScholar(scholar);
-                return ResponseEntity.ok(new Response(1001,"修改提交成功",""));
+        List<Paper>paperList = new ArrayList<>(paperSet);
+        responseMap.put("paperNum",paperList.size());
+        responseMap.put("paper",paperList);
 
+        List<Optional<cn.edu.buaa.scholarshipserver.models.Project>> projectList = new ArrayList<>();
+        List<Optional<Patent>> patentList = new ArrayList<>();
+        List<Project_Scholar> projectScholarList = projectScholarDao.findByScholarId(scholar.getScholarId());
+        for(Project_Scholar projectScholar : projectScholarList){
+            projectList.add(projectDao.findById(projectScholar.getProjectId()));
+        }
+        responseMap.put("projectNum",projectList.size());
+        responseMap.put("project",projectList);
+        List<Patent_Scholar> patentScholarList = patentScholarDao.findByScholarId(scholar.getScholarId());
+        for(Patent_Scholar patentScholar : patentScholarList){
+            patentList.add(patentDao.findById(patentScholar.getPatentId()));
+        }
+        responseMap.put("patentNum",patentList.size());
+        responseMap.put("patent",patentList);
+                //下面获取合作学者
+        Map<String,Integer>coAuthorsMap = new TreeMap<>();
+        for(DataScholar dataScholar :dataScholarList){
+            List<Cooperation> cooperationList = cooperationDao.findByAuthorId1(dataScholar.getAuthorId());
+            for(Cooperation cooperation : cooperationList){
+                String authorName = dataScholarMethod.getDataScholarByAuthorId(cooperation.getAuthorId2()).getNormalizedName();
+                if(null == coAuthorsMap.get(authorName)){
+                    coAuthorsMap.put(authorName,cooperation.getTimes());
+                }else{
+                    Integer oldTimes = coAuthorsMap.get(authorName);
+                    coAuthorsMap.put(authorName,oldTimes+cooperation.getTimes());
+                }
             }
+        }
+        responseMap.put("coAuthors",coAuthorsMap);
+        //工作经历
+        List<WorkExperience>workExperienceList = workExperienceDao.findByScholarId(scholar.getScholarId());
+        responseMap.put("workExperience",workExperienceList);
+        boolean isSubscribed = false;
+        if(subscribeDao.findByFanIdAndScholarId(uid,id)!=null){
+            isSubscribed = true;
+        }
+        responseMap.put("isSubscribed",isSubscribed);
+        return ResponseEntity.ok(new Response(responseMap));
+    }
+
+    public ResponseEntity<Response> PutScholar(Integer id,Map<String,Object> params){
+        Scholar scholar = scholarMethod.getScholarById(id);
+                //scholar.setAvatarUrl((String)params.get("avatarUrl"));
+        for(Map.Entry<String,Object>entry : params.entrySet()){
+            switch (entry.getKey()){
+                case "name":
+                    scholar.setName((String)entry.getValue());
+                    break;
+                case "email":
+                    scholar.setEmail((String)entry.getValue());
+                    break;
+                case "phone":
+                    scholar.setPhone((String)entry.getValue());
+                    break;
+                case "title":
+                     scholar.setTitle((String)entry.getValue());
+                     break;
+                case "introduction":
+                    scholar.setIntroduction((String)entry.getValue());
+                    break;
+                case "organization":
+                    scholar.setOrganization((String)entry.getValue());
+                    break;
+            }
+        }
+        scholarMethod.updateScholar(scholar);
+        return ResponseEntity.ok(new Response(1001,"修改提交成功",""));
+
+    }
     public ResponseEntity<Response> GetSameNameUser (String username){
         List<DataScholar> dataScholarList = dataScholarMethod.getDataScholarByNormalizedName(username);
         //如果dataScholar的学者ID不为空，放在前面。

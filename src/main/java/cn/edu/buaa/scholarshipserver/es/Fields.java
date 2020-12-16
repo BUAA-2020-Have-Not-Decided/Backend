@@ -15,7 +15,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 public class Fields {
     @Id
     @Field(type = FieldType.Auto)
-    private Integer Id;
+    private String Id;
     @Field(type = FieldType.Auto)
     private Integer FieldsId;
     @Field(type = FieldType.Auto)
