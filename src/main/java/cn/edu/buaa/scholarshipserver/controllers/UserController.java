@@ -89,7 +89,7 @@ public class UserController {
         else{
             try{
                 String code = digest_util.getRandMD5Code(email);
-                email_sender.sendEmail(email, "/#/user/verify/",code);
+                email_sender.sendEmail("点击链接完成用户激活", email, "/#/user/verify/",code);
                 user_service.register(username, password, email, code);
                 res.setMessage(String.format("验证链接已发送到%s，链接10分钟内有效", email));
                 res.setCode(1001);
@@ -220,7 +220,7 @@ public class UserController {
         else{//如果不一样，那就发送邮件，并且把相关的东西存在redis中
             try{
                 String rand_code = this.digest_util.getRandMD5Code(email);
-                this.email_sender.sendEmail(email, "/#/user/scholarVerify/",rand_code);
+                this.email_sender.sendEmail("点击链接完成学者认证", email, "/#/user/scholarVerify/",rand_code);
                 this.redis_util.setScholarAndCode(s, rand_code);
                 res.setMessage(String.format("验证邮件已发送到%s，连接在10分钟内有效", email));
                 return res;
@@ -231,6 +231,38 @@ public class UserController {
             }
         }
     }
+
+    @PostMapping("/modifyUsername")
+    public Response modifyUsername(@RequestParam("NewName")String name){
+        User current_user = (User)SecurityUtils.getSubject().getPrincipal();
+        this.user_mapper.updateName(current_user.getUserID(), name);
+        HashMap<String, Object> data = new HashMap<>();
+        Response res = new Response(data);
+        data.put("success", true);
+        return res;
+    }
+
+    @PostMapping("/modifyPassword")
+    public Response modifyPassword(@RequestParam("NewPassword") String new_password){
+        User current_user = (User)SecurityUtils.getSubject().getPrincipal();
+        this.user_mapper.updatePassword(current_user.getUserID(), new_password);
+        HashMap<String, Object> data = new HashMap<>();
+        Response res = new Response(data);
+        data.put("success", true);
+        return res;
+    }
+
+    //TODO 根据jwt修改邮箱
+    /*@PostMapping("/modifyEmail")
+    public Response modifyEmail(@RequestParam("Email")String emails){
+
+    }
+
+    //TODO 根据发上来的
+    @PostMapping("/link/modifyEmail")
+    public Response linkModifyEmail(@RequestParam("Code")String code){
+
+    }*/
 
     //尝试进行jwt_user登录
     @PostMapping("/jwtLoginUserTest")
