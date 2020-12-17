@@ -235,11 +235,11 @@ public class ScholarService {
         DataScholar dataScholar = dataScholarMethod.getDataScholarByAuthorId((Long)params.get("authorId"));
         if (dataScholar != null) {
             if (dataScholar.getScholarId().equals((Integer) params.get("scholarId"))) {
-                dataScholar.setScholarId(null);
+                dataScholar.setScholarId(-1);
                 dataScholarMethod.updateDataScholar(dataScholar);
                 return ResponseEntity.ok(new Response(1001, "success", ""));
             } else {
-                return ResponseEntity.ok(new Response(400, "关系已添加", ""));
+                return ResponseEntity.ok(new Response(400, "关系不存在", ""));
             }
         } else {
             return ResponseEntity.ok(new Response(400, "该数据库门户不存在", ""));
