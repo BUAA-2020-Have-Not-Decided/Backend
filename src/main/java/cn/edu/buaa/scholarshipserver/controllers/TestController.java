@@ -52,7 +52,9 @@ public class TestController {
         }
         @GetMapping("/test2")
         public ResponseEntity<Response> test2(){
-                return ResponseEntity.ok(new Response(scholarDao.findByScholarId(12)));
+                
+                return ResponseEntity.ok(new Response(scholarDao.findByScholarId(1)));
+
         }
         @GetMapping("/test3")
         public ResponseEntity<Response> test3(){
