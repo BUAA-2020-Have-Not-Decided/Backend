@@ -141,6 +141,7 @@ public class ScholarService {
             responseMap.put("paper",paperList);
             return ResponseEntity.ok(new Response(responseMap));
     }
+
     public ResponseEntity<Response> PutScholar(Integer id,Map<String,Object> params){
         Scholar scholar = scholarMethod.getScholarById(id);
                 //scholar.setAvatarUrl((String)params.get("avatarUrl"));
@@ -350,7 +351,7 @@ public class ScholarService {
             SS.add(ins);
         }
         res.put("scholars",SS);
-        res.put("totalPage",totalPage);
+        res.put("totalSize",totalPage);
         return ResponseEntity.ok(new Response(1001,res));
     }
     public ResponseEntity<Response> SearchDataScholar (String ScholarName,Integer OrderType,Integer pageNumber){
@@ -381,7 +382,7 @@ public class ScholarService {
             DS.add(ins);
         }
         res.put("dataScholars",DS);
-        res.put("totalPage",totalPage);
+        res.put("totalSize",totalPage);
         return ResponseEntity.ok(new Response(1001,res));
     }
 }
