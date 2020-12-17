@@ -28,7 +28,7 @@ public class RedisUtil {
 
     /*设置一个用户和自己的jwt的关系*/
     public void setUserAndJWT(User u, String jwt){
-        redis_template.opsForValue().set(jwt, u, 30, TimeUnit.MINUTES);
+        redis_template.opsForValue().set(jwt, u);
     }
 
     /*根据key移除掉value*/
