@@ -97,6 +97,9 @@
       <if test="msgid != null">
         #{msgid,jdbcType=INTEGER},
       </if>
+      <if test="data_scholar_id != null">
+        #{data_scholar_id,jdbcType=BIGINT},
+      </if>
       <if test="paperid != null">
         #{paperid,jdbcType=BIGINT},
       </if>

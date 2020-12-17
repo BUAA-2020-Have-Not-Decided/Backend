@@ -119,6 +119,8 @@ public class MessageService {
             messageMapper.insertSelective(newMessage);
             return ResponseEntity.ok(new Response("done", ""));
         } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
             return ResponseEntity.ok(new Response(500, "something's wrong", ""));
         }
     }
