@@ -20,8 +20,8 @@ public class FieldService {
 
     public ResponseEntity<Response> getHotFields() {
         List<Fields> hotFields = new ArrayList<>();
-        for (int i = 2; i < 11; i++) {
-            hotFields.add(fieldDao.findByFieldsId(i));
+        for (long i = 2L; i <= 11; i++) {
+            hotFields.add(fieldDao.findById(i).orElse(null));
         }
         return ResponseEntity.ok(new Response(hotFields));
     }
