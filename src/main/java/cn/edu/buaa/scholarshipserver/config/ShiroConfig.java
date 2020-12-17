@@ -86,6 +86,9 @@ public class ShiroConfig {
         filterRuleMap.put("/scholar/subscribe/**","jwt_user");
         filterRuleMap.put("/scholar/Scholar/Search/**","anon");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterRuleMap);
+
+        /*管理员的过滤器*/
+        filterRuleMap.put("/user/getScholarId", "jwt_admin");
         return shiroFilterFactoryBean;
     }
 
