@@ -224,11 +224,7 @@ public class ScholarService {
     }
     public ResponseEntity<Response> GetScholar_DataScholar (Integer scholarId){
         List<DataScholar> dataScholars = dataScholarMethod.getDataScholarByScholarId(scholarId);
-        if (dataScholars.size()!=0) {
-            return ResponseEntity.ok(new Response(1001,dataScholars));
-        } else {
-            return ResponseEntity.ok(new Response(400, "该数据库门户不存在", ""));
-        }
+        return ResponseEntity.ok(new Response(1001,dataScholars));
     }
 
     public ResponseEntity<Response> PostScholar_DataScholar (Map < String, Object > params){
