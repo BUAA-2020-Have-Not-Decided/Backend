@@ -3,6 +3,7 @@ package cn.edu.buaa.scholarshipserver.controllers;
 import cn.edu.buaa.scholarshipserver.es.CorrectPaper;
 import cn.edu.buaa.scholarshipserver.es.Paper;
 import cn.edu.buaa.scholarshipserver.es.Patent;
+import cn.edu.buaa.scholarshipserver.models.Project;
 import cn.edu.buaa.scholarshipserver.models.Scholar;
 import cn.edu.buaa.scholarshipserver.models.User;
 import cn.edu.buaa.scholarshipserver.services.scholarship.FieldService;
@@ -247,6 +248,43 @@ public class ScholarshipController {
     @GetMapping("/hotFields")
     public ResponseEntity<Response> getHotFields() {
         return fieldService.getHotFields();
+
+    @PostMapping("/claimProject/{projectId}")
+    @ApiOperation(notes = "认领项目", value = "认领项目")
+    public ResponseEntity<Response> claimProject(@PathVariable("projectId")String projectId){
+        User u = (User) SecurityUtils.getSubject().getPrincipal();
+        Scholar scholar = patentService.getScholarByUserId(u.getUserID());
+        if(scholar==null){
+            return ResponseEntity.ok(new Response(4001,"你还未认证成为学者！",400));
+        }
+        Project project = projectService.getTheProjectById(projectId);
+
+        long projectid = project.getProjectId();
+        int scholarid = scholar.getScholarid();
+        if(projectService.haveClaimProject(scholarid,projectid)){
+            return ResponseEntity.ok(new Response(4002,"你已经认领该项目！",400));
+        }
+        projectService.addProjectPossess(scholarid,projectid);
+        return ResponseEntity.ok(new Response("认领成功！"));
+    }
+
+    @PostMapping("/backClaimProject/{projectId}")
+    @ApiOperation(notes = "退领项目", value = "退领项目")
+    public ResponseEntity<Response> backClaimProject(@PathVariable("projectId")String projectId){
+        User u = (User) SecurityUtils.getSubject().getPrincipal();
+        Scholar scholar = patentService.getScholarByUserId(u.getUserID());
+        if(scholar==null){
+            return ResponseEntity.ok(new Response(4001,"你还未认证成为学者！",400));
+        }
+        Project project = projectService.getTheProjectById(projectId);
+
+        long projectid = project.getProjectId();
+        int scholarid = scholar.getScholarid();
+        if(!projectService.haveClaimProject(scholarid,projectid)){
+            return ResponseEntity.ok(new Response(4002,"你还未认领该项目！",400));
+        }
+        projectService.deleteProjectPossess(scholarid,projectid);
+        return ResponseEntity.ok(new Response("认领成功！"));
     }
 
 }
