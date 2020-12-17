@@ -257,6 +257,19 @@ public class ScholarService {
             if (dataScholar.getScholarId().equals((Integer) params.get("scholarId"))) {
                 dataScholar.setScholarId(-1);
                 dataScholarMethod.updateDataScholar(dataScholar);
+                int maxHIndex=0;
+                Scholar scholar = scholarMethod.getScholarById((Integer) params.get("scholarId"));
+                if(scholar!=null) {
+                    List<DataScholar> dataScholars = dataScholarMethod.getDataScholarByScholarId((Integer) params.get("scholarId"));
+                    if (dataScholars != null) {
+                        for (DataScholar dataScholar1 : dataScholars) {
+                            maxHIndex = maxHIndex < dataScholar1.getHIndex() ? dataScholar1.getHIndex() : maxHIndex;
+                        }
+                    }
+                    scholar.setHIndex(maxHIndex);
+                    scholarMethod.updateScholar(scholar);
+                }
+                else return ResponseEntity.ok(new Response(400, "学者id不存在", ""));
                 return ResponseEntity.ok(new Response(1001, "success", ""));
             } else {
                 return ResponseEntity.ok(new Response(400, "关系不存在", ""));

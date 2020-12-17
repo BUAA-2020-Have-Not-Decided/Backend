@@ -89,7 +89,7 @@ public class ScholarController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="scholarId",value="学者Id",required=true,paramType="body"),
     })
-    public ResponseEntity<Response> GetScholar_DataScholar(@RequestParam String scholarId) {
+    public ResponseEntity<Response> GetScholar_DataScholar(@RequestParam("scholarId") String scholarId) {
         return scholarService.GetScholar_DataScholar(Integer.valueOf(scholarId));
     }
 
@@ -119,14 +119,14 @@ public class ScholarController {
         return scholarService.DeleteScholar_DataScholar(params);
     }
 
-    @GetMapping("/admin/{ScholarName}/{ScholarId}")
+    @GetMapping("/admin/Search")
     @ApiOperation(value = "查找学者,按照顺序,没有为空字符串")
     @ApiImplicitParams({
             @ApiImplicitParam(name="ScholarName",value="学者名字",required=true,paramType="path"),
             @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path")
     })
-    public ResponseEntity<Response> GetAdminScholar(@PathVariable("ScholarName") String ScholarName,
-                                                    @PathVariable("ScholarId") String ScholarId) {
+    public ResponseEntity<Response> GetAdminScholar(@RequestParam("ScholarName") String ScholarName,
+                                                    @RequestParam("ScholarId") String ScholarId) {
         return scholarService.GetAdminScholar(ScholarName,ScholarId);
     }
 
