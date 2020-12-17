@@ -80,47 +80,47 @@ public class PaperService {
         searchRequest.source(sourceBuilder);
         SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
 
-        List<Map<String,Object>> authorList = new ArrayList<>();
-        List<Map<String,Object>> scholarList = new ArrayList<>();
-        for(org.elasticsearch.search.SearchHit documentFields : searchResponse.getHits().getHits()){
+        List<Map<String, Object>> authorList = new ArrayList<>();
+        List<Map<String, Object>> scholarList = new ArrayList<>();
+        for (org.elasticsearch.search.SearchHit documentFields : searchResponse.getHits().getHits()) {
             long authorid = Long.parseLong(documentFields.getSourceAsMap().get("authorId").toString());
             DataScholar dataScholar = dataScholarDao.findByAuthorId(authorid);
-            if(dataScholar.getScholarId()== -1){
-                HashMap<String,Object> authorMap = new HashMap<>();
-                authorMap.put("type",0);
-                authorMap.put("authorId",dataScholar.getAuthorId());
-                authorMap.put("name",dataScholar.getDisplayName());
-                authorMap.put("paperCount",dataScholar.getPaperCount());
-                authorMap.put("citationCount",dataScholar.getCitationCount());
-                authorMap.put("HIndex",dataScholar.getHIndex());
+            if (dataScholar.getScholarId() == -1) {
+                HashMap<String, Object> authorMap = new HashMap<>();
+                authorMap.put("type", 0);
+                authorMap.put("authorId", dataScholar.getAuthorId());
+                authorMap.put("name", dataScholar.getDisplayName());
+                authorMap.put("paperCount", dataScholar.getPaperCount());
+                authorMap.put("citationCount", dataScholar.getCitationCount());
+                authorMap.put("HIndex", dataScholar.getHIndex());
                 authorList.add(authorMap);
-            }else{
+            } else {
                 int scholarId = dataScholar.getScholarId();
                 Scholar scholar = scholarDao.findByScholarId(scholarId);
-                HashMap<String,Object> scholarMap = new HashMap<>();
-                scholarMap.put("type",1);
-                scholarMap.put("scholarId",scholar.getScholarId());
-                scholarMap.put("englishName",scholar.getEnglishName());
-                scholarMap.put("name",scholar.getName());
-                scholarMap.put("title",scholar.getTitle());
-                scholarMap.put("organization",scholar.getOrganization());
-                scholarMap.put("papers",scholar.getPapers());
-                scholarMap.put("citations",scholar.getCitations());
-                scholarMap.put("hIndex",scholar.getHIndex());
-                scholarMap.put("gIndex",scholar.getGIndex());
+                HashMap<String, Object> scholarMap = new HashMap<>();
+                scholarMap.put("type", 1);
+                scholarMap.put("scholarId", scholar.getScholarId());
+                scholarMap.put("englishName", scholar.getEnglishName());
+                scholarMap.put("name", scholar.getName());
+                scholarMap.put("title", scholar.getTitle());
+                scholarMap.put("organization", scholar.getOrganization());
+                scholarMap.put("papers", scholar.getPapers());
+                scholarMap.put("citations", scholar.getCitations());
+                scholarMap.put("hIndex", scholar.getHIndex());
+                scholarMap.put("gIndex", scholar.getGIndex());
                 scholarList.add(scholarMap);
             }
         }
-        HashMap<String,Object> authorMap = new HashMap<>();
-        authorMap.put("authorList",authorList);
-        authorMap.put("scholarList",scholarList);
+        HashMap<String, Object> authorMap = new HashMap<>();
+        authorMap.put("authorList", authorList);
+        authorMap.put("scholarList", scholarList);
         return authorMap;
     }
 
     public ResponseEntity<Response> advancedSearchPaper(String titleKW, String abstractKW, int doctype,
                                                         String organizationKW, String authorKW,
                                                         String startDate, String endDate,
-                                                        String page, String size) {
+                                                        String page, String size) throws IOException {
         int pageNum = Integer.parseInt(page);
         int sizeNum = Integer.parseInt(size);
         Pageable pageable = PageRequest.of(pageNum - 1, sizeNum);
@@ -159,6 +159,7 @@ public class PaperService {
         Map<String, Object> responseMap = new TreeMap<>();
         responseMap.put("paperList", correctPapers);
         responseMap.put("total", search.getTotalHits());
+        responseMap.put("author", getAuthorList(correctPapers));
         return ResponseEntity.ok(new Response(responseMap));
     }
 
@@ -166,7 +167,7 @@ public class PaperService {
     public ResponseEntity<Response> advancedSearchPaperSortByDate(String titleKW, String abstractKW, int doctype,
                                                                   String organizationKW, String authorKW,
                                                                   String startDate, String endDate,
-                                                                  String page, String size) {
+                                                                  String page, String size) throws IOException {
         int pageNum = Integer.parseInt(page);
         int sizeNum = Integer.parseInt(size);
         Pageable pageable = PageRequest.of(pageNum - 1, sizeNum);
@@ -211,11 +212,12 @@ public class PaperService {
         Map<String, Object> responseMap = new TreeMap<>();
         responseMap.put("paperList", correctPapers);
         responseMap.put("total", search.getTotalHits());
+        responseMap.put("author", getAuthorList(correctPapers));
         return ResponseEntity.ok(new Response(responseMap));
 
     }
 
-    public ResponseEntity<Response> advancedSearchPaperSortByCitationCount(String titleKW, String abstractKW, int doctype, String organizationKW, String authorKW, String startDate, String endDate, String page, String size) {
+    public ResponseEntity<Response> advancedSearchPaperSortByCitationCount(String titleKW, String abstractKW, int doctype, String organizationKW, String authorKW, String startDate, String endDate, String page, String size) throws IOException {
         int pageNum = Integer.parseInt(page);
         int sizeNum = Integer.parseInt(size);
         Pageable pageable = PageRequest.of(pageNum - 1, sizeNum);
@@ -260,6 +262,7 @@ public class PaperService {
         Map<String, Object> responseMap = new TreeMap<>();
         responseMap.put("paperList", correctPapers);
         responseMap.put("total", search.getTotalHits());
+        responseMap.put("author", getAuthorList(correctPapers));
         return ResponseEntity.ok(new Response(responseMap));
     }
 
@@ -305,4 +308,44 @@ public class PaperService {
         return functionScoreQueryBuilder;
     }
 
+    public List<Map<String, Object>> authorMap(String paperId) throws IOException {
+        SearchRequest searchRequest = new SearchRequest("paper_datascholar");
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("PaperId", paperId);
+        sourceBuilder.query(termQueryBuilder);
+
+        sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
+        searchRequest.source(sourceBuilder);
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+
+        List<Map<String, Object>> authorList = new ArrayList<>();
+        for (org.elasticsearch.search.SearchHit documentFields : searchResponse.getHits().getHits()) {
+            long authorid = Long.parseLong(documentFields.getSourceAsMap().get("authorId").toString());
+            DataScholar dataScholar = dataScholarDao.findByAuthorId(authorid);
+            HashMap<String, Object> authorMap = new HashMap<>();
+            if (dataScholar != null) {
+                if (dataScholar.getScholarId() == -1) {
+                    authorMap.put("type", 0);
+                    authorMap.put("authorId", dataScholar.getAuthorId());
+                    authorMap.put("name", dataScholar.getDisplayName());
+                } else {
+                    int scholarId = dataScholar.getScholarId();
+                    Scholar scholar = scholarDao.findByScholarId(scholarId);
+                    authorMap.put("type", 1);
+                    authorMap.put("authorId", scholar.getScholarId());
+                    authorMap.put("name", scholar.getName());
+                }
+                authorList.add(authorMap);
+            }
+        }
+        return authorList;
+    }
+
+    public List<List<Map<String, Object>>> getAuthorList(List<CorrectPaper> paperList) throws IOException {
+        List<List<Map<String, Object>>> authorList = new ArrayList<>();
+        for (int i = 0; i < paperList.size(); i++) {
+            authorList.add(authorMap(paperList.get(i).getPaperId().toString()));
+        }
+        return authorList;
+    }
 }

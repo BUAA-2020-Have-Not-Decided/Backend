@@ -132,7 +132,7 @@ public class ScholarshipController {
                                                         @RequestParam("startDate") String startDate,
                                                         @RequestParam("endDate") String endDate,
                                                         @RequestParam("page") String page,
-                                                        @RequestParam("size") String size){
+                                                        @RequestParam("size") String size) throws IOException {
         if (doctype < 0 || doctype > 2) {
             return ResponseEntity.ok(new Response(400, "文献类型不正确", 400));
         }
@@ -149,7 +149,7 @@ public class ScholarshipController {
                                                                   @RequestParam("startDate") String startDate,
                                                                   @RequestParam("endDate") String endDate,
                                                                   @RequestParam("page") String page,
-                                                                  @RequestParam("size") String size) {
+                                                                  @RequestParam("size") String size) throws IOException {
         if (doctype < 0 || doctype > 2) {
             return ResponseEntity.ok(new Response(400, "文献类型不正确", 400));
         }
@@ -166,7 +166,7 @@ public class ScholarshipController {
                                                                   @RequestParam("startDate") String startDate,
                                                                   @RequestParam("endDate") String endDate,
                                                                   @RequestParam("page") String page,
-                                                                  @RequestParam("size") String size) {
+                                                                  @RequestParam("size") String size) throws IOException {
         if (doctype < 0 || doctype > 2) {
             return ResponseEntity.ok(new Response(400, "文献类型不正确", 400));
         }
