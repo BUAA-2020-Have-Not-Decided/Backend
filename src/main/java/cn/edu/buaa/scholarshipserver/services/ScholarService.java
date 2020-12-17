@@ -213,13 +213,15 @@ public class ScholarService {
         return ResponseEntity.ok(new Response(tem1));
     }
 
-    public ResponseEntity<Response> PutWorkExperience (Integer scholarId, List < WorkExperience > workExperienceList)
+    public ResponseEntity<Response> PutWorkExperience ( WorkExperience workExperienceList)
     {
-        workExperienceDao.deleteAll(workExperienceDao.findByScholarId(scholarId));
-        workExperienceDao.saveAll(workExperienceList);
+        workExperienceDao.save(workExperienceList);
         return ResponseEntity.ok(new Response(1001, "success", ""));
     }
-
+    public ResponseEntity<Response> DeleteWorkExperience(WorkExperience workExperience){
+        workExperienceDao.delete(workExperience);
+        return ResponseEntity.ok(new Response(1001, "success", ""));
+    }
     public ResponseEntity<Response> GetScholar_DataScholar (Integer scholarId){
         List<DataScholar> dataScholars = dataScholarMethod.getDataScholarByScholarId(scholarId);
         if (dataScholars.size()!=0) {

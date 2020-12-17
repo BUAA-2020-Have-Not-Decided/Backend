@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,14 +63,17 @@ public class ScholarController {
     public ResponseEntity<Response> PutScholar(@PathVariable("ScholarId") String scholarId,@RequestBody Map<String,Object> params) {
         return scholarService.PutScholar(Integer.parseInt(scholarId),params);
     }
-    @PutMapping("/workExperience/{ScholarId}")
+    @PostMapping("/workExperience")
     @ApiOperation(value="更新学者工作简历")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path",dataType = "String"),
             @ApiImplicitParam(name = "workExperienceList",value = "学者所填工作经历列表",required = true,paramType = "body",dataType = "List<WorkExperience>")
     })
-    public ResponseEntity<Response> PutWorkExperience(@PathVariable String ScholarId, @RequestBody List<WorkExperience> workExperienceList){
-        return scholarService.PutWorkExperience(Integer.parseInt(ScholarId),workExperienceList);
+    public ResponseEntity<Response> PutWorkExperience(@RequestBody WorkExperience workExperienceList){
+        return scholarService.PutWorkExperience(workExperienceList);
+    }
+    @DeleteMapping("/workExperience")
+    public ResponseEntity<Response> DeleteWorkExperience(@RequestBody WorkExperience workExperience){
+        return scholarService.DeleteWorkExperience(workExperience);
     }
     @GetMapping("/sameName/{UserName}/{ScholarId}")
     @ApiOperation(value = "推送同名学者")
