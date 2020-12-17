@@ -219,7 +219,8 @@ public class ScholarService {
         return ResponseEntity.ok(new Response(1001, "success", ""));
     }
     public ResponseEntity<Response> DeleteWorkExperience(WorkExperience workExperience){
-        workExperienceDao.delete(workExperience);
+        WorkExperience workExperience1  = workExperienceDao.findByScholarIdAndAndIntroductionAndOrganizationAndYearStartAndYearEnd(workExperience.getScholarId(),workExperience.getIntroduction(),workExperience.getOrganization(),workExperience.getYearStart(),workExperience.getYearEnd());
+        workExperienceDao.delete(workExperience1);
         return ResponseEntity.ok(new Response(1001, "success", ""));
     }
     public ResponseEntity<Response> GetScholar_DataScholar (Integer scholarId){

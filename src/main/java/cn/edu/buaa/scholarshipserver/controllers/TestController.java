@@ -36,15 +36,8 @@ public class TestController {
         private CooperationDao cooperationDao;
         @PutMapping("/test1")
         public ResponseEntity<Response> test(){
-                Scholar scholar = new Scholar();
-                scholar.setScholarId(1);
-                scholar.setEnglishName("Yuan CZ.");
-                scholar.setName("原仓周");
-                scholar.setTitle("副教授");
-                scholar.setOrganization("BUAA");
-                scholar.setFans(0);
-                scholarDao.save(scholar);
-                return ResponseEntity.ok(new Response("ok"));
+
+                return ResponseEntity.ok(new Response(scholarDao.findByScholarId(14)));
         }
         @GetMapping("/test1")
         public ResponseEntity<Response> test1(){
