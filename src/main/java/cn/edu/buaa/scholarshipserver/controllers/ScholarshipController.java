@@ -18,10 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -283,7 +279,61 @@ public class ScholarshipController {
         long projectid = project.getProjectId();
         int scholarid = scholar.getScholarid();
         if(!projectService.haveClaimProject(scholarid,projectid)){
-            return ResponseEntity.ok(new Response(4002,"你还未认领该项目！",400));
+            return ResponseEntity.ok(new Response(4003,"你还未认领该项目！",400));
+        }
+        projectService.deleteProjectPossess(scholarid,projectid);
+        return ResponseEntity.ok(new Response("认领成功！"));
+    }
+
+    @PostMapping("/manageClaimPatent/{scholarId}/{patentId}")
+    @ApiOperation(notes = "管理员指定认领专利", value = "管理员指定认领专利")
+    public ResponseEntity<Response> manageClaimPatent(@PathVariable("scholarId")String scholarId,
+                                                      @PathVariable("patentId")String patentId){
+        long patentid = Integer.parseInt(patentId);
+        int scholarid = Integer.parseInt(scholarId);
+        if(patentService.haveClaimPatent(scholarid,patentid)){
+            return ResponseEntity.ok(new Response(4002,"学者"+scholarId+"已经认领了该专利！",400));
+        }
+        patentService.addPatentPossess(scholarid,patentid);
+        return ResponseEntity.ok(new Response("认领成功！"));
+    }
+
+
+    @PostMapping("/manageBackClaimPatent/{scholarId}/{patentId}")
+    @ApiOperation(notes = "管理员指定退领专利", value = "管理员指定退领专利")
+    public ResponseEntity<Response> manageBackClaimPatent(@PathVariable("scholarId")String scholarId,
+                                                    @PathVariable("patentId")String patentId) {
+        long patentid = Integer.parseInt(patentId);
+        int scholarid = Integer.parseInt(scholarId);
+        if(!patentService.haveClaimPatent(scholarid,patentid)){
+            return ResponseEntity.ok(new Response(4003,"学者"+scholarId+"还未认领该专利！",400));
+        }
+
+        patentService.deletePatentPossess(scholarid,patentid);
+        return ResponseEntity.ok(new Response("退领成功！"));
+    }
+
+    @PostMapping("/manageClaimProject/{scholarId}/{projectId}")
+    @ApiOperation(notes = "管理员指定认领项目", value = "管理员指定认领项目")
+    public ResponseEntity<Response> manageClaimProject(@PathVariable("scholarId")String scholarId,
+                                                       @PathVariable("projectId")String projectId){
+        long projectid = Integer.parseInt(projectId);
+        int scholarid = Integer.parseInt(scholarId);
+        if(projectService.haveClaimProject(scholarid,projectid)){
+            return ResponseEntity.ok(new Response(4002,"学者"+scholarId+"已经认领该项目！",400));
+        }
+        projectService.addProjectPossess(scholarid,projectid);
+        return ResponseEntity.ok(new Response("认领成功！"));
+    }
+
+    @PostMapping("/manageBackClaimProject/{scholarId}/{projectId}")
+    @ApiOperation(notes = "管理员指定退领项目", value = "管理员指定退领项目")
+    public ResponseEntity<Response> manageBackClaimProject(@PathVariable("scholarId")String scholarId,
+                                                     @PathVariable("projectId")String projectId){
+        long projectid = Integer.parseInt(projectId);
+        int scholarid = Integer.parseInt(scholarId);
+        if(!projectService.haveClaimProject(scholarid,projectid)){
+            return ResponseEntity.ok(new Response(4003,"学者"+scholarId+"还未认领该项目！",400));
         }
         projectService.deleteProjectPossess(scholarid,projectid);
         return ResponseEntity.ok(new Response("认领成功！"));
