@@ -6,6 +6,7 @@ import cn.edu.buaa.scholarshipserver.es.Patent;
 import cn.edu.buaa.scholarshipserver.models.Project;
 import cn.edu.buaa.scholarshipserver.models.Scholar;
 import cn.edu.buaa.scholarshipserver.models.User;
+import cn.edu.buaa.scholarshipserver.services.scholarship.FieldService;
 import cn.edu.buaa.scholarshipserver.services.scholarship.PaperService;
 import cn.edu.buaa.scholarshipserver.services.scholarship.PatentService;
 import cn.edu.buaa.scholarshipserver.services.scholarship.ProjectService;
@@ -37,6 +38,8 @@ public class ScholarshipController {
 
     @Autowired
     private PatentService patentService;
+
+    private FieldService fieldService;
 
     @GetMapping("/getProjectById/{projectId}")
     @ApiOperation(notes = "查看项目内容", value = "查看项目内容")
@@ -241,6 +244,10 @@ public class ScholarshipController {
         patentService.deletePatentPossess(scholarid,patentid);
         return ResponseEntity.ok(new Response("退领成功！"));
     }
+
+    @GetMapping("/hotFields")
+    public ResponseEntity<Response> getHotFields() {
+        return fieldService.getHotFields();
 
     @PostMapping("/claimProject/{projectId}")
     @ApiOperation(notes = "认领项目", value = "认领项目")

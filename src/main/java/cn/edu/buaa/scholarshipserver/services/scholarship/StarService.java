@@ -1,10 +1,10 @@
 package cn.edu.buaa.scholarshipserver.services.scholarship;
 
 import cn.edu.buaa.scholarshipserver.dao.CollectMapper;
+import cn.edu.buaa.scholarshipserver.dao.CorrectPaperDao;
 import cn.edu.buaa.scholarshipserver.dao.PatentDao;
 import cn.edu.buaa.scholarshipserver.dao.ProjectDao;
 import cn.edu.buaa.scholarshipserver.es.CorrectPaper;
-import cn.edu.buaa.scholarshipserver.es.CorrectPaperDao;
 import cn.edu.buaa.scholarshipserver.es.Patent;
 import cn.edu.buaa.scholarshipserver.es.Project;
 import cn.edu.buaa.scholarshipserver.models.Collect_Article;
@@ -114,9 +114,7 @@ public class StarService {
         List<Collect_Patent> allCollectPatent = collectMapper.getAllCollectPatent(userId);
         List<Patent> patents = new ArrayList<>();
         for (Collect_Patent collect_patent : allCollectPatent) {
-            long pid = collect_patent.getPatentId();
-            int ppid = (int) pid;
-            patents.add(patentDao.findByPatentId(ppid));
+            patents.add(patentDao.findPatentById(collect_patent.getPatentId()));
         }
         Map<String, Object> responseMap = new TreeMap<>();
         responseMap.put("patentList", patents);
