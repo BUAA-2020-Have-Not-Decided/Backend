@@ -191,7 +191,7 @@ public class ScholarService {
         }
         tem1.put("pos",tem.size());
         for (DataScholar dataScholar : dataScholarList) {
-            if (-1 != dataScholar.getScholarId() && dataScholar.getScholarId() == Integer.parseInt(scholarId)) {
+            if (-1 != dataScholar.getScholarId() && dataScholar.getScholarId() != Integer.parseInt(scholarId)) {
                 tem.add(dataScholar);
             }
         }
