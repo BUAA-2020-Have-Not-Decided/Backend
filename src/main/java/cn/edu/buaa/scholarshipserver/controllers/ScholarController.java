@@ -27,7 +27,7 @@ public class ScholarController {
     private ScholarService scholarService;
     @Autowired
     private UploadService uploadService;
-    @GetMapping("/info/{UserId}/{ScholarId}")
+    @GetMapping("/{UserId}/{ScholarId}")
     @ApiOperation(value = "获得学者门户相关信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ScholarId",value = "用户id",required = true,paramType = "path",dataType = "String"),
@@ -49,7 +49,7 @@ public class ScholarController {
     public ResponseEntity<Response> UploadImage(@PathVariable String ScholarId,@RequestBody String base64Data){
         return uploadService.UploadImage(Integer.parseInt(ScholarId),base64Data);
     }
-    @PutMapping("/infoUpdate/{ScholarId}")
+    @PutMapping("/{ScholarId}")
     @ApiOperation(value = "更新学者门户相关信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path",dataType = "String"),
@@ -84,12 +84,12 @@ public class ScholarController {
        return scholarService.GetSameNameUser(userName,scholarId);
     }
 
-    @GetMapping("/Scholar_DataScholar/{scholarId}")
-    @ApiOperation(value = "")
+    @GetMapping("/Scholar_DataScholar")
+    @ApiOperation(value = "为ScholarId的门户中添加一个数据库门户authorId")
     @ApiImplicitParams({
             @ApiImplicitParam(name="scholarId",value="学者Id",required=true,paramType="body"),
     })
-    public ResponseEntity<Response> GetScholar_DataScholar(@PathVariable("scholarId") String scholarId) {
+    public ResponseEntity<Response> GetScholar_DataScholar(@RequestParam("scholarId") String scholarId) {
         return scholarService.GetScholar_DataScholar(Integer.valueOf(scholarId));
     }
 
@@ -119,14 +119,14 @@ public class ScholarController {
         return scholarService.DeleteScholar_DataScholar(params);
     }
 
-    @GetMapping("/admin/{ScholarName}/{ScholarId}")
+    @GetMapping("/admin/Search")
     @ApiOperation(value = "查找学者,按照顺序,没有为空字符串")
     @ApiImplicitParams({
             @ApiImplicitParam(name="ScholarName",value="学者名字",required=true,paramType="path"),
             @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path")
     })
-    public ResponseEntity<Response> GetAdminScholar(@PathVariable("ScholarName") String ScholarName,
-                                                    @PathVariable("ScholarId") String ScholarId) {
+    public ResponseEntity<Response> GetAdminScholar(@RequestParam("ScholarName") String ScholarName,
+                                                    @RequestParam("ScholarId") String ScholarId) {
         return scholarService.GetAdminScholar(ScholarName,ScholarId);
     }
 
