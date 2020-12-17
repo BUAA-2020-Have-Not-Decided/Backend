@@ -95,7 +95,7 @@ public class ScholarController {
             @ApiImplicitParam(name="scholarId",value="学者Id",required=true,paramType="body"),
             @ApiImplicitParam(name="authorId",value="数据库门户Id",required=true,paramType="body")
     })
-    public ResponseEntity<Response> PostScholar_DataScholar(@RequestParam String scholarId,@RequestParam String authorId) {
+    public ResponseEntity<Response> PostScholar_DataScholar(@RequestParam("scholarId") String scholarId,@RequestParam("authorId") String authorId) {
         Map<String,Object> params = new HashMap<String,Object>();
         params.put("scholarId",Integer.valueOf(scholarId));
         params.put("authorId",Long.valueOf(authorId));
@@ -108,7 +108,7 @@ public class ScholarController {
             @ApiImplicitParam(name="scholarId",value="学者Id",required=true,paramType="body"),
             @ApiImplicitParam(name="authorId",value="数据库门户Id",required=true,paramType="body")
     })
-    public ResponseEntity<Response> DeleteScholar_DataScholar(@RequestParam String scholarId,@RequestParam String authorId) {
+    public ResponseEntity<Response> DeleteScholar_DataScholar(@RequestParam("scholarId") String scholarId,@RequestParam("authorId") String authorId) {
         Map<String,Object> params = new HashMap<String,Object>();
         params.put("scholarId",Integer.valueOf(scholarId));
         params.put("authorId",Long.valueOf(authorId));
