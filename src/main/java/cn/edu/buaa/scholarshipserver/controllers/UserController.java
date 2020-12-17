@@ -190,6 +190,18 @@ public class UserController {
         return res;
     }
 
+    //TODO 找回密码
+    // 发送邮件，点击邮件重置密码
+    @PostMapping("/findPassword")
+    public Response findPassword(@RequestParam("Email")String email){
+        HashMap<String, Object> data = new HashMap<>();
+        Response res = new Response(data);
+        User current_user = (User)SecurityUtils.getSubject().getPrincipal();
+        String new_pwd = this.user_service.randomPassword();
+        System.out.println(new_pwd);
+        return res;
+    }
+
     @PostMapping("/getInfo")
     public Response giveInfo(){
         /*获取当前用户*/
