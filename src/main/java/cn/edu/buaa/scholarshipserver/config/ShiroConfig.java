@@ -106,6 +106,10 @@ public class ShiroConfig {
 
         /*管理员的过滤器*/
         filterRuleMap.put("/user/getScholarId", "jwt_admin");
+        filterRuleMap.put("/scholarship/manageClaimPatent/**", "jwt_admin");
+        filterRuleMap.put("/scholarship/manageBackClaimPatent/**", "jwt_admin");
+        filterRuleMap.put("/scholarship/manageClaimProject/**", "jwt_admin");
+        filterRuleMap.put("/scholarship/manageBackClaimProject/**", "jwt_admin");
         return shiroFilterFactoryBean;
     }
 
