@@ -345,6 +345,7 @@ public class ScholarService {
     }
 
     public ResponseEntity<Response> Search (String ScholarName, String Institution,Integer OrderType,Integer pageNumber){
+        pageNumber-=1;
         Map<String, Object> res = new HashMap<String, Object>();
         List<Scholar> scholars;
         AtomicInteger totalPage = new AtomicInteger();
@@ -387,6 +388,7 @@ public class ScholarService {
         return ResponseEntity.ok(new Response(1001,res));
     }
     public ResponseEntity<Response> SearchDataScholar (String ScholarName,Integer OrderType,Integer pageNumber){
+        pageNumber-=1;
         Map<String, Object> res = new HashMap<String, Object>();
         List<DataScholar> dataScholars;
         AtomicInteger totalPage = new AtomicInteger();
@@ -409,7 +411,7 @@ public class ScholarService {
                 ins.put("institution",institution.getInstitutionName());
             }
             else {
-                ins.put("institution","null");
+                ins.put("institution","");
             }
             DS.add(ins);
         }
