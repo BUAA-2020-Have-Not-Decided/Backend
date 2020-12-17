@@ -1,6 +1,9 @@
 package cn.edu.buaa.scholarshipserver.services.scholarship;
 
 import cn.edu.buaa.scholarshipserver.dao.ProjectDao;
+import cn.edu.buaa.scholarshipserver.dao.ProjectScholarDao;
+import cn.edu.buaa.scholarshipserver.es.Patent_Scholar;
+import cn.edu.buaa.scholarshipserver.es.Project_Scholar;
 import cn.edu.buaa.scholarshipserver.models.Project;
 import cn.edu.buaa.scholarshipserver.utils.Response;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -41,12 +44,21 @@ public class ProjectService {
     @Autowired
     private ProjectDao projectDao;
 
+    @Autowired
+    private ProjectScholarDao projectScholarDao;
+
     public ResponseEntity<Response> getProjectById(String projectId) {
         Long id = Long.parseLong(projectId);
         Optional<Project> project = projectDao.findById(id);
         Map<String, Object> responseMap = new TreeMap<>();
         responseMap.put("project", project);
         return ResponseEntity.ok(new Response(responseMap));
+    }
+
+    public Project getTheProjectById(String projectId){
+        Long id = Long.parseLong(projectId);
+        Optional<Project> project = projectDao.findById(id);
+        return project.get();
     }
 
     public ResponseEntity<Response> getProjectListByKeyword(String keyword, String page, String size) {
@@ -220,5 +232,27 @@ public class ProjectService {
         }
         FunctionScoreQueryBuilder functionScoreQueryBuilder= QueryBuilders.functionScoreQuery(boolQuery);
         return functionScoreQueryBuilder;
+    }
+
+    public boolean haveClaimProject(int scholarid, long projectid) {
+        List<Project_Scholar> psList = projectScholarDao.findByScholarId(scholarid);
+        for(int i = 0 ; i< psList.size();i++){
+            if(projectid==psList.get(i).getProjectId()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void addProjectPossess(int scholarid, long projectid) {
+        Project_Scholar ps = new Project_Scholar();
+        ps.setScholarId(scholarid);
+        ps.setProjectId(projectid);
+        projectScholarDao.save(ps);
+    }
+
+    public void deleteProjectPossess(int scholarid, long projectid) {
+        Project_Scholar ps = projectScholarDao.findByScholarIdAndProjectId(scholarid,projectid);
+        projectScholarDao.delete(ps);
     }
 }
