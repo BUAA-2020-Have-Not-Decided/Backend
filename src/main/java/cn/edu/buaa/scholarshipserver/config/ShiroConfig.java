@@ -71,6 +71,9 @@ public class ShiroConfig {
         filterRuleMap.put("/user/modifyEmail", "jwt_user");
 
         /*消息系统的过滤器*/
+        filterRuleMap.put("/message/user/**","jwt_scholar");
+        filterRuleMap.put("/message/scholar/**", "jwt_scholar");
+        filterRuleMap.put("/message/admin/**", "jwt_admin");
 
         /*学术成果系统的过滤器*/
         filterRuleMap.put("/scholarship/getProjectById/**","anon");
