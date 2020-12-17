@@ -16,7 +16,7 @@ public class Fields {
     @Field(type = FieldType.Auto)
     private String id;
     @Field(type = FieldType.Auto)
-    private Integer FieldsId;
+    private Integer fieldsId;
     @Field(type = FieldType.Auto)
     private String RankNumber;
     @Field(type = FieldType.Auto)

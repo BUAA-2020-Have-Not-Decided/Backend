@@ -5,6 +5,7 @@ import cn.edu.buaa.scholarshipserver.es.Scholar;
 import cn.edu.buaa.scholarshipserver.models.Project;
 import cn.edu.buaa.scholarshipserver.services.UploadService;
 import cn.edu.buaa.scholarshipserver.utils.Response;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,8 @@ public class TestController {
         @Autowired
         private WorkExperienceDao workExperienceDao;
         @Autowired
-        private DataScholarDao dataScholarDao;
+        private InstitutionDao institutionDao;
+
         @PutMapping("/test1")
         public ResponseEntity<Response> test(){
                 Scholar scholar = new Scholar();
@@ -52,6 +54,6 @@ public class TestController {
         }
         @GetMapping("/test4")
         public ResponseEntity<Response> test4(){
-                return ResponseEntity.ok(new Response(dataScholarDao.findByNormalizedName("yuan cangzhou")));
+                return ResponseEntity.ok(new Response(institutionDao.findByInstitutionId(119454577L)));
         }
 }

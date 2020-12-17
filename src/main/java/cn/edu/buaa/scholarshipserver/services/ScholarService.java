@@ -145,8 +145,15 @@ public class ScholarService {
             List<Paper>paperList = new ArrayList<>(paperSet);
             responseMap.put("paperNum",paperList.size());
             responseMap.put("paper",paperList);
+            if(dataScholar.getLastKnownAffiliationId()==-1L){
+                responseMap.put("institution","");
+            }
+            else{
+                responseMap.put("institution",institutionDao.findByInstitutionId(dataScholar.getLastKnownAffiliationId()).getInstitutionName());
+            }
             return ResponseEntity.ok(new Response(responseMap));
     }
+
     public ResponseEntity<Response> PutScholar(Integer id,Map<String,Object> params){
         Scholar scholar = scholarMethod.getScholarById(id);
                 //scholar.setAvatarUrl((String)params.get("avatarUrl"));
@@ -194,7 +201,15 @@ public class ScholarService {
                 tem.add(dataScholar);
             }
         }
+        List<String>institutionList = new ArrayList<>();
+        for(DataScholar dataScholar:tem){
+            if(dataScholar.getLastKnownAffiliationId()==-1L)
+                institutionList.add("");
+            else
+                institutionList.add(institutionDao.findByInstitutionId(dataScholar.getLastKnownAffiliationId()).getInstitutionName());
+        }
         tem1.put("dataScholar",tem);
+        tem1.put("institution",institutionList);
         return ResponseEntity.ok(new Response(tem1));
     }
 
@@ -356,7 +371,7 @@ public class ScholarService {
             SS.add(ins);
         }
         res.put("scholars",SS);
-        res.put("totalPage",totalPage);
+        res.put("totalSize",totalPage);
         return ResponseEntity.ok(new Response(1001,res));
     }
     public ResponseEntity<Response> SearchDataScholar (String ScholarName,Integer OrderType,Integer pageNumber){
@@ -387,7 +402,7 @@ public class ScholarService {
             DS.add(ins);
         }
         res.put("dataScholars",DS);
-        res.put("totalPage",totalPage);
+        res.put("totalSize",totalPage);
         return ResponseEntity.ok(new Response(1001,res));
     }
 }
