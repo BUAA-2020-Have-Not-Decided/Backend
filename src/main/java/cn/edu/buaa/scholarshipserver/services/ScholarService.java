@@ -323,7 +323,7 @@ public class ScholarService {
         List<Subscribe> subscribes = subscribeMethod.getSubscribeByFanId(fanId);
         for (int i = 0; i < subscribes.size(); i++) {
             Map<String, String> ins = new HashMap<String, String>();
-            int scholarId = subscribes.get(0).getScholarId();
+            int scholarId = subscribes.get(i).getScholarId();
             Scholar scholar = scholarMethod.getScholarById(scholarId);
             ins.put("AvatarUrl", scholar.getAvatarUrl());
             ins.put("Name", scholar.getName());
