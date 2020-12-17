@@ -57,10 +57,12 @@ public class ScholarService {
 
     public ResponseEntity<Response> GetScholar(Integer uid,Integer id) {
         Map<String, Object> responseMap = new TreeMap<>();
+
         User u = (User) SecurityUtils.getSubject().getPrincipal();
         if(u.getUserID()!=uid){
             return ResponseEntity.ok(new Response(405,"Method Not Allowed",""));
         }
+
         //获取学者门户相关信息
         Scholar scholar = scholarMethod.getScholarById(id);
         if(scholar == null){
@@ -176,18 +178,19 @@ public class ScholarService {
     }
     public ResponseEntity<Response> GetSameNameUser (String username,String scholarId){
         List<DataScholar> dataScholarList = dataScholarMethod.getDataScholarByNormalizedName(username);
+        System.out.println(username);
         //如果dataScholar的学者ID不为空，放在前面。
         Map<String,Object> tem1 = new LinkedHashMap<>();
 
         List<DataScholar> tem = new ArrayList<>();
         for (DataScholar dataScholar : dataScholarList) {
-            if (null == dataScholar.getScholarId()) {
+            if (-1 == dataScholar.getScholarId()) {
                 tem.add(dataScholar);
             }
         }
         tem1.put("pos",tem.size());
         for (DataScholar dataScholar : dataScholarList) {
-            if (null != dataScholar.getScholarId() && dataScholar.getScholarId() == Integer.parseInt(scholarId)) {
+            if (-1 != dataScholar.getScholarId() && dataScholar.getScholarId() == Integer.parseInt(scholarId)) {
                 tem.add(dataScholar);
             }
         }
