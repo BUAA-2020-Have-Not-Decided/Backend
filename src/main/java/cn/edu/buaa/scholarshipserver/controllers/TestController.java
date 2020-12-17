@@ -24,6 +24,8 @@ public class TestController {
         private PatentDao patentDao;
         @Autowired
         private WorkExperienceDao workExperienceDao;
+        @Autowired
+        private DataScholarDao dataScholarDao;
         @PutMapping("/test1")
         public ResponseEntity<Response> test(){
                 Scholar scholar = new Scholar();
@@ -50,6 +52,6 @@ public class TestController {
         }
         @GetMapping("/test4")
         public ResponseEntity<Response> test4(){
-                return ResponseEntity.ok(new Response(workExperienceDao.findByScholarId(1)));
+                return ResponseEntity.ok(new Response(dataScholarDao.findByNormalizedName("yuan cangzhou")));
         }
 }
