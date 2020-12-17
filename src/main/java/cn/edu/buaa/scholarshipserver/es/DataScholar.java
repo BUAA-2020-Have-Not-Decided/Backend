@@ -26,7 +26,7 @@ public class DataScholar {
         @Field(type = FieldType.Auto)
         private String displayName;
         @Field(type = FieldType.Auto)
-        private int lastKnownAffiliationId;
+        private Long lastKnownAffiliationId;
         @Field(type = FieldType.Auto)
         private int paperCount;
         @Field(type = FieldType.Auto)

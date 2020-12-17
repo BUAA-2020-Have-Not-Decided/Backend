@@ -15,7 +15,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 public class Institution {
         @Id
         @Field(type = FieldType.Auto)
-        private Integer institutionId;
+        private Long institutionId;
         @Field(type = FieldType.Auto)
         private String institutionName;
         @Field(type = FieldType.Auto)
