@@ -177,19 +177,10 @@ public class MessageService {
         }
     }
 
-    public ResponseEntity<Response> getAppeals(String type) {
+    public ResponseEntity<Response> getAppeals() {
         try {
             List<Message> appeals = messageMapper.findByReceiverUserId(0);
             appeals.removeIf(message -> message.getMsgstatus() == 2);
-            if ("dataScholar".equals(type)) {
-                appeals.removeIf(message -> message.getDataScholarId() == null);
-            }
-            else if ("scholarship".equals(type)) {
-                appeals.removeIf(message -> message.getDataScholarId() != null);
-            }
-            else {
-                return ResponseEntity.ok(new Response(400, "wrong type given", ""));
-            }
             return ResponseEntity.ok(new Response(appeals));
         } catch (Exception e) {
             return ResponseEntity.ok(new Response(500, "something's wrong", ""));

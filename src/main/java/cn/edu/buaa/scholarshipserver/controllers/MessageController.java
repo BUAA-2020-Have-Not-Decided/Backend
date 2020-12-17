@@ -53,8 +53,8 @@ public class MessageController {
     }
 
     @GetMapping("/appeal/all")
-    public ResponseEntity<Response> getAppeals(String type) {
-        return messageService.getAppeals(type);
+    public ResponseEntity<Response> getAppeals() {
+        return messageService.getAppeals();
     }
 
     @PutMapping("/appeal/one")
