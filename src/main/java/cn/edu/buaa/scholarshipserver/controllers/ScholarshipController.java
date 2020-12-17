@@ -248,6 +248,7 @@ public class ScholarshipController {
     @GetMapping("/hotFields")
     public ResponseEntity<Response> getHotFields() {
         return fieldService.getHotFields();
+    }
 
     @PostMapping("/claimProject/{projectId}")
     @ApiOperation(notes = "认领项目", value = "认领项目")
