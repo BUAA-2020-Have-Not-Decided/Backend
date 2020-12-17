@@ -285,14 +285,18 @@ public class ScholarService {
             Integer scholarId = Integer.valueOf(ScholarId);
             Scholar scholar = scholarMethod.getScholarById(scholarId);
             if (scholar != null) {
-                if (ScholarName.length() != 0 && scholar.getName().equals(ScholarName)) {
-                    Map<String, String> ins = new HashMap<String, String>();
-                    ins.put("AvatarUrl", scholar.getAvatarUrl());
-                    ins.put("Name", scholar.getName());
-                    ins.put("ScholarId", String.valueOf(scholar.getScholarId()));
-                    ins.put("Institution", scholar.getOrganization());
-                    res.add(ins);
-                } else return ResponseEntity.ok(new Response(400, "scholarId与ScholarName不对应", ""));
+                System.out.println(ScholarName);
+                if (ScholarName.length() != 0) {
+                    if(scholar.getName().equals(ScholarName)) {
+                        Map<String, String> ins = new HashMap<String, String>();
+                        ins.put("AvatarUrl", scholar.getAvatarUrl());
+                        ins.put("Name", scholar.getName());
+                        ins.put("ScholarId", String.valueOf(scholar.getScholarId()));
+                        ins.put("Institution", scholar.getOrganization());
+                        res.add(ins);
+                    }
+                    else return ResponseEntity.ok(new Response(400, "scholarId与ScholarName不对应", ""));
+                }
             } else return ResponseEntity.ok(new Response(400, "scholarId不存在", ""));
         } else if (ScholarName.length() != 0) {
             List<Scholar> scholars = scholarDao.findByName(ScholarName);
