@@ -18,8 +18,6 @@ import java.util.Date;
 public class Scholar implements Serializable {
         @Id
         @Field(type = FieldType.Auto)
-        private String id;
-        @Field(type = FieldType.Auto)
         private Integer scholarId;
         @Field(type = FieldType.Auto)
         private Integer institutionId;

@@ -52,13 +52,10 @@ public class TestController {
         }
         @GetMapping("/test2")
         public ResponseEntity<Response> test2(){
-                Scholar scholar = new Scholar();
-                scholar.setScholarId(13);
-                scholar.setEmail("18231077@buaa.edu.cn");
-                scholar.setName("路路路");
-                scholar.setEnglishName("lululu");
-                scholarDao.save(scholar);
-                return ResponseEntity.ok(new Response(scholar));
+
+                
+                return ResponseEntity.ok(new Response(scholarDao.findByScholarId(1)));
+
         }
         @GetMapping("/test3")
         public ResponseEntity<Response> test3(){
