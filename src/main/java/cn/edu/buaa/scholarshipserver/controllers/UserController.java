@@ -107,7 +107,7 @@ public class UserController {
         return res;
     }
 
-    //用来验证用户或者学者的地方
+    //用来验证用户的地方
     @PostMapping("/verify")
     public Response verifyUser(@RequestParam("Code") String code){
         Map<String, Object> result = new TreeMap<>();
@@ -200,7 +200,7 @@ public class UserController {
         Response res = new Response(data);
         User u = (User)SecurityUtils.getSubject().getPrincipal();
         Scholar s = new Scholar(u.getUserID(), real_name, email, english_name);
-        if(u.getIdentify()==2){//这个用户已经是学者了
+        if(u.getIdentify()==1){//这个用户已经是学者了
             res.setCode(501);
             res.setMessage("已经是学者了");
             return res;
@@ -235,7 +235,6 @@ public class UserController {
     @PostMapping("/modifyUsername")
     public Response modifyUsername(@RequestParam("NewName")String name){
         User current_user = (User)SecurityUtils.getSubject().getPrincipal();
-        this.user_mapper.updateName(current_user.getUserID(), name);
         HashMap<String, Object> data = new HashMap<>();
         Response res = new Response(data);
         if(this.user_service.usernameUsed(name)){
@@ -243,6 +242,7 @@ public class UserController {
             res.setMessage("用户名重复了");
             return res;
         }
+        this.user_mapper.updateName(current_user.getUserID(), name);
         data.put("success", true);
         return res;
     }
@@ -285,7 +285,6 @@ public class UserController {
         return res;
     }
 
-    //TODO 根据发上来的
     @PostMapping("/link/modifyEmail")
     public Response linkModifyEmail(@RequestParam("Code")String code){
         HashMap<String,Object> data = new HashMap<>();
@@ -304,6 +303,27 @@ public class UserController {
 
     }
 
+    @PostMapping("/getScholarId")
+    public Response getScholarIdByUserId(@RequestParam("UserID")int user_id){
+        User u = this.user_mapper.getUserByID(user_id);
+        HashMap<String, Object> data = new HashMap<>();
+        Response res = new Response(data);
+        if(u==null){
+            res.setMessage("这个用户不存在");
+            res.setCode(500);
+        }
+        else{
+            if(u.getIdentify()!=1){
+                res.setMessage("他/她不是学者");
+                res.setCode(501);
+            }
+            else{
+                res.setMessage("找到了这个学者");
+                data.put("scholarId", this.scholar_mapper.selectByUID(user_id).getScholarid());
+            }
+        }
+        return res;
+    }
     //尝试进行jwt_user登录
     @PostMapping("/jwtLoginUserTest")
     @ResponseBody

@@ -15,7 +15,7 @@ public class JWTAdminFilter extends JWTBasicFilter{
             try{
                 boolean flag = this.executeLogin(request, response);
                 User current_user = (User) SecurityUtils.getSubject().getPrincipal();
-                if(!flag||current_user.getIdentify()>=2){
+                if(!flag||current_user.getIdentify()<2){
                     ((HttpServletResponse)response).sendRedirect("/user/unauthorized");
                     return false;
                 }
