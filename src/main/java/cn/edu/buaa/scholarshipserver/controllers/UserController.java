@@ -5,6 +5,7 @@ import cn.edu.buaa.scholarshipserver.dao.ScholarMapper;
 import cn.edu.buaa.scholarshipserver.dao.UserMapper;
 import cn.edu.buaa.scholarshipserver.models.Scholar;
 import cn.edu.buaa.scholarshipserver.models.User;
+import cn.edu.buaa.scholarshipserver.services.message.MessageService;
 import cn.edu.buaa.scholarshipserver.services.users.UserService;
 import cn.edu.buaa.scholarshipserver.utils.*;
 import io.swagger.annotations.Api;
@@ -39,6 +40,9 @@ public class UserController {
 
     @Autowired
     private ScholarDao scholar_dao;
+
+    @Autowired
+    private MessageService message_service;
 
     //判断这个用户名用过没有
     @PostMapping("/nameUsed")
@@ -168,12 +172,24 @@ public class UserController {
     }
 
     //TODO 接收前端上传的头像
-    @PostMapping("/receive/image")
-    public Response uploadAvatar(){
+    @PostMapping("/avatar")
+    public Response uploadAvatar(@RequestParam("Base64")String picture){
         HashMap<String, Object> data = new HashMap<>();
         Response res = new Response(data);
+        try{
+            String url = this.message_service.uploadImage(picture);
+            res.setMessage("头像上传成功");
+            User current_user = (User)SecurityUtils.getSubject().getPrincipal();
+            int current_uid = current_user.getUserID();
+            this.user_mapper.updateImagePath(current_uid, url);
+            data.put("url", url);
+        }catch(Exception e){
+            res.setCode(500);
+            res.setMessage("图片保存失败");
+        }
         return res;
     }
+
     @PostMapping("/getInfo")
     public Response giveInfo(){
         /*获取当前用户*/
@@ -186,6 +202,7 @@ public class UserController {
         data.put("isScholar", current_user.getIdentify()==1);
         return res;
     }
+
     //用户登录的地方
     @PostMapping("/login")
     public Response login(@RequestParam("Email") String email, @RequestParam("Password") String password, HttpServletResponse response){
