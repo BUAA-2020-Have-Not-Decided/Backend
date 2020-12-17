@@ -224,10 +224,12 @@ public class UserController {
         if(u == null){//用户不存在，500
             data.put("success", false);
             res.setCode(500);
+            res.setMessage("用户不存在");
         }
         else if(u.getPassword().compareTo(password)!=0){//密码错误，501
             data.put("success",false);
             res.setCode(501);
+            res.setMessage("密码错误");
         }
         else{//成功1001
             data.put("success", true);
@@ -239,6 +241,7 @@ public class UserController {
             response.setHeader("Authorization",jwt);
             response.setHeader("Access-Control-Expose-Headers", "Authorization");
             redis_util.setUserAndJWT(u, jwt);
+            res.setMessage("登陆成功");
         }
         return res;
     }
@@ -405,6 +408,7 @@ public class UserController {
     {
         return "登陆成功";
     }
+
     //用来显示没有权限
     @GetMapping("/unauthorized")
     @ResponseBody

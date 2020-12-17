@@ -69,6 +69,7 @@ public class ShiroConfig {
         filterRuleMap.put("/user/modifyPassword", "jwt_user");
         filterRuleMap.put("/user/modifyUsername", "jwt_user");
         filterRuleMap.put("/user/modifyEmail", "jwt_user");
+        filterRuleMap.put("/user/avatar", "jwt_user");
 
         /*消息系统的过滤器*/
 
