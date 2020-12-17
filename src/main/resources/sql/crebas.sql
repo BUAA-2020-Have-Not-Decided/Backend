@@ -148,6 +148,7 @@ create table Institution
 create table Message
 (
    MessageId            int not null auto_increment,
+   DataScholarId        bigint,
    PaperId              bigint,
    PatentId             bigint,
    ProjectId            bigint,
@@ -407,15 +408,6 @@ alter table Collect_Project add constraint FK_Collect_Project foreign key (Proje
 
 alter table Collect_Project add constraint FK_Collect_Project2 foreign key (WatcherID)
       references User (UserID) on delete restrict on update restrict;
-
-alter table Message add constraint FK_MsgPaper foreign key (PaperId)
-      references Paper (PaperId) on delete restrict on update restrict;
-
-alter table Message add constraint FK_MsgPatent foreign key (PatentId)
-      references Patent (PatentId) on delete restrict on update restrict;
-
-alter table Message add constraint FK_MsgProject foreign key (ProjectId)
-      references Project (ProjectId) on delete restrict on update restrict;
 
 alter table Message add constraint FK_MsgReceiver foreign key (ReceiverUserID)
       references User (UserID) on delete restrict on update restrict;

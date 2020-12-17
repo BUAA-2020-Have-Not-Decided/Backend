@@ -4,7 +4,6 @@ import cn.edu.buaa.scholarshipserver.services.message.MessageService;
 import cn.edu.buaa.scholarshipserver.utils.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/message")
@@ -45,17 +44,17 @@ public class MessageController {
 
     @PostMapping("/appeal/one")
     public ResponseEntity<Response> makeAppeal(Integer userId,
-                                               Long scholarshipId,
-                                               String scholarshipType,
+                                               Long towardsId,
+                                               String towardsType,
                                                String complaintMaterial,
                                                String messageTitle,
                                                String messageContent) {
-        return messageService.makeAppeal(userId, scholarshipId, scholarshipType, complaintMaterial, messageTitle, messageContent);
+        return messageService.makeAppeal(userId, towardsId, towardsType, complaintMaterial, messageTitle, messageContent);
     }
 
     @GetMapping("/appeal/all")
-    public ResponseEntity<Response> getAppeals() {
-        return messageService.getAppeals();
+    public ResponseEntity<Response> getAppeals(String type) {
+        return messageService.getAppeals(type);
     }
 
     @PutMapping("/appeal/one")
