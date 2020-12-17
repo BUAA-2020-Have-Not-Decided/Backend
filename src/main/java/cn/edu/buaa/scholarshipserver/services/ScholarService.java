@@ -211,7 +211,7 @@ public class ScholarService {
     public ResponseEntity<Response> PostScholar_DataScholar (Map < String, Object > params){
         DataScholar dataScholar = dataScholarMethod.getDataScholarByAuthorId((Long)params.get("authorId"));
         if (dataScholar != null) {
-            if (dataScholar.getScholarId() == null) {
+            if (dataScholar.getScholarId() == -1) {
                 Scholar scholar = scholarDao.findByScholarId((int)params.get("scholarId"));
                 if(scholar!=null){
                     if(scholar.getHIndex()<dataScholar.getHIndex()){
