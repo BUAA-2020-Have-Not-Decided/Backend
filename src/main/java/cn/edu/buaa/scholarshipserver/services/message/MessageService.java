@@ -33,7 +33,7 @@ public class MessageService {
                                                     String messageContent,
                                                     Integer sender_userid,
                                                     Integer receiver_userid) {
-        Message newMessage = new Message(null, null, null, null, null, sender_userid, receiver_userid, messageTitle, messageContent, 0, new Date(), 1);
+        Message newMessage = new Message(null, null, null, null, null, null, sender_userid, receiver_userid, messageTitle, messageContent, 0, new Date(), 1);
         try {
             messageMapper.insertSelective(newMessage);
             return ResponseEntity.ok(new Response("message sent", ""));
@@ -84,22 +84,25 @@ public class MessageService {
     }
 
     public ResponseEntity<Response> makeAppeal(Integer userId,
-                                               Long scholarshipId,
-                                               String scholarshipType,
+                                               Long towardsId,
+                                               String towardsType,
                                                String complaintMaterial,
                                                String messageTitle,
                                                String messageContent) {
         try {
-            Message newMessage = new Message(null, null, null, null, null, userId, 0, messageTitle, messageContent, 0, new Date(), 2);
-            switch (scholarshipType) {
+            Message newMessage = new Message(null, null, null, null, null, null, userId, 0, messageTitle, messageContent, 0, new Date(), 2);
+            switch (towardsType) {
+                case "dataScholar":
+                    newMessage.setDataScholarId(towardsId);
+                    break;
                 case "paper":
-                    newMessage.setPaperid(scholarshipId);
+                    newMessage.setPaperid(towardsId);
                     break;
                 case "patent":
-                    newMessage.setPatentid(scholarshipId);
+                    newMessage.setPatentid(towardsId);
                     break;
                 case "project":
-                    newMessage.setProjectid(scholarshipId);
+                    newMessage.setProjectid(towardsId);
                     break;
                 default:
                     return ResponseEntity.ok(new Response(400, "wrong scholarship type", ""));
@@ -116,6 +119,8 @@ public class MessageService {
             messageMapper.insertSelective(newMessage);
             return ResponseEntity.ok(new Response("done", ""));
         } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
             return ResponseEntity.ok(new Response(500, "something's wrong", ""));
         }
     }
@@ -172,10 +177,19 @@ public class MessageService {
         }
     }
 
-    public ResponseEntity<Response> getAppeals() {
+    public ResponseEntity<Response> getAppeals(String type) {
         try {
             List<Message> appeals = messageMapper.findByReceiverUserId(0);
             appeals.removeIf(message -> message.getMsgstatus() == 2);
+            if ("dataScholar".equals(type)) {
+                appeals.removeIf(message -> message.getDataScholarId() == null);
+            }
+            else if ("scholarship".equals(type)) {
+                appeals.removeIf(message -> message.getDataScholarId() != null);
+            }
+            else {
+                return ResponseEntity.ok(new Response(400, "wrong type given", ""));
+            }
             return ResponseEntity.ok(new Response(appeals));
         } catch (Exception e) {
             return ResponseEntity.ok(new Response(500, "something's wrong", ""));
