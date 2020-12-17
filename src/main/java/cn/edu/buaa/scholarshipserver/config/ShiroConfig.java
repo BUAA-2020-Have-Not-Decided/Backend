@@ -73,6 +73,8 @@ public class ShiroConfig {
         filterRuleMap.put("/scholarship/getProjectById/**","anon");
         filterRuleMap.put("/scholarship/advancedSearchProject","anon");
         filterRuleMap.put("/scholarship/advancedSearchProjectSortByDate","anon");
+        filterRuleMap.put("/scholarship/claimProject/**","jwt_user");
+        filterRuleMap.put("/scholarship/backClaimProject/**","jwt_user");
 
         filterRuleMap.put("/scholarship/getPaperByPaperId/**","anon");
         filterRuleMap.put("/scholarship/advancedSearchPaper","anon");
