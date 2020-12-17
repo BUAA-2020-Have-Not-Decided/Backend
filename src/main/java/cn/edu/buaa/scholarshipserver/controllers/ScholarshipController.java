@@ -217,6 +217,9 @@ public class ScholarshipController {
             return ResponseEntity.ok(new Response(4001,"你还未认证成为学者！",400));
         }
         Patent patent = patentService.getPatentByPatentId(patentId);
+        if(patentService.getPatentNowClaimNumber(patent)>=patentService.getPatentMaxClaimNumber(patent)){
+            return ResponseEntity.ok(new Response(4005,"认领人数已满！",400));
+        }
 
         long patentid = patent.getId();
         int scholarid = scholar.getScholarid();
@@ -262,6 +265,11 @@ public class ScholarshipController {
             return ResponseEntity.ok(new Response(4001,"你还未认证成为学者！",400));
         }
         Project project = projectService.getTheProjectById(projectId);
+
+        if(patentService.getProjectNowClaimNumber(project)>=patentService.getProjectMaxClaimNumber(project)){
+            return ResponseEntity.ok(new Response(4005,"认领人数已满！",400));
+        }
+
 
         long projectid = project.getProjectId();
         int scholarid = scholar.getScholarid();

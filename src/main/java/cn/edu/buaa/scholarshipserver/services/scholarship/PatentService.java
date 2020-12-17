@@ -5,6 +5,7 @@ import cn.edu.buaa.scholarshipserver.es.DataScholar;
 import cn.edu.buaa.scholarshipserver.es.Patent;
 import cn.edu.buaa.scholarshipserver.es.Patent_Scholar;
 import cn.edu.buaa.scholarshipserver.es.Project_Scholar;
+import cn.edu.buaa.scholarshipserver.models.Project;
 import cn.edu.buaa.scholarshipserver.models.Scholar;
 import cn.edu.buaa.scholarshipserver.utils.Response;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -263,6 +264,26 @@ public class PatentService {
                 whoClaimItList.add(scholar);
         }
         return whoClaimItList;
+    }
+
+    public int getProjectMaxClaimNumber(Project project){
+        String authors = project.getAuthors();
+        String[] authorNumber1 = authors.split(";");
+        String[] authorNumber2 = authors.split("，");
+        return Math.max(authorNumber1.length,authorNumber2.length);
+    }
+
+    public int getProjectNowClaimNumber(Project project){
+        return getWhoClaimProjectList(project.getProjectId()).size();
+    }
+
+    public int getPatentMaxClaimNumber(Patent patent){
+        String authors = patent.getInventor();
+        String[] authorNumber = authors.split(";");
+        return authorNumber.length;
+    }
+    public int getPatentNowClaimNumber(Patent patent){
+        return getWhoClaimPatentList(patent.getId()).size();
     }
 
 }
