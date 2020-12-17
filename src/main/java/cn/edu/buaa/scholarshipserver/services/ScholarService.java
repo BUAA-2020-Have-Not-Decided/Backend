@@ -215,7 +215,7 @@ public class ScholarService {
             if (dataScholar.getScholarId() == -1) {
                 Scholar scholar = scholarDao.findByScholarId((int)params.get("scholarId"));
                 if(scholar!=null){
-                    if(scholar.getHIndex()<dataScholar.getHIndex()){
+                    if(scholar.getHIndex()==null || scholar.getHIndex()<dataScholar.getHIndex()){
                         scholar.setHIndex(dataScholar.getHIndex());
                         scholarMethod.updateScholar(scholar);
                     }
@@ -223,6 +223,7 @@ public class ScholarService {
                 else return ResponseEntity.ok(new Response(400, "学者id不存在", ""));
                 dataScholar.setScholarId((Integer) params.get("scholarId"));
                 dataScholarMethod.updateDataScholar(dataScholar);
+
                 return ResponseEntity.ok(new Response(1001, "success", ""));
             } else {
                 return ResponseEntity.ok(new Response(400, "关系已添加", ""));
