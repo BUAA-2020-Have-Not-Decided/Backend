@@ -157,6 +157,8 @@ public class UserController {
             ss.setEnglishName(s.getEnglishname());
             ss.setScholarId(s.getScholarid());
             this.scholar_dao.save(ss);
+            int uid = s.getUid();
+            this.user_mapper.updateIdentify(uid, 1);
             res.setMessage("认证学者成功");
         }catch(Exception e){
             res.setCode(500);
@@ -165,6 +167,13 @@ public class UserController {
         return res;
     }
 
+    //TODO 接收前端上传的头像
+    @PostMapping("/receive/image")
+    public Response uploadAvatar(){
+        HashMap<String, Object> data = new HashMap<>();
+        Response res = new Response(data);
+        return res;
+    }
     @PostMapping("/getInfo")
     public Response giveInfo(){
         /*获取当前用户*/
