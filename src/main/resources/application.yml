@@ -13,6 +13,7 @@ spring:
     host: smtp.126.com
     username: notdecidedyet@126.com
     password: OGRFFURPYTUANFDF
+    nickname: 邓涵之
     spring.mail.smtp.ssl.enable: true
     port: 465
   http:

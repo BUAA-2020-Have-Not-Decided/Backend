@@ -263,6 +263,19 @@ public class ScholarService {
             if (dataScholar.getScholarId().equals((Integer) params.get("scholarId"))) {
                 dataScholar.setScholarId(-1);
                 dataScholarMethod.updateDataScholar(dataScholar);
+                int maxHIndex=0;
+                Scholar scholar = scholarMethod.getScholarById((Integer) params.get("scholarId"));
+                if(scholar!=null) {
+                    List<DataScholar> dataScholars = dataScholarMethod.getDataScholarByScholarId((Integer) params.get("scholarId"));
+                    if (dataScholars != null) {
+                        for (DataScholar dataScholar1 : dataScholars) {
+                            maxHIndex = maxHIndex < dataScholar1.getHIndex() ? dataScholar1.getHIndex() : maxHIndex;
+                        }
+                    }
+                    scholar.setHIndex(maxHIndex);
+                    scholarMethod.updateScholar(scholar);
+                }
+                else return ResponseEntity.ok(new Response(400, "学者id不存在", ""));
                 return ResponseEntity.ok(new Response(1001, "success", ""));
             } else {
                 return ResponseEntity.ok(new Response(400, "关系不存在", ""));
@@ -338,6 +351,7 @@ public class ScholarService {
     }
 
     public ResponseEntity<Response> Search (String ScholarName, String Institution,Integer OrderType,Integer pageNumber){
+        pageNumber-=1;
         Map<String, Object> res = new HashMap<String, Object>();
         List<Scholar> scholars;
         AtomicInteger totalPage = new AtomicInteger();
@@ -380,6 +394,7 @@ public class ScholarService {
         return ResponseEntity.ok(new Response(1001,res));
     }
     public ResponseEntity<Response> SearchDataScholar (String ScholarName,Integer OrderType,Integer pageNumber){
+        pageNumber-=1;
         Map<String, Object> res = new HashMap<String, Object>();
         List<DataScholar> dataScholars;
         AtomicInteger totalPage = new AtomicInteger();
@@ -402,7 +417,7 @@ public class ScholarService {
                 ins.put("institution",institution.getInstitutionName());
             }
             else {
-                ins.put("institution","null");
+                ins.put("institution","");
             }
             DS.add(ins);
         }

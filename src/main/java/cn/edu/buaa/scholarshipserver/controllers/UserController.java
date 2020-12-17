@@ -1,5 +1,6 @@
 package cn.edu.buaa.scholarshipserver.controllers;
 
+import cn.edu.buaa.scholarshipserver.dao.ScholarDao;
 import cn.edu.buaa.scholarshipserver.dao.ScholarMapper;
 import cn.edu.buaa.scholarshipserver.dao.UserMapper;
 import cn.edu.buaa.scholarshipserver.models.Scholar;
@@ -35,6 +36,9 @@ public class UserController {
 
     @Autowired
     private ScholarMapper scholar_mapper;
+
+    @Autowired
+    private ScholarDao scholar_dao;
 
     //判断这个用户名用过没有
     @PostMapping("/nameUsed")
@@ -89,7 +93,7 @@ public class UserController {
         else{
             try{
                 String code = digest_util.getRandMD5Code(email);
-                email_sender.sendEmail("点击链接完成用户激活", email, "/#/user/verify/",code);
+                email_sender.sendEmail("点击链接完成用户激活", email, "/#/user/verify/",code, "用户激活确认");
                 user_service.register(username, password, email, code);
                 res.setMessage(String.format("验证链接已发送到%s，链接10分钟内有效", email));
                 res.setCode(1001);
@@ -146,6 +150,12 @@ public class UserController {
         try{
             Scholar s = this.redis_util.getScholarByCode(code);
             this.scholar_mapper.insert(s);
+            cn.edu.buaa.scholarshipserver.es.Scholar ss = new cn.edu.buaa.scholarshipserver.es.Scholar();
+            ss.setEmail(s.getEmail());
+            ss.setName(s.getName());
+            ss.setEnglishName(s.getEnglishname());
+            ss.setScholarId(s.getScholarid());
+            this.scholar_dao.save(ss);
             res.setMessage("认证学者成功");
         }catch(Exception e){
             res.setCode(500);
@@ -210,6 +220,12 @@ public class UserController {
             this.user_mapper.updateIdentify(u.getUserID(), 1);
             res.setMessage("认证成功");
             res.setCode(1002);
+            cn.edu.buaa.scholarshipserver.es.Scholar ss = new cn.edu.buaa.scholarshipserver.es.Scholar();
+            ss.setScholarId(s.getScholarid());
+            ss.setName(s.getName());
+            ss.setEnglishName(s.getEnglishname());
+            ss.setEmail(s.getEmail());
+            this.scholar_dao.save(ss);
             return res;
         }
         else if(this.user_service.emailUsed(email)){
@@ -220,7 +236,7 @@ public class UserController {
         else{//如果不一样，那就发送邮件，并且把相关的东西存在redis中
             try{
                 String rand_code = this.digest_util.getRandMD5Code(email);
-                this.email_sender.sendEmail("点击链接完成学者认证", email, "/#/user/scholarVerify/",rand_code);
+                this.email_sender.sendEmail("点击链接完成学者认证", email, "/#/user/scholarVerify/",rand_code, "学着认证邮箱验证");
                 this.redis_util.setScholarAndCode(s, rand_code);
                 res.setMessage(String.format("验证邮件已发送到%s，连接在10分钟内有效", email));
                 return res;
@@ -276,7 +292,7 @@ public class UserController {
             return res;
         }
         try{
-            this.email_sender.sendEmail("点击这个链接完成邮箱修改", email, "/user/link/modifyEmail/", code);
+            this.email_sender.sendEmail("点击这个链接完成邮箱修改", email, "/#/user/link/modifyEmail/", code,"修改邮箱验证");
             this.redis_util.setUserAndCode(current_user, code);
         }catch(Exception e){
             res.setMessage("邮件发送失败");
@@ -324,6 +340,7 @@ public class UserController {
         }
         return res;
     }
+
     //尝试进行jwt_user登录
     @PostMapping("/jwtLoginUserTest")
     @ResponseBody

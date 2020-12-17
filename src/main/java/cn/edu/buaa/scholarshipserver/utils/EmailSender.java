@@ -17,7 +17,7 @@ public class EmailSender {
     String address;
     @Resource
     JavaMailSenderImpl JavaMailSender;
-    public void sendEmail(String msg, String receiver, String suffix, String code)throws MessagingException {
+    public void sendEmail(String msg, String receiver, String suffix, String code, String title)throws MessagingException {
         MimeMessage message = JavaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message,true);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -26,7 +26,7 @@ public class EmailSender {
                 +"激活链接将在"+df.format(new Date(new Date().getTime()+(long)10*60*1000))+"失效";
         helper.setFrom("notdecidedyet@126.com");
         helper.setTo(receiver);
-        helper.setSubject("Register Confirm from Not Decided Yet");
+        helper.setSubject(title);
         helper.setText(text);
         JavaMailSender.send(message);
     }
