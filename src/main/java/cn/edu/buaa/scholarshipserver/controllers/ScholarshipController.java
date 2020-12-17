@@ -19,10 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 @RestController
 @RequestMapping("/scholarship")
@@ -390,4 +387,28 @@ public class ScholarshipController {
         return patentService.getWhoClaimIt(type,scholarShipId);
     }
 
+    @GetMapping("/getClaimNumber/{type}/{scholarShipId}")
+    @ApiOperation(notes = "检测认领者是否超过数量",value = "检测认领者是否超过数量")
+    public  ResponseEntity<Response> getClaimNumber(@PathVariable("type") String type,
+                                                    @PathVariable("scholarShipId") String scholarShipId) {
+        HashMap<String,Object> responseMap = new HashMap<>();
+        int nowClaimNumber;
+        int maxClaimNumber;
+        if(type.equals("1")) {
+            Project project = projectService.getTheProjectById(scholarShipId);
+            nowClaimNumber = patentService.getProjectNowClaimNumber(project);
+            maxClaimNumber = patentService.getProjectMaxClaimNumber(project);
+
+        }else if(type.equals("2")){
+            Patent patent = patentService.getPatentByPatentId(scholarShipId);
+            nowClaimNumber = patentService.getPatentNowClaimNumber(patent);
+            maxClaimNumber = patentService.getPatentMaxClaimNumber(patent);
+        }else{
+            return ResponseEntity.ok(new Response(400,"学术成果类型不正确！",400));
+        }
+        responseMap.put("nowClaimNumber",nowClaimNumber);
+        responseMap.put("maxClaimNumber",maxClaimNumber);
+        responseMap.put("canClaim",nowClaimNumber<maxClaimNumber);
+        return ResponseEntity.ok(new Response(responseMap));
+    }
 }
