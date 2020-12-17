@@ -362,7 +362,7 @@ public class ScholarService {
                         Map<String,String> fieldIns = new HashMap<String,String>();
                         Fields fields = fieldDao.findByFieldsId(article_field.getFieldsId());
                         fieldIns.put("FieldsId",String.valueOf(fields.getFieldsId()));
-                        fieldIns.put("FieldName",fields.getNormalizedName());
+                        fieldIns.put("FieldName",fields.getDisplayName());
                         fieldsIns.add(fieldIns);
                     }
                 }

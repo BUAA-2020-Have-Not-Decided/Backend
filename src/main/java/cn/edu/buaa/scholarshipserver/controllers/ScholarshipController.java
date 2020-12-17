@@ -35,6 +35,7 @@ public class ScholarshipController {
     @Autowired
     private PatentService patentService;
 
+    @Autowired
     private FieldService fieldService;
 
     @GetMapping("/getProjectById/{projectId}")
