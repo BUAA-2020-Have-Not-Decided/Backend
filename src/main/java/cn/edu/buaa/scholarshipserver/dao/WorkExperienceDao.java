@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface WorkExperienceDao extends ElasticsearchRepository<WorkExperience,Long> {
         public List<WorkExperience> findByScholarId(Integer scholarId);
+        public WorkExperience findByScholarIdAndAndIntroductionAndOrganizationAndYearStartAndYearEnd(Integer scholarId,String introduction,String organization,Integer yearStart,Integer yearEnd);
 }

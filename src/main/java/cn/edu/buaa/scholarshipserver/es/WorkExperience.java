@@ -14,6 +14,8 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 public class WorkExperience  {
         @Id
         @Field(type = FieldType.Auto)
+        private String id;
+        @Field(type = FieldType.Auto)
         private Integer scholarId;
         @Field(type = FieldType.Auto)
         private String  introduction;
