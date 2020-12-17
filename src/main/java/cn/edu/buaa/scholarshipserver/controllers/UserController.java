@@ -150,6 +150,7 @@ public class UserController {
         try{
             Scholar s = this.redis_util.getScholarByCode(code);
             this.scholar_mapper.insert(s);
+            s = this.scholar_mapper.selectByEmail(s.getEmail());
             cn.edu.buaa.scholarshipserver.es.Scholar ss = new cn.edu.buaa.scholarshipserver.es.Scholar();
             ss.setEmail(s.getEmail());
             ss.setName(s.getName());
@@ -217,6 +218,7 @@ public class UserController {
         }
         if(u.getEmail().compareTo(s.getEmail())==0){//如果学者的邮箱和用户一样，那就直接搞定
             this.scholar_mapper.insert(s);
+            s = this.scholar_mapper.selectByUID(u.getUserID());
             this.user_mapper.updateIdentify(u.getUserID(), 1);
             res.setMessage("认证成功");
             res.setCode(1002);
@@ -225,6 +227,7 @@ public class UserController {
             ss.setName(s.getName());
             ss.setEnglishName(s.getEnglishname());
             ss.setEmail(s.getEmail());
+            System.out.println(ss);
             this.scholar_dao.save(ss);
             return res;
         }
