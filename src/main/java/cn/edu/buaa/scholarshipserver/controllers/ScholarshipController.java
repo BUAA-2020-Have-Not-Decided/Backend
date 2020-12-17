@@ -246,6 +246,7 @@ public class ScholarshipController {
     }
 
     @GetMapping("/hotFields")
+    @ApiOperation(notes = "查看热门领域", value = "查看热门领域")
     public ResponseEntity<Response> getHotFields() {
         return fieldService.getHotFields();
     }
