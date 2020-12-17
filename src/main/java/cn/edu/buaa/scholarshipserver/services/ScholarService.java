@@ -145,6 +145,12 @@ public class ScholarService {
             List<Paper>paperList = new ArrayList<>(paperSet);
             responseMap.put("paperNum",paperList.size());
             responseMap.put("paper",paperList);
+            if(dataScholar.getLastKnownAffiliationId()==-1L){
+                responseMap.put("institution","");
+            }
+            else{
+                responseMap.put("institution",institutionDao.findByInstitutionId(dataScholar.getLastKnownAffiliationId()).getInstitutionName());
+            }
             return ResponseEntity.ok(new Response(responseMap));
     }
 
@@ -195,7 +201,15 @@ public class ScholarService {
                 tem.add(dataScholar);
             }
         }
+        List<String>institutionList = new ArrayList<>();
+        for(DataScholar dataScholar:tem){
+            if(dataScholar.getLastKnownAffiliationId()==-1L)
+                institutionList.add("");
+            else
+                institutionList.add(institutionDao.findByInstitutionId(dataScholar.getLastKnownAffiliationId()).getInstitutionName());
+        }
         tem1.put("dataScholar",tem);
+        tem1.put("institution",institutionList);
         return ResponseEntity.ok(new Response(tem1));
     }
 
