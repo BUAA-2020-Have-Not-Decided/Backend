@@ -5,6 +5,7 @@ import cn.edu.buaa.scholarshipserver.dao.ScholarMapper;
 import cn.edu.buaa.scholarshipserver.dao.UserMapper;
 import cn.edu.buaa.scholarshipserver.models.Scholar;
 import cn.edu.buaa.scholarshipserver.models.User;
+import cn.edu.buaa.scholarshipserver.services.message.MessageService;
 import cn.edu.buaa.scholarshipserver.services.users.UserService;
 import cn.edu.buaa.scholarshipserver.utils.*;
 import io.swagger.annotations.Api;
@@ -39,6 +40,9 @@ public class UserController {
 
     @Autowired
     private ScholarDao scholar_dao;
+
+    @Autowired
+    private MessageService message_service;
 
     //判断这个用户名用过没有
     @PostMapping("/nameUsed")
@@ -150,16 +154,38 @@ public class UserController {
         try{
             Scholar s = this.redis_util.getScholarByCode(code);
             this.scholar_mapper.insert(s);
+            s = this.scholar_mapper.selectByEmail(s.getEmail());
             cn.edu.buaa.scholarshipserver.es.Scholar ss = new cn.edu.buaa.scholarshipserver.es.Scholar();
             ss.setEmail(s.getEmail());
             ss.setName(s.getName());
             ss.setEnglishName(s.getEnglishname());
             ss.setScholarId(s.getScholarid());
             this.scholar_dao.save(ss);
+            int uid = s.getUid();
+            this.user_mapper.updateIdentify(uid, 1);
             res.setMessage("认证学者成功");
         }catch(Exception e){
             res.setCode(500);
             res.setMessage("服务器有点问题");
+        }
+        return res;
+    }
+
+    //TODO 接收前端上传的头像
+    @PostMapping("/avatar")
+    public Response uploadAvatar(@RequestParam("Base64")String picture){
+        HashMap<String, Object> data = new HashMap<>();
+        Response res = new Response(data);
+        try{
+            String url = this.message_service.uploadImage(picture);
+            res.setMessage("头像上传成功");
+            User current_user = (User)SecurityUtils.getSubject().getPrincipal();
+            int current_uid = current_user.getUserID();
+            this.user_mapper.updateImagePath(current_uid, url);
+            data.put("url", url);
+        }catch(Exception e){
+            res.setCode(500);
+            res.setMessage("图片保存失败");
         }
         return res;
     }
@@ -176,6 +202,7 @@ public class UserController {
         data.put("isScholar", current_user.getIdentify()==1);
         return res;
     }
+
     //用户登录的地方
     @PostMapping("/login")
     public Response login(@RequestParam("Email") String email, @RequestParam("Password") String password, HttpServletResponse response){
@@ -217,6 +244,7 @@ public class UserController {
         }
         if(u.getEmail().compareTo(s.getEmail())==0){//如果学者的邮箱和用户一样，那就直接搞定
             this.scholar_mapper.insert(s);
+            s = this.scholar_mapper.selectByUID(u.getUserID());
             this.user_mapper.updateIdentify(u.getUserID(), 1);
             res.setMessage("认证成功");
             res.setCode(1002);
@@ -225,6 +253,7 @@ public class UserController {
             ss.setName(s.getName());
             ss.setEnglishName(s.getEnglishname());
             ss.setEmail(s.getEmail());
+            System.out.println(ss);
             this.scholar_dao.save(ss);
             return res;
         }
