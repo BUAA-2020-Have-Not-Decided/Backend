@@ -56,10 +56,7 @@ public class ScholarService {
 
     public ResponseEntity<Response> GetScholar(Integer uid,Integer id) {
         Map<String, Object> responseMap = new TreeMap<>();
-        User u = (User) SecurityUtils.getSubject().getPrincipal();
-        if(!u.getUserID().equals(uid)){
-            return ResponseEntity.ok(new Response(405,"Method Not Allowed",""));
-        }
+        
         //获取学者门户相关信息
         Scholar scholar = scholarMethod.getScholarById(id);
         if(scholar == null){
