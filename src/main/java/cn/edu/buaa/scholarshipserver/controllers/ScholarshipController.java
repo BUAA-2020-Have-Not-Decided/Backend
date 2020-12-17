@@ -224,7 +224,6 @@ public class ScholarshipController {
     @ApiOperation(notes = "退领专利", value = "退领专利")
     public ResponseEntity<Response> backClaimPatent(@PathVariable("patentId")String patentId) {
         User u = (User) SecurityUtils.getSubject().getPrincipal();
-        System.out.println("===="+u.getUserID());
         Scholar scholar = patentService.getScholarByUserId(u.getUserID());
         if(scholar==null){
             return ResponseEntity.ok(new Response(4001,"你还未认证成为学者！",400));
@@ -337,6 +336,35 @@ public class ScholarshipController {
         }
         projectService.deleteProjectPossess(scholarid,projectid);
         return ResponseEntity.ok(new Response("认领成功！"));
+    }
+
+
+    @GetMapping("/getHaveClaim/{type}/{scholarShipId}")
+    @ApiOperation(notes = "查看是否已经认领", value = "查看是否已经认领")
+    public ResponseEntity<Response> getHaveClaim(@PathVariable("type")String type,
+                                                 @PathVariable("scholarShipId")String scholarShipId) {
+        User u = (User) SecurityUtils.getSubject().getPrincipal();
+        if(u==null){
+            return ResponseEntity.ok(new Response(4000,"用户未登录！",400));
+        }
+        Scholar scholar = patentService.getScholarByUserId(u.getUserID());
+        if(scholar==null){
+            return ResponseEntity.ok(new Response(4001,"你还未认证成为学者！",400));
+        }
+        int scholarid = scholar.getScholarid();
+        boolean haveClaim = false;
+        if(type.equals("1")) {
+            int projectid = Integer.parseInt(scholarShipId);
+            haveClaim = projectService.haveClaimProject(scholarid,projectid);
+        }else if(type.equals("2")){
+            int patentid = Integer.parseInt(scholarShipId);
+            haveClaim = patentService.haveClaimPatent(scholarid,patentid);
+        }else{
+            return ResponseEntity.ok(new Response(400,"学术成果类型不正确！",400));
+        }
+        Map<String, Object> responseMap = new TreeMap<>();
+        responseMap.put("haveClaim",haveClaim);
+        return ResponseEntity.ok(new Response(responseMap));
     }
 
 }
