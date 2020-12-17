@@ -238,31 +238,71 @@ public class UserController {
         this.user_mapper.updateName(current_user.getUserID(), name);
         HashMap<String, Object> data = new HashMap<>();
         Response res = new Response(data);
+        if(this.user_service.usernameUsed(name)){
+            res.setCode(500);
+            res.setMessage("用户名重复了");
+            return res;
+        }
         data.put("success", true);
         return res;
     }
 
     @PostMapping("/modifyPassword")
-    public Response modifyPassword(@RequestParam("NewPassword") String new_password){
+    public Response modifyPassword(@RequestParam("NewPassword") String new_password, @RequestParam("OldPassword")String old_password){
         User current_user = (User)SecurityUtils.getSubject().getPrincipal();
-        this.user_mapper.updatePassword(current_user.getUserID(), new_password);
+
         HashMap<String, Object> data = new HashMap<>();
         Response res = new Response(data);
+        if(current_user.getPassword().compareTo(old_password)!=0){
+            res.setCode(500);
+            res.setMessage("密码有误");
+            return res;
+        }
+        this.user_mapper.updatePassword(current_user.getUserID(), new_password);
         data.put("success", true);
         return res;
     }
 
-    //TODO 根据jwt修改邮箱
-    /*@PostMapping("/modifyEmail")
-    public Response modifyEmail(@RequestParam("Email")String emails){
-
+    @PostMapping("/modifyEmail")
+    public Response modifyEmail(@RequestParam("Email")String email){
+        User current_user = (User)SecurityUtils.getSubject().getPrincipal();
+        current_user.setEmail(email);
+        String code = this.digest_util.getRandMD5Code(email);
+        HashMap<String, Object> data = new HashMap<>();
+        Response res = new Response(data);
+        if(this.user_service.emailUsed(email)){
+            res.setMessage("这个邮箱被用过了");
+            res.setCode(501);
+            return res;
+        }
+        try{
+            this.email_sender.sendEmail("点击这个链接完成邮箱修改", email, "/user/link/modifyEmail/", code);
+            this.redis_util.setUserAndCode(current_user, code);
+        }catch(Exception e){
+            res.setMessage("邮件发送失败");
+            res.setCode(500);
+        }
+        return res;
     }
 
     //TODO 根据发上来的
     @PostMapping("/link/modifyEmail")
     public Response linkModifyEmail(@RequestParam("Code")String code){
+        HashMap<String,Object> data = new HashMap<>();
+        Response res = new Response(data);
+        User modified = this.redis_util.getUserByString(code);
+        this.redis_util.removeItemByKey(code);
+        if(this.user_service.emailUsed(modified.getEmail())){
+            res.setCode(500);
+            res.setMessage("修改错误");
+        }
+        else{
+            this.user_mapper.updateEmail(modified.getUserID(), modified.getEmail());
+            res.setMessage("邮箱修改成功");
+        }
+        return res;
 
-    }*/
+    }
 
     //尝试进行jwt_user登录
     @PostMapping("/jwtLoginUserTest")
