@@ -228,13 +228,15 @@ public class ScholarService {
         if (dataScholar != null) {
             if (dataScholar.getScholarId() == -1) {
                 Scholar scholar = scholarDao.findByScholarId((int)params.get("scholarId"));
+
                 if(scholar!=null){
-                    if(scholar.getHIndex()==null || scholar.getHIndex()<dataScholar.getHIndex()){
+                    if(null == scholar.getHIndex() || scholar.getHIndex()<dataScholar.getHIndex()){
                         scholar.setHIndex(dataScholar.getHIndex());
                         scholarMethod.updateScholar(scholar);
                     }
                 }
-                else return ResponseEntity.ok(new Response(400, "学者id不存在", ""));
+                else
+                    return ResponseEntity.ok(new Response(400, "学者id不存在", ""));
                 dataScholar.setScholarId((Integer) params.get("scholarId"));
                 dataScholarMethod.updateDataScholar(dataScholar);
 
