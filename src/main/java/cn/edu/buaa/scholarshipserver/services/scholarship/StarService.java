@@ -59,19 +59,6 @@ public class StarService {
         }
     }
 
-    public ResponseEntity<Response> getStarStatusRes (Integer userId, Long paperId, Integer type) {
-        int code = getStarStatus(userId, paperId, type);
-        switch (code) {
-            case 0: return ResponseEntity.ok(new Response("已收藏该文献", 0));
-            case 1: return ResponseEntity.ok(new Response(404, "未收藏该文献！", 0));
-            case 2: return ResponseEntity.ok(new Response("已收藏该专利", 0));
-            case 3: return ResponseEntity.ok(new Response(404, "未收藏该专利！", 0));
-            case 4: return ResponseEntity.ok(new Response("已收藏该项目", 0));
-            case 5: return ResponseEntity.ok(new Response(404, "未收藏该项目！", 0));
-            default: return ResponseEntity.ok(new Response(400, "type的值只能为0,1,2！", 0));
-        }
-    }
-
     public ResponseEntity<Response> changeStarStatus (Integer userId, Long paperId, Integer type) {
         int code = getStarStatus(userId, paperId, type);
         int status;

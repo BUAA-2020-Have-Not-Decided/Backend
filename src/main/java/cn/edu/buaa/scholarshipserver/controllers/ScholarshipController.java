@@ -6,10 +6,7 @@ import cn.edu.buaa.scholarshipserver.es.Patent;
 import cn.edu.buaa.scholarshipserver.models.Project;
 import cn.edu.buaa.scholarshipserver.models.Scholar;
 import cn.edu.buaa.scholarshipserver.models.User;
-import cn.edu.buaa.scholarshipserver.services.scholarship.FieldService;
-import cn.edu.buaa.scholarshipserver.services.scholarship.PaperService;
-import cn.edu.buaa.scholarshipserver.services.scholarship.PatentService;
-import cn.edu.buaa.scholarshipserver.services.scholarship.ProjectService;
+import cn.edu.buaa.scholarshipserver.services.scholarship.*;
 import cn.edu.buaa.scholarshipserver.utils.Response;
 import io.swagger.annotations.*;
 import org.apache.shiro.SecurityUtils;
@@ -37,6 +34,9 @@ public class ScholarshipController {
 
     @Autowired
     private FieldService fieldService;
+
+    @Autowired
+    private StarService starService;
 
     @GetMapping("/getProjectById/{projectId}")
     @ApiOperation(notes = "查看项目内容", value = "查看项目内容")
@@ -366,6 +366,60 @@ public class ScholarshipController {
         Map<String, Object> responseMap = new TreeMap<>();
         responseMap.put("haveClaim",haveClaim);
         return ResponseEntity.ok(new Response(responseMap));
+    }
+
+    @PutMapping("/scholarship/starStatus")
+    @ApiOperation(notes = "修改收藏状态", value = "修改收藏状态")
+    public ResponseEntity<Response> changeStarStatus(Long paperId, Integer type) {
+        User u = (User)SecurityUtils.getSubject().getPrincipal();
+        if(u == null)
+            return ResponseEntity.ok(new Response(403,"请先登录！",0));
+        return starService.changeStarStatus(u.getUserID(), paperId, type);
+    }
+
+    @GetMapping("/scholarship/starStatus")
+    @ApiOperation(notes = "获取收藏状态", value = "获取收藏状态")
+    public ResponseEntity<Response> getStarStatusRes (Long paperId, Integer type) {
+        User u = (User)SecurityUtils.getSubject().getPrincipal();
+        if(u == null)
+            return ResponseEntity.ok(new Response(403,"请先登录！",0));
+        int code = starService.getStarStatus(u.getUserID(), paperId, type);
+        switch (code) {
+            case 0: return ResponseEntity.ok(new Response("已收藏该文献", 0));
+            case 1: return ResponseEntity.ok(new Response(404, "未收藏该文献！", 0));
+            case 2: return ResponseEntity.ok(new Response("已收藏该专利", 0));
+            case 3: return ResponseEntity.ok(new Response(404, "未收藏该专利！", 0));
+            case 4: return ResponseEntity.ok(new Response("已收藏该项目", 0));
+            case 5: return ResponseEntity.ok(new Response(404, "未收藏该项目！", 0));
+            default: return ResponseEntity.ok(new Response(400, "type的值只能为0,1,2！", 0));
+        }
+    }
+
+    @GetMapping("/scholarship/staredPaper")
+    @ApiOperation(notes = "获取已收藏文献列表", value = "获取已收藏文献列表")
+    public ResponseEntity<Response> getStaredPaper () {
+        User u = (User)SecurityUtils.getSubject().getPrincipal();
+        if(u == null)
+            return ResponseEntity.ok(new Response(403,"请先登录！",0));
+        return starService.getStaredPaper(u.getUserID());
+    }
+
+    @GetMapping("/scholarship/staredPatent")
+    @ApiOperation(notes = "获取已收藏专利列表", value = "获取已收藏专利列表")
+    public ResponseEntity<Response> getStaredPatent () {
+        User u = (User)SecurityUtils.getSubject().getPrincipal();
+        if(u == null)
+            return ResponseEntity.ok(new Response(403,"请先登录！",0));
+        return starService.getStaredPatent(u.getUserID());
+    }
+
+    @GetMapping("/scholarship/staredProject")
+    @ApiOperation(notes = "获取已收藏项目列表", value = "获取已收藏项目列表")
+    public ResponseEntity<Response> getStaredProject () {
+        User u = (User)SecurityUtils.getSubject().getPrincipal();
+        if(u == null)
+            return ResponseEntity.ok(new Response(403,"请先登录！",0));
+        return starService.getStaredProject(u.getUserID());
     }
 
 }
