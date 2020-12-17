@@ -1,5 +1,6 @@
 package cn.edu.buaa.scholarshipserver.controllers;
 
+import cn.edu.buaa.scholarshipserver.dao.ScholarDao;
 import cn.edu.buaa.scholarshipserver.es.CorrectPaper;
 import cn.edu.buaa.scholarshipserver.es.Paper;
 import cn.edu.buaa.scholarshipserver.es.Patent;
@@ -18,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -37,6 +40,9 @@ public class ScholarshipController {
 
     @Autowired
     private FieldService fieldService;
+
+    @Autowired
+    private ScholarDao scholarDao;
 
     @GetMapping("/getProjectById/{projectId}")
     @ApiOperation(notes = "查看项目内容", value = "查看项目内容")
@@ -366,6 +372,14 @@ public class ScholarshipController {
         Map<String, Object> responseMap = new TreeMap<>();
         responseMap.put("haveClaim",haveClaim);
         return ResponseEntity.ok(new Response(responseMap));
+    }
+
+    @GetMapping("/getWhoClaimIt/{type}/{scholarShipId}")
+    @ApiOperation(notes = "通过scholarShipId查询认领了它的人的列表",
+            value = "通过scholarShipId查询认领了它的人的列表")
+    public ResponseEntity<Response> getWhoClaimIt(@PathVariable("type") String type,
+                                                  @PathVariable("scholarShipId") String scholarShipId) {
+        return patentService.getWhoClaimIt(type,scholarShipId);
     }
 
 }

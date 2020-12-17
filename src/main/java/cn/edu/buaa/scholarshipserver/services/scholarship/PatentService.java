@@ -1,10 +1,10 @@
 package cn.edu.buaa.scholarshipserver.services.scholarship;
 
-import cn.edu.buaa.scholarshipserver.dao.PatentDao;
-import cn.edu.buaa.scholarshipserver.dao.PatentMapper;
-import cn.edu.buaa.scholarshipserver.dao.PatentScholarDao;
+import cn.edu.buaa.scholarshipserver.dao.*;
+import cn.edu.buaa.scholarshipserver.es.DataScholar;
 import cn.edu.buaa.scholarshipserver.es.Patent;
 import cn.edu.buaa.scholarshipserver.es.Patent_Scholar;
+import cn.edu.buaa.scholarshipserver.es.Project_Scholar;
 import cn.edu.buaa.scholarshipserver.models.Scholar;
 import cn.edu.buaa.scholarshipserver.utils.Response;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -52,12 +52,21 @@ public class PatentService {
     @Autowired
     private PatentScholarDao patentScholarDao;
 
-    public Patent getPatentByPatentId(String patentId){
+    @Autowired
+    private ProjectService projectService;
+
+    @Autowired
+    private ScholarDao scholarDao;
+
+    @Autowired
+    private ProjectScholarDao projectScholarDao;
+
+    public Patent getPatentByPatentId(String patentId) {
         long id = Long.parseLong(patentId);
         Optional<Patent> patent = patentDao.findById(id);
         //格式化日期
         String temp = patent.get().getApplicationDate();
-        patent.get().setApplicationDate(temp.substring(0,4)+'-'+temp.substring(4,6)+'-'+temp.substring(6,8));
+        patent.get().setApplicationDate(temp.substring(0, 4) + '-' + temp.substring(4, 6) + '-' + temp.substring(6, 8));
 
         return patent.get();
     }
@@ -69,9 +78,9 @@ public class PatentService {
                                                          String page, String size) {
         int pageNum = Integer.parseInt(page);
         int sizeNum = Integer.parseInt(size);
-        Pageable pageable = PageRequest.of(pageNum-1, sizeNum);
-        FunctionScoreQueryBuilder functionScoreQueryBuilder = getProjectFunctionScoreQueryBuilder(titleKW,abstractKW,
-                organizationKW, authorKW,startDate,endDate);
+        Pageable pageable = PageRequest.of(pageNum - 1, sizeNum);
+        FunctionScoreQueryBuilder functionScoreQueryBuilder = getProjectFunctionScoreQueryBuilder(titleKW, abstractKW,
+                organizationKW, authorKW, startDate, endDate);
 
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(functionScoreQueryBuilder).withPageable(pageable).withSort(SortBuilders.scoreSort())
@@ -103,15 +112,16 @@ public class PatentService {
             searchHit.getContent().setApplicant(highlightFields.get("applicant") == null ? searchHit.getContent().getApplicant() : highlightFields.get("applicant").get(0));
             //格式化日期
             String temp = searchHit.getContent().getApplicationDate();
-            searchHit.getContent().setApplicationDate(temp.substring(0,4)+'-'+temp.substring(4,6)+'-'+temp.substring(6,8));
+            searchHit.getContent().setApplicationDate(temp.substring(0, 4) + '-' + temp.substring(4, 6) + '-' + temp.substring(6, 8));
             //放到实体类中
             patents.add(searchHit.getContent());
         }
         Map<String, Object> responseMap = new TreeMap<>();
         responseMap.put("patenList", patents);
-        responseMap.put("total",search.getTotalHits());
+        responseMap.put("total", search.getTotalHits());
         return ResponseEntity.ok(new Response(responseMap));
     }
+
     //日期排序
     public ResponseEntity<Response> advancedSearchPatentSortByDate(String titleKW, String abstractKW,
                                                                    String organizationKW, String authorKW,
@@ -119,9 +129,9 @@ public class PatentService {
                                                                    String page, String size) {
         int pageNum = Integer.parseInt(page);
         int sizeNum = Integer.parseInt(size);
-        Pageable pageable = PageRequest.of(pageNum-1, sizeNum);
-        FunctionScoreQueryBuilder functionScoreQueryBuilder = getProjectFunctionScoreQueryBuilder(titleKW,abstractKW,
-                organizationKW, authorKW,startDate,endDate);
+        Pageable pageable = PageRequest.of(pageNum - 1, sizeNum);
+        FunctionScoreQueryBuilder functionScoreQueryBuilder = getProjectFunctionScoreQueryBuilder(titleKW, abstractKW,
+                organizationKW, authorKW, startDate, endDate);
 
         // 排序条件
         FieldSortBuilder ageSortBuilder = SortBuilders.fieldSort("applicationDate").order(SortOrder.DESC);
@@ -157,13 +167,13 @@ public class PatentService {
             searchHit.getContent().setApplicant(highlightFields.get("applicant") == null ? searchHit.getContent().getApplicant() : highlightFields.get("applicant").get(0));
             //格式化日期
             String temp = searchHit.getContent().getApplicationDate();
-            searchHit.getContent().setApplicationDate(temp.substring(0,4)+'-'+temp.substring(4,6)+'-'+temp.substring(6,8));
+            searchHit.getContent().setApplicationDate(temp.substring(0, 4) + '-' + temp.substring(4, 6) + '-' + temp.substring(6, 8));
             //放到实体类中
             patents.add(searchHit.getContent());
         }
         Map<String, Object> responseMap = new TreeMap<>();
         responseMap.put("patenList", patents);
-        responseMap.put("total",search.getTotalHits());
+        responseMap.put("total", search.getTotalHits());
         return ResponseEntity.ok(new Response(responseMap));
     }
 
@@ -171,27 +181,26 @@ public class PatentService {
                                                                          String organizationKW, String authorKW,
                                                                          String startDate, String endDate) {
         BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
-        if(!titleKW.equals(""))
-            boolQuery.should(QueryBuilders.matchQuery("title",titleKW));
-        if(!abstractKW.equals(""))
-            boolQuery.should(QueryBuilders.matchQuery("Abstract",abstractKW));
-        if(!authorKW.equals("")){
-            boolQuery.should(QueryBuilders.matchQuery("inventor",authorKW));
-            boolQuery.should(QueryBuilders.matchQuery("agent",authorKW));
+        if (!titleKW.equals(""))
+            boolQuery.should(QueryBuilders.matchQuery("title", titleKW));
+        if (!abstractKW.equals(""))
+            boolQuery.should(QueryBuilders.matchQuery("Abstract", abstractKW));
+        if (!authorKW.equals("")) {
+            boolQuery.should(QueryBuilders.matchQuery("inventor", authorKW));
+            boolQuery.should(QueryBuilders.matchQuery("agent", authorKW));
         }
-        if(!organizationKW.equals(""))
-            boolQuery.should(QueryBuilders.matchQuery("applicant",organizationKW));
-        if(!startDate.equals("")) {
+        if (!organizationKW.equals(""))
+            boolQuery.should(QueryBuilders.matchQuery("applicant", organizationKW));
+        if (!startDate.equals("")) {
             String begin = startDate;
             String end = endDate;
             RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery("applicationDate")
                     .from(begin).to(end);
             boolQuery.must(rangeQueryBuilder);
         }
-        FunctionScoreQueryBuilder functionScoreQueryBuilder= QueryBuilders.functionScoreQuery(boolQuery);
+        FunctionScoreQueryBuilder functionScoreQueryBuilder = QueryBuilders.functionScoreQuery(boolQuery);
         return functionScoreQueryBuilder;
     }
-
 
     public Scholar getScholarByUserId(Integer UID) {
         return patentMapper.getScholarByUserId(UID);
@@ -199,8 +208,8 @@ public class PatentService {
 
     public boolean haveClaimPatent(int scholarid, long patentid) {
         List<Patent_Scholar> psList = patentScholarDao.findByScholarId(scholarid);
-        for(int i = 0 ; i< psList.size();i++){
-            if(patentid==psList.get(i).getPatentId()){
+        for (int i = 0; i < psList.size(); i++) {
+            if (patentid == psList.get(i).getPatentId()) {
                 return true;
             }
         }
@@ -215,7 +224,45 @@ public class PatentService {
     }
 
     public void deletePatentPossess(int scholarid, long patentid) {
-        Patent_Scholar ps = patentScholarDao.findByScholarIdAndPatentId(scholarid,patentid);
+        Patent_Scholar ps = patentScholarDao.findByScholarIdAndPatentId(scholarid, patentid);
         patentScholarDao.delete(ps);
     }
+
+    public ResponseEntity<Response> getWhoClaimIt(String type, String scholarShipId) {
+
+        List<cn.edu.buaa.scholarshipserver.es.Scholar> whoClaimIt = new ArrayList();
+        if (type.equals("1")) {
+            long projectid = Long.parseLong(scholarShipId);
+            whoClaimIt = getWhoClaimProjectList(projectid);
+        } else if (type.equals("2")) {
+            long patentid = Long.parseLong(scholarShipId);
+            whoClaimIt = getWhoClaimPatentList(patentid);
+        } else {
+            return ResponseEntity.ok(new Response(400, "学术成果类型不正确！", 400));
+        }
+        return ResponseEntity.ok(new Response(whoClaimIt));
+    }
+
+    public List<cn.edu.buaa.scholarshipserver.es.Scholar> getWhoClaimPatentList(long patentid) {
+        List<Patent_Scholar> psList = patentScholarDao.findByPatentId(patentid);
+        List<cn.edu.buaa.scholarshipserver.es.Scholar> whoClaimItList = new ArrayList<>();
+        for (int i = 0; i < psList.size(); i++) {
+            cn.edu.buaa.scholarshipserver.es.Scholar scholar = scholarDao.findByScholarId(psList.get(i).getScholarId());
+            if (scholar != null)
+                whoClaimItList.add(scholar);
+        }
+        return whoClaimItList;
+    }
+
+    public List<cn.edu.buaa.scholarshipserver.es.Scholar> getWhoClaimProjectList(long projectId) {
+        List<Project_Scholar> psList = projectScholarDao.findByProjectId(projectId);
+        List<cn.edu.buaa.scholarshipserver.es.Scholar> whoClaimItList = new ArrayList<>();
+        for (int i = 0; i < psList.size(); i++) {
+            cn.edu.buaa.scholarshipserver.es.Scholar scholar = scholarDao.findByScholarId(psList.get(i).getScholarId());
+            if (scholar != null)
+                whoClaimItList.add(scholar);
+        }
+        return whoClaimItList;
+    }
+
 }

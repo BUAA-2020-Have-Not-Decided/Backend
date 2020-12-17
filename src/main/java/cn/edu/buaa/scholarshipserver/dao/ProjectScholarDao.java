@@ -11,4 +11,6 @@ public interface ProjectScholarDao extends ElasticsearchRepository<Project_Schol
         public List<Project_Scholar> findByScholarId(Integer scholarId);
 
         public Project_Scholar findByScholarIdAndProjectId(int scholarId,long projectId);
+
+        public List<Project_Scholar> findByProjectId(long projectId);
 }
