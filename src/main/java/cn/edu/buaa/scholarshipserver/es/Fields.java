@@ -3,7 +3,6 @@ package cn.edu.buaa.scholarshipserver.es;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.joda.time.DateTime;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -17,11 +16,9 @@ public class Fields {
     @Field(type = FieldType.Auto)
     private String id;
     @Field(type = FieldType.Auto)
-    private Integer fieldsId;
+    private Integer FieldsId;
     @Field(type = FieldType.Auto)
     private String RankNumber;
-    @Field(type = FieldType.Auto)
-    private String NormalizedName;
     @Field(type = FieldType.Auto)
     private String DisplayName;
     @Field(type = FieldType.Auto)

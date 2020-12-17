@@ -20,9 +20,16 @@ public class FieldService {
 
     public ResponseEntity<Response> getHotFields() {
         List<Fields> hotFields = new ArrayList<>();
-        for (long i = 2L; i <= 11; i++) {
-            hotFields.add(fieldDao.findById(i).orElse(null));
-        }
+        hotFields.add(fieldDao.findById(2L).orElse(null));
+        hotFields.add(fieldDao.findById(5L).orElse(null));
+        hotFields.add(fieldDao.findById(3L).orElse(null));
+        hotFields.add(fieldDao.findById(4L).orElse(null));
+        hotFields.add(fieldDao.findById(6L).orElse(null));
+        hotFields.add(fieldDao.findById(7L).orElse(null));
+        hotFields.add(fieldDao.findById(12L).orElse(null));
+        hotFields.add(fieldDao.findById(9L).orElse(null));
+        hotFields.add(fieldDao.findById(10L).orElse(null));
+        hotFields.add(fieldDao.findById(11L).orElse(null));
         return ResponseEntity.ok(new Response(hotFields));
     }
 }
