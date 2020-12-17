@@ -15,9 +15,9 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 public class Fields {
     @Id
     @Field(type = FieldType.Auto)
-    private String Id;
+    private String id;
     @Field(type = FieldType.Auto)
-    private Integer FieldsId;
+    private Integer fieldsId;
     @Field(type = FieldType.Auto)
     private String RankNumber;
     @Field(type = FieldType.Auto)
@@ -35,5 +35,5 @@ public class Fields {
     @Field(type = FieldType.Auto)
     private Integer CitationCount;
     @Field(type = FieldType.Auto)
-    private DateTime CreateDate;
+    private String CreateDate;
 }
