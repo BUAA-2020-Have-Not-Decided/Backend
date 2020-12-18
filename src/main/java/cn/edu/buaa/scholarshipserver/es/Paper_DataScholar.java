@@ -17,7 +17,7 @@ public class Paper_DataScholar {
         @Field(type = FieldType.Auto)
         private String id;
         @Field(type = FieldType.Auto)
-        private Long PaperId;
+        private Long paperId;
         @Field(type = FieldType.Auto)
         private Long authorId;
 }

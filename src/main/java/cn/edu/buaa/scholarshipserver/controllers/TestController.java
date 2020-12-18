@@ -37,7 +37,7 @@ public class TestController {
         @PutMapping("/test1")
         public ResponseEntity<Response> test(){
 
-                return ResponseEntity.ok(new Response(scholarDao.findByScholarId(14)));
+                return ResponseEntity.ok(new Response(scholarDao.findByScholarId(13)));
         }
         @GetMapping("/test1")
         public ResponseEntity<Response> test1(){
