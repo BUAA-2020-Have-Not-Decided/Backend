@@ -60,7 +60,7 @@ public class ScholarController {
             @ApiImplicitParam(name = "introduction",value = "更改后的学者个人简介",required = false,paramType = "body",dataType = "String"),
             @ApiImplicitParam(name ="organization",value = "更改后的学者所属组织",required = false,paramType = "body",dataType = "String")
     })
-    public ResponseEntity<Response> PutScholar(@PathVariable("ScholarId") String scholarId,@RequestBody Map<String,Object> params) {
+    public ResponseEntity<Response> PutScholar(@PathVariable("ScholarId") String scholarId,@RequestBody Map<String,Object> params)  {
         return scholarService.PutScholar(Integer.parseInt(scholarId),params);
     }
     @PostMapping("/workExperience")

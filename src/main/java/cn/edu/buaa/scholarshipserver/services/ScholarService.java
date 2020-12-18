@@ -86,9 +86,18 @@ public class ScholarService {
                         }
         }
         List<Paper>paperList = new ArrayList<>(paperSet);
+        List<List<String>> authorList = new ArrayList<>();
+        for(Paper paper : paperList){
+            List<Paper_DataScholar> tem = paperDataScholarDao.findByPaperId(paper.getPaperId());
+            List<String> tem1 = new ArrayList<>();
+            for(Paper_DataScholar paperDataScholar : tem){
+                tem1.add(dataScholarMethod.getDataScholarByAuthorId(paperDataScholar.getAuthorId()).getNormalizedName());
+            }
+            authorList.add(tem1);
+        }
         responseMap.put("paperNum",paperList.size());
         responseMap.put("paper",paperList);
-
+        responseMap.put("authorList",authorList);
         List<Optional<cn.edu.buaa.scholarshipserver.models.Project>> projectList = new ArrayList<>();
         List<Optional<Patent>> patentList = new ArrayList<>();
         List<Project_Scholar> projectScholarList = projectScholarDao.findByScholarId(scholar.getScholarId());
@@ -154,7 +163,7 @@ public class ScholarService {
             return ResponseEntity.ok(new Response(responseMap));
     }
 
-    public ResponseEntity<Response> PutScholar(Integer id,Map<String,Object> params){
+    public ResponseEntity<Response> PutScholar(Integer id,Map<String,Object> params) {
         Scholar scholar = scholarMethod.getScholarById(id);
                 //scholar.setAvatarUrl((String)params.get("avatarUrl"));
         for(Map.Entry<String,Object>entry : params.entrySet()){
@@ -180,6 +189,7 @@ public class ScholarService {
             }
         }
         scholarMethod.updateScholar(scholar);
+
         return ResponseEntity.ok(new Response(1001,"修改提交成功",""));
 
     }
