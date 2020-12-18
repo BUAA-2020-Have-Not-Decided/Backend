@@ -153,6 +153,7 @@ public class UserController {
         Response res = new Response(data);
         try{
             Scholar s = this.redis_util.getScholarByCode(code);
+            this.redis_util.removeItemByKey(code);
             this.scholar_mapper.insert(s);
             s = this.scholar_mapper.selectByEmail(s.getEmail());
             cn.edu.buaa.scholarshipserver.es.Scholar ss = new cn.edu.buaa.scholarshipserver.es.Scholar();
