@@ -238,6 +238,10 @@ public class UserController {
             data.put("identification", u.getIdentify());
             data.put("username", u.getName());
             data.put("avatar", u.getUserImagePath());
+            if(u.getIdentify()==1){
+                Scholar s = this.scholar_mapper.selectByUID(u.getUserID());
+                data.put("scholarId", s.getScholarid());
+            }
             String jwt = JwtUtil.createToken(u.getEmail(), new Date().getTime());
             response.setHeader("Authorization",jwt);
             response.setHeader("Access-Control-Expose-Headers", "Authorization");
