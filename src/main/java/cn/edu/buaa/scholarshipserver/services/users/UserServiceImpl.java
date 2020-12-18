@@ -8,6 +8,8 @@ import cn.edu.buaa.scholarshipserver.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Random;
+
 @Service
 public class UserServiceImpl implements UserService{
 
@@ -53,5 +55,19 @@ public class UserServiceImpl implements UserService{
         System.out.println(u);
         Scholar s = this.scholar_mapper.selectByEmail(email);
         return u != null&&s!=null;
+    }
+
+    @Override
+    public String randomPassword() {
+        StringBuilder rand_password = new StringBuilder();
+        int i;
+        Random rd = new Random();
+        for(i=0;i<8;i++){
+            rand_password.append((char)(97+rd.nextInt()%26));
+        }
+        for(i=0;i<4;i++){
+            rand_password.append((char)(rd.nextInt()%10));
+        }
+        return rand_password.toString();
     }
 }

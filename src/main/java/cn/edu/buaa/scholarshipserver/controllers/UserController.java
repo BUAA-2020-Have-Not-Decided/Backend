@@ -153,6 +153,7 @@ public class UserController {
         Response res = new Response(data);
         try{
             Scholar s = this.redis_util.getScholarByCode(code);
+            this.redis_util.removeItemByKey(code);
             this.scholar_mapper.insert(s);
             s = this.scholar_mapper.selectByEmail(s.getEmail());
             cn.edu.buaa.scholarshipserver.es.Scholar ss = new cn.edu.buaa.scholarshipserver.es.Scholar();
@@ -190,6 +191,18 @@ public class UserController {
         return res;
     }
 
+    //TODO 找回密码
+    // 发送邮件，点击邮件重置密码
+    @PostMapping("/findPassword")
+    public Response findPassword(@RequestParam("Email")String email){
+        HashMap<String, Object> data = new HashMap<>();
+        Response res = new Response(data);
+        User current_user = (User)SecurityUtils.getSubject().getPrincipal();
+        String new_pwd = this.user_service.randomPassword();
+        System.out.println(new_pwd);
+        return res;
+    }
+
     @PostMapping("/getInfo")
     public Response giveInfo(){
         /*获取当前用户*/
@@ -212,21 +225,28 @@ public class UserController {
         if(u == null){//用户不存在，500
             data.put("success", false);
             res.setCode(500);
+            res.setMessage("用户不存在");
         }
         else if(u.getPassword().compareTo(password)!=0){//密码错误，501
             data.put("success",false);
             res.setCode(501);
+            res.setMessage("密码错误");
         }
         else{//成功1001
             data.put("success", true);
             res.setCode(1001);
             data.put("identification", u.getIdentify());
             data.put("username", u.getName());
-            data.put("avatar", u.getUserImagePath());
+            data.put("avatar", u.getUserImagePath()==null?"":u.getUserImagePath());
+            if(u.getIdentify()==1){
+                Scholar s = this.scholar_mapper.selectByUID(u.getUserID());
+                data.put("scholarId", s.getScholarid());
+            }
             String jwt = JwtUtil.createToken(u.getEmail(), new Date().getTime());
             response.setHeader("Authorization",jwt);
             response.setHeader("Access-Control-Expose-Headers", "Authorization");
             redis_util.setUserAndJWT(u, jwt);
+            res.setMessage("登陆成功");
         }
         return res;
     }
@@ -393,6 +413,7 @@ public class UserController {
     {
         return "登陆成功";
     }
+
     //用来显示没有权限
     @GetMapping("/unauthorized")
     @ResponseBody

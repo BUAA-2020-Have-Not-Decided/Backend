@@ -12,4 +12,6 @@ public interface UserService {
     boolean usernameUsed(String username);
     /*判断一个邮箱有没有被用过*/
     boolean emailUsed(String email);
+    /*生成一个随机的密码*/
+    String randomPassword();
 }
