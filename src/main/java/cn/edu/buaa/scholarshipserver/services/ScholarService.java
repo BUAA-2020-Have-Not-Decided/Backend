@@ -65,6 +65,7 @@ public class ScholarService {
 
         //获取学者门户相关信息
         Scholar scholar = scholarMethod.getScholarById(id);
+        System.out.println(scholar);
         if(scholar == null){
             return ResponseEntity.ok(new Response(404,"该学者门户不存在",""));
         }
@@ -81,7 +82,7 @@ public class ScholarService {
                                 /*
                                 NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
                                 nativeSearchQueryBuilder.withQuery(QueryBuilders.termsQuery("paperId",paperList));
-                                 */
+                                */
 
                         }
         }
@@ -98,6 +99,8 @@ public class ScholarService {
         responseMap.put("paperNum",paperList.size());
         responseMap.put("paper",paperList);
         responseMap.put("authorList",authorList);
+
+
         List<Optional<cn.edu.buaa.scholarshipserver.models.Project>> projectList = new ArrayList<>();
         List<Optional<Patent>> patentList = new ArrayList<>();
         List<Project_Scholar> projectScholarList = projectScholarDao.findByScholarId(scholar.getScholarId());
@@ -163,35 +166,41 @@ public class ScholarService {
             return ResponseEntity.ok(new Response(responseMap));
     }
 
-    public ResponseEntity<Response> PutScholar(Integer id,Map<String,Object> params) {
-        Scholar scholar = scholarMethod.getScholarById(id);
+    public ResponseEntity<Response> PutScholar(Integer id,Map<String,Object> params){
+        Scholar scholar = scholarDao.findByScholarId(id);
+        System.out.println(params);
                 //scholar.setAvatarUrl((String)params.get("avatarUrl"));
         for(Map.Entry<String,Object>entry : params.entrySet()){
             switch (entry.getKey()){
                 case "name":
-                    scholar.setName((String)entry.getValue());
+                    if(!entry.getValue().equals(""))
+                        scholar.setName((String)entry.getValue());
                     break;
                 case "email":
-                    scholar.setEmail((String)entry.getValue());
+                    if(!entry.getValue().equals(""))
+                        scholar.setEmail((String)entry.getValue());
                     break;
                 case "phone":
-                    scholar.setPhone((String)entry.getValue());
+                    if(!entry.getValue().equals(""))
+                        scholar.setPhone((String)entry.getValue());
                     break;
                 case "title":
-                     scholar.setTitle((String)entry.getValue());
+                     if(!entry.getValue().equals(""))
+                        scholar.setTitle((String)entry.getValue());
                      break;
                 case "introduction":
-                    scholar.setIntroduction((String)entry.getValue());
+                    if(!entry.getValue().equals(""))
+                        scholar.setIntroduction((String)entry.getValue());
                     break;
                 case "organization":
-                    scholar.setOrganization((String)entry.getValue());
+                    if(!entry.getValue().equals(""))
+                        scholar.setOrganization((String)entry.getValue());
                     break;
             }
         }
-        scholarMethod.updateScholar(scholar);
-
+        System.out.println(scholar);
+        scholarDao.save(scholar);
         return ResponseEntity.ok(new Response(1001,"修改提交成功",""));
-
     }
     public ResponseEntity<Response> GetSameNameUser (String username,String scholarId){
         List<DataScholar> dataScholarList = dataScholarMethod.getDataScholarByNormalizedName(username);

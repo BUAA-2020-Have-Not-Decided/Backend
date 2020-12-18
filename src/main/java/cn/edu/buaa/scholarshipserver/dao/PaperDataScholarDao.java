@@ -6,7 +6,6 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import java.util.List;
 
 public interface PaperDataScholarDao extends ElasticsearchRepository<Paper_DataScholar,Long> {
-        public List<Paper_DataScholar> findByAuthorId(Long authorId);
-
-        public List<Paper_DataScholar> findByPaperId(long PaperId);
+        List<Paper_DataScholar> findByAuthorId(Long authorId);
+        List<Paper_DataScholar> findByPaperId(Long paperId);
 }

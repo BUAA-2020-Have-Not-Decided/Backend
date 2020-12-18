@@ -34,7 +34,8 @@ public class ScholarController {
             @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path",dataType = "String")
     })
     public ResponseEntity<Response> GetScholar(@PathVariable("UserId") String userId,@PathVariable("ScholarId") String scholarId) {
-        return scholarService.GetScholar(Integer.parseInt(userId),Integer.parseInt(scholarId));
+        System.out.println(scholarId);
+        return scholarService.GetScholar(Integer.parseInt(userId),Integer.valueOf(scholarId));
     }
     @GetMapping("/dataScholar/{AuthorId}")
     public ResponseEntity<Response> GetDataScholar(@PathVariable("AuthorId") String authorId){

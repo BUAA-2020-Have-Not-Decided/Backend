@@ -36,8 +36,13 @@ public class TestController {
         private CooperationDao cooperationDao;
         @PutMapping("/test1")
         public ResponseEntity<Response> test(){
-
-                return ResponseEntity.ok(new Response(scholarDao.findByScholarId(14)));
+                Scholar scholar = new Scholar();
+                scholar.setScholarId(13);
+                scholar.setEnglishName("lululu");
+                scholar.setName("路路路");
+                scholar.setEmail("18231077@buaa.edu.cn");
+                scholarDao.save(scholar);
+                return ResponseEntity.ok(new Response(""));
         }
         @GetMapping("/test1")
         public ResponseEntity<Response> test1(){
@@ -46,8 +51,9 @@ public class TestController {
         @GetMapping("/test2")
         public ResponseEntity<Response> test2(){
 
-                
-                return ResponseEntity.ok(new Response(dataScholarDao.findByAuthorId(2889275216L)));
+
+
+                return ResponseEntity.ok(new Response(scholarDao.findByName("路路路")));
 
         }
         @GetMapping("/test3")
