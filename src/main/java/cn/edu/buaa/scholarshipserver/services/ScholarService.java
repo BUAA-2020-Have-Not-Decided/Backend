@@ -55,14 +55,10 @@ public class ScholarService {
     @Autowired
     private InstitutionDao institutionDao;
 
-    public ResponseEntity<Response> GetScholar(Integer uid,Integer id) {
+    public ResponseEntity<Response> GetScholar(Integer id) {
         Map<String, Object> responseMap = new TreeMap<>();
 
         User u = (User) SecurityUtils.getSubject().getPrincipal();
-        if(u.getUserID()!=uid){
-            return ResponseEntity.ok(new Response(405,"Method Not Allowed",""));
-        }
-
         //获取学者门户相关信息
         Scholar scholar = scholarMethod.getScholarById(id);
         System.out.println(scholar);
@@ -134,7 +130,7 @@ public class ScholarService {
         List<WorkExperience>workExperienceList = workExperienceDao.findByScholarId(scholar.getScholarId());
         responseMap.put("workExperience",workExperienceList);
         boolean isSubscribed = false;
-        if(subscribeDao.findByFanIdAndScholarId(uid,id)!=null){
+        if(subscribeDao.findByFanIdAndScholarId(u.getUserID(),id)!=null){
             isSubscribed = true;
         }
         responseMap.put("isSubscribed",isSubscribed);

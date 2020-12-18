@@ -27,15 +27,14 @@ public class ScholarController {
     private ScholarService scholarService;
     @Autowired
     private UploadService uploadService;
-    @GetMapping("/info/{UserId}/{ScholarId}")
+    @GetMapping("/info/{ScholarId}")
     @ApiOperation(value = "获得学者门户相关信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "ScholarId",value = "用户id",required = true,paramType = "path",dataType = "String"),
             @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path",dataType = "String")
     })
-    public ResponseEntity<Response> GetScholar(@PathVariable("UserId") String userId,@PathVariable("ScholarId") String scholarId) {
+    public ResponseEntity<Response> GetScholar(@PathVariable("ScholarId") String scholarId) {
         System.out.println(scholarId);
-        return scholarService.GetScholar(Integer.parseInt(userId),Integer.valueOf(scholarId));
+        return scholarService.GetScholar(Integer.valueOf(scholarId));
     }
     @GetMapping("/dataScholar/{AuthorId}")
     public ResponseEntity<Response> GetDataScholar(@PathVariable("AuthorId") String authorId){
