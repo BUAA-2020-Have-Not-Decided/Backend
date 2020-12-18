@@ -27,14 +27,14 @@ public class ScholarController {
     private ScholarService scholarService;
     @Autowired
     private UploadService uploadService;
-    @GetMapping("/{UserId}/{ScholarId}")
+    @GetMapping("/info/{ScholarId}")
     @ApiOperation(value = "获得学者门户相关信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "ScholarId",value = "用户id",required = true,paramType = "path",dataType = "String"),
             @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path",dataType = "String")
     })
-    public ResponseEntity<Response> GetScholar(@PathVariable("UserId") String userId,@PathVariable("ScholarId") String scholarId) {
-        return scholarService.GetScholar(Integer.parseInt(userId),Integer.parseInt(scholarId));
+    public ResponseEntity<Response> GetScholar(@PathVariable("ScholarId") String scholarId) {
+        System.out.println(scholarId);
+        return scholarService.GetScholar(Integer.valueOf(scholarId));
     }
     @GetMapping("/dataScholar/{AuthorId}")
     public ResponseEntity<Response> GetDataScholar(@PathVariable("AuthorId") String authorId){
@@ -49,7 +49,7 @@ public class ScholarController {
     public ResponseEntity<Response> UploadImage(@PathVariable String ScholarId,@RequestBody String base64Data){
         return uploadService.UploadImage(Integer.parseInt(ScholarId),base64Data);
     }
-    @PutMapping("/{ScholarId}")
+    @PutMapping("/infoUpdate/{ScholarId}")
     @ApiOperation(value = "更新学者门户相关信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path",dataType = "String"),
@@ -60,7 +60,7 @@ public class ScholarController {
             @ApiImplicitParam(name = "introduction",value = "更改后的学者个人简介",required = false,paramType = "body",dataType = "String"),
             @ApiImplicitParam(name ="organization",value = "更改后的学者所属组织",required = false,paramType = "body",dataType = "String")
     })
-    public ResponseEntity<Response> PutScholar(@PathVariable("ScholarId") String scholarId,@RequestBody Map<String,Object> params) {
+    public ResponseEntity<Response> PutScholar(@PathVariable("ScholarId") String scholarId,@RequestBody Map<String,Object> params)  {
         return scholarService.PutScholar(Integer.parseInt(scholarId),params);
     }
     @PostMapping("/workExperience")

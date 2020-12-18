@@ -1,5 +1,6 @@
 package cn.edu.buaa.scholarshipserver.controllers;
 
+import cn.edu.buaa.scholarshipserver.dao.ScholarDao;
 import cn.edu.buaa.scholarshipserver.es.CorrectPaper;
 import cn.edu.buaa.scholarshipserver.es.Paper;
 import cn.edu.buaa.scholarshipserver.es.Patent;
@@ -15,8 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 @RestController
 @RequestMapping("/scholarship")
@@ -37,6 +37,9 @@ public class ScholarshipController {
 
     @Autowired
     private StarService starService;
+
+    @Autowired
+    private ScholarDao scholarDao;
 
     @GetMapping("/getProjectById/{projectId}")
     @ApiOperation(notes = "查看项目内容", value = "查看项目内容")
@@ -211,6 +214,9 @@ public class ScholarshipController {
             return ResponseEntity.ok(new Response(4001,"你还未认证成为学者！",400));
         }
         Patent patent = patentService.getPatentByPatentId(patentId);
+        if(patentService.getPatentNowClaimNumber(patent)>=patentService.getPatentMaxClaimNumber(patent)){
+            return ResponseEntity.ok(new Response(4005,"认领人数已满！",400));
+        }
 
         long patentid = patent.getId();
         int scholarid = scholar.getScholarid();
@@ -256,6 +262,11 @@ public class ScholarshipController {
             return ResponseEntity.ok(new Response(4001,"你还未认证成为学者！",400));
         }
         Project project = projectService.getTheProjectById(projectId);
+
+        if(patentService.getProjectNowClaimNumber(project)>=patentService.getProjectMaxClaimNumber(project)){
+            return ResponseEntity.ok(new Response(4005,"认领人数已满！",400));
+        }
+
 
         long projectid = project.getProjectId();
         int scholarid = scholar.getScholarid();
@@ -420,6 +431,39 @@ public class ScholarshipController {
         if(u == null)
             return ResponseEntity.ok(new Response(403,"请先登录！",0));
         return starService.getStaredProject(u.getUserID());
+    }
+
+    @GetMapping("/getWhoClaimIt/{type}/{scholarShipId}")
+    @ApiOperation(notes = "通过scholarShipId查询认领了它的人的列表",
+            value = "通过scholarShipId查询认领了它的人的列表")
+    public ResponseEntity<Response> getWhoClaimIt(@PathVariable("type") String type,
+                                                  @PathVariable("scholarShipId") String scholarShipId) {
+        return patentService.getWhoClaimIt(type,scholarShipId);
+    }
+
+    @GetMapping("/getClaimNumber/{type}/{scholarShipId}")
+    @ApiOperation(notes = "检测认领者是否超过数量",value = "检测认领者是否超过数量")
+    public  ResponseEntity<Response> getClaimNumber(@PathVariable("type") String type,
+                                                    @PathVariable("scholarShipId") String scholarShipId) {
+        HashMap<String,Object> responseMap = new HashMap<>();
+        int nowClaimNumber;
+        int maxClaimNumber;
+        if(type.equals("1")) {
+            Project project = projectService.getTheProjectById(scholarShipId);
+            nowClaimNumber = patentService.getProjectNowClaimNumber(project);
+            maxClaimNumber = patentService.getProjectMaxClaimNumber(project);
+
+        }else if(type.equals("2")){
+            Patent patent = patentService.getPatentByPatentId(scholarShipId);
+            nowClaimNumber = patentService.getPatentNowClaimNumber(patent);
+            maxClaimNumber = patentService.getPatentMaxClaimNumber(patent);
+        }else{
+            return ResponseEntity.ok(new Response(400,"学术成果类型不正确！",400));
+        }
+        responseMap.put("nowClaimNumber",nowClaimNumber);
+        responseMap.put("maxClaimNumber",maxClaimNumber);
+        responseMap.put("canClaim",nowClaimNumber<maxClaimNumber);
+        return ResponseEntity.ok(new Response(responseMap));
     }
 
 }

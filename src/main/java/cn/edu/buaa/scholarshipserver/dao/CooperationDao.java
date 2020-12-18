@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface CooperationDao extends ElasticsearchRepository<Cooperation,Long> {
         public List<Cooperation> findByAuthorId1(Long authorId1);
+        public List<Cooperation> findByAuthorId2(Long authorId2);
 }

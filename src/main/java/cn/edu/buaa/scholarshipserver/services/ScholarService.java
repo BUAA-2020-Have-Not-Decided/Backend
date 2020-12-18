@@ -55,16 +55,13 @@ public class ScholarService {
     @Autowired
     private InstitutionDao institutionDao;
 
-    public ResponseEntity<Response> GetScholar(Integer uid,Integer id) {
+    public ResponseEntity<Response> GetScholar(Integer id) {
         Map<String, Object> responseMap = new TreeMap<>();
 
         User u = (User) SecurityUtils.getSubject().getPrincipal();
-        if(u.getUserID()!=uid){
-            return ResponseEntity.ok(new Response(405,"Method Not Allowed",""));
-        }
-
         //获取学者门户相关信息
         Scholar scholar = scholarMethod.getScholarById(id);
+        System.out.println(scholar);
         if(scholar == null){
             return ResponseEntity.ok(new Response(404,"该学者门户不存在",""));
         }
@@ -81,13 +78,24 @@ public class ScholarService {
                                 /*
                                 NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
                                 nativeSearchQueryBuilder.withQuery(QueryBuilders.termsQuery("paperId",paperList));
-                                 */
+                                */
 
                         }
         }
         List<Paper>paperList = new ArrayList<>(paperSet);
+        List<List<String>> authorList = new ArrayList<>();
+        for(Paper paper : paperList){
+            List<Paper_DataScholar> tem = paperDataScholarDao.findByPaperId(paper.getPaperId());
+            List<String> tem1 = new ArrayList<>();
+            for(Paper_DataScholar paperDataScholar : tem){
+                tem1.add(dataScholarMethod.getDataScholarByAuthorId(paperDataScholar.getAuthorId()).getNormalizedName());
+            }
+            authorList.add(tem1);
+        }
         responseMap.put("paperNum",paperList.size());
         responseMap.put("paper",paperList);
+        responseMap.put("authorList",authorList);
+
 
         List<Optional<cn.edu.buaa.scholarshipserver.models.Project>> projectList = new ArrayList<>();
         List<Optional<Patent>> patentList = new ArrayList<>();
@@ -122,7 +130,7 @@ public class ScholarService {
         List<WorkExperience>workExperienceList = workExperienceDao.findByScholarId(scholar.getScholarId());
         responseMap.put("workExperience",workExperienceList);
         boolean isSubscribed = false;
-        if(subscribeDao.findByFanIdAndScholarId(uid,id)!=null){
+        if(subscribeDao.findByFanIdAndScholarId(u.getUserID(),id)!=null){
             isSubscribed = true;
         }
         responseMap.put("isSubscribed",isSubscribed);
@@ -155,33 +163,40 @@ public class ScholarService {
     }
 
     public ResponseEntity<Response> PutScholar(Integer id,Map<String,Object> params){
-        Scholar scholar = scholarMethod.getScholarById(id);
+        Scholar scholar = scholarDao.findByScholarId(id);
+        System.out.println(params);
                 //scholar.setAvatarUrl((String)params.get("avatarUrl"));
         for(Map.Entry<String,Object>entry : params.entrySet()){
             switch (entry.getKey()){
                 case "name":
-                    scholar.setName((String)entry.getValue());
+                    if(!entry.getValue().equals(""))
+                        scholar.setName((String)entry.getValue());
                     break;
                 case "email":
-                    scholar.setEmail((String)entry.getValue());
+                    if(!entry.getValue().equals(""))
+                        scholar.setEmail((String)entry.getValue());
                     break;
                 case "phone":
-                    scholar.setPhone((String)entry.getValue());
+                    if(!entry.getValue().equals(""))
+                        scholar.setPhone((String)entry.getValue());
                     break;
                 case "title":
-                     scholar.setTitle((String)entry.getValue());
+                     if(!entry.getValue().equals(""))
+                        scholar.setTitle((String)entry.getValue());
                      break;
                 case "introduction":
-                    scholar.setIntroduction((String)entry.getValue());
+                    if(!entry.getValue().equals(""))
+                        scholar.setIntroduction((String)entry.getValue());
                     break;
                 case "organization":
-                    scholar.setOrganization((String)entry.getValue());
+                    if(!entry.getValue().equals(""))
+                        scholar.setOrganization((String)entry.getValue());
                     break;
             }
         }
-        scholarMethod.updateScholar(scholar);
+        System.out.println(scholar);
+        scholarDao.save(scholar);
         return ResponseEntity.ok(new Response(1001,"修改提交成功",""));
-
     }
     public ResponseEntity<Response> GetSameNameUser (String username,String scholarId){
         List<DataScholar> dataScholarList = dataScholarMethod.getDataScholarByNormalizedName(username);
@@ -197,7 +212,7 @@ public class ScholarService {
         }
         tem1.put("pos",tem.size());
         for (DataScholar dataScholar : dataScholarList) {
-            if (-1 != dataScholar.getScholarId() && dataScholar.getScholarId() == Integer.parseInt(scholarId)) {
+            if (-1 != dataScholar.getScholarId() && dataScholar.getScholarId() != Integer.parseInt(scholarId)) {
                 tem.add(dataScholar);
             }
         }
@@ -219,16 +234,13 @@ public class ScholarService {
         return ResponseEntity.ok(new Response(1001, "success", ""));
     }
     public ResponseEntity<Response> DeleteWorkExperience(WorkExperience workExperience){
-        workExperienceDao.delete(workExperience);
+        WorkExperience workExperience1  = workExperienceDao.findByScholarIdAndAndIntroductionAndOrganizationAndYearStartAndYearEnd(workExperience.getScholarId(),workExperience.getIntroduction(),workExperience.getOrganization(),workExperience.getYearStart(),workExperience.getYearEnd());
+        workExperienceDao.delete(workExperience1);
         return ResponseEntity.ok(new Response(1001, "success", ""));
     }
     public ResponseEntity<Response> GetScholar_DataScholar (Integer scholarId){
         List<DataScholar> dataScholars = dataScholarMethod.getDataScholarByScholarId(scholarId);
-        if (dataScholars.size()!=0) {
-            return ResponseEntity.ok(new Response(1001,dataScholars));
-        } else {
-            return ResponseEntity.ok(new Response(400, "该数据库门户不存在", ""));
-        }
+        return ResponseEntity.ok(new Response(1001,dataScholars));
     }
 
     public ResponseEntity<Response> PostScholar_DataScholar (Map < String, Object > params){
@@ -291,14 +303,18 @@ public class ScholarService {
             Integer scholarId = Integer.valueOf(ScholarId);
             Scholar scholar = scholarMethod.getScholarById(scholarId);
             if (scholar != null) {
-                if (ScholarName.length() != 0 && scholar.getName().equals(ScholarName)) {
-                    Map<String, String> ins = new HashMap<String, String>();
-                    ins.put("AvatarUrl", scholar.getAvatarUrl());
-                    ins.put("Name", scholar.getName());
-                    ins.put("ScholarId", String.valueOf(scholar.getScholarId()));
-                    ins.put("Institution", scholar.getOrganization());
-                    res.add(ins);
-                } else return ResponseEntity.ok(new Response(400, "scholarId与ScholarName不对应", ""));
+                System.out.println(ScholarName);
+                if (ScholarName.length() != 0) {
+                    if(!scholar.getName().equals(ScholarName)) {
+                        return ResponseEntity.ok(new Response(400, "scholarId与ScholarName不对应", ""));
+                    }
+                }
+                Map<String, String> ins = new HashMap<String, String>();
+                ins.put("AvatarUrl", scholar.getAvatarUrl());
+                ins.put("Name", scholar.getName());
+                ins.put("ScholarId", String.valueOf(scholar.getScholarId()));
+                ins.put("Institution", scholar.getOrganization());
+                res.add(ins);
             } else return ResponseEntity.ok(new Response(400, "scholarId不存在", ""));
         } else if (ScholarName.length() != 0) {
             List<Scholar> scholars = scholarDao.findByName(ScholarName);
@@ -319,7 +335,7 @@ public class ScholarService {
         List<Subscribe> subscribes = subscribeMethod.getSubscribeByFanId(fanId);
         for (int i = 0; i < subscribes.size(); i++) {
             Map<String, String> ins = new HashMap<String, String>();
-            int scholarId = subscribes.get(0).getScholarId();
+            int scholarId = subscribes.get(i).getScholarId();
             Scholar scholar = scholarMethod.getScholarById(scholarId);
             ins.put("AvatarUrl", scholar.getAvatarUrl());
             ins.put("Name", scholar.getName());

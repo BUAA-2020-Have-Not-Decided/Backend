@@ -1,6 +1,8 @@
 package cn.edu.buaa.scholarshipserver.controllers;
 
 import cn.edu.buaa.scholarshipserver.dao.*;
+import cn.edu.buaa.scholarshipserver.es.Cooperation;
+import cn.edu.buaa.scholarshipserver.es.DataScholar;
 import cn.edu.buaa.scholarshipserver.es.Scholar;
 import cn.edu.buaa.scholarshipserver.models.Project;
 import cn.edu.buaa.scholarshipserver.services.UploadService;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -27,18 +30,19 @@ public class TestController {
         private WorkExperienceDao workExperienceDao;
         @Autowired
         private InstitutionDao institutionDao;
-
+        @Autowired
+        private DataScholarDao dataScholarDao;
+        @Autowired
+        private CooperationDao cooperationDao;
         @PutMapping("/test1")
         public ResponseEntity<Response> test(){
                 Scholar scholar = new Scholar();
-                scholar.setScholarId(1);
-                scholar.setEnglishName("Yuan CZ.");
-                scholar.setName("原仓周");
-                scholar.setTitle("副教授");
-                scholar.setOrganization("BUAA");
-                scholar.setFans(0);
+                scholar.setScholarId(13);
+                scholar.setEnglishName("lululu");
+                scholar.setName("路路路");
+                scholar.setEmail("18231077@buaa.edu.cn");
                 scholarDao.save(scholar);
-                return ResponseEntity.ok(new Response("ok"));
+                return ResponseEntity.ok(new Response(""));
         }
         @GetMapping("/test1")
         public ResponseEntity<Response> test1(){
@@ -46,14 +50,21 @@ public class TestController {
         }
         @GetMapping("/test2")
         public ResponseEntity<Response> test2(){
-                return ResponseEntity.ok(new Response(projectDao.findById(1L)));
+
+
+
+                return ResponseEntity.ok(new Response(scholarDao.findByName("路路路")));
+
         }
         @GetMapping("/test3")
         public ResponseEntity<Response> test3(){
                 return ResponseEntity.ok(new Response(patentDao.findById(1L)));
         }
-        @GetMapping("/test4")
-        public ResponseEntity<Response> test4(){
-                return ResponseEntity.ok(new Response(institutionDao.findByInstitutionId(119454577L)));
+        @GetMapping("/test4/{Id}")
+        public ResponseEntity<Response> test4(@PathVariable("Id") String id){
+                List<List<Cooperation>> list1 = new ArrayList<>();
+                list1.add(cooperationDao.findByAuthorId1(Long.valueOf(id)));
+                list1.add(cooperationDao.findByAuthorId2(Long.valueOf(id)));
+                return ResponseEntity.ok(new Response(list1));
         }
 }
