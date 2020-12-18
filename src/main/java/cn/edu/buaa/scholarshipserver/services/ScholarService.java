@@ -76,7 +76,7 @@ public class ScholarService {
                                 /*
                                 NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
                                 nativeSearchQueryBuilder.withQuery(QueryBuilders.termsQuery("paperId",paperList));
-                                 */
+                                */
 
                         }
         }
@@ -84,7 +84,6 @@ public class ScholarService {
 
         responseMap.put("paperNum",paperList.size());
         responseMap.put("paper",paperList);
-
         List<Optional<cn.edu.buaa.scholarshipserver.models.Project>> projectList = new ArrayList<>();
         List<Optional<Patent>> patentList = new ArrayList<>();
         List<Project_Scholar> projectScholarList = projectScholarDao.findByScholarId(scholar.getScholarId());
@@ -101,6 +100,7 @@ public class ScholarService {
         responseMap.put("patent",patentList);
                 //下面获取合作学者
         Map<String,Integer>coAuthorsMap = new TreeMap<>();
+        /*
         for(DataScholar dataScholar :dataScholarList){
             List<Cooperation> cooperationList = cooperationDao.findByAuthorId1(dataScholar.getAuthorId());
             for(Cooperation cooperation : cooperationList){
@@ -114,6 +114,7 @@ public class ScholarService {
             }
         }
         responseMap.put("coAuthors",coAuthorsMap);
+        */
         //工作经历
         List<WorkExperience>workExperienceList = workExperienceDao.findByScholarId(scholar.getScholarId());
         responseMap.put("workExperience",workExperienceList);
