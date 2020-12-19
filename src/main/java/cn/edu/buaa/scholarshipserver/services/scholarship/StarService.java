@@ -6,7 +6,7 @@ import cn.edu.buaa.scholarshipserver.dao.PatentDao;
 import cn.edu.buaa.scholarshipserver.dao.ProjectDao;
 import cn.edu.buaa.scholarshipserver.es.CorrectPaper;
 import cn.edu.buaa.scholarshipserver.es.Patent;
-import cn.edu.buaa.scholarshipserver.es.Project;
+import cn.edu.buaa.scholarshipserver.models.Project;
 import cn.edu.buaa.scholarshipserver.models.Collect_Article;
 import cn.edu.buaa.scholarshipserver.models.Collect_Patent;
 import cn.edu.buaa.scholarshipserver.models.Collect_Project;
@@ -101,7 +101,7 @@ public class StarService {
         List<Collect_Patent> allCollectPatent = collectMapper.getAllCollectPatent(userId);
         List<Patent> patents = new ArrayList<>();
         for (Collect_Patent collect_patent : allCollectPatent) {
-            patents.add(patentDao.findPatentById(collect_patent.getPatentId()));
+            patents.add(patentDao.findById(collect_patent.getPatentId()).orElse(null));
         }
         Map<String, Object> responseMap = new TreeMap<>();
         responseMap.put("patentList", patents);
@@ -113,9 +113,7 @@ public class StarService {
         List<Collect_Project> allCollectProject = collectMapper.getAllCollectProject(userId);
         List<Project> projects = new ArrayList<>();
         for (Collect_Project collect_project : allCollectProject) {
-            long pid = collect_project.getProjectId();
-            int ppid = (int) pid;
-            projects.add(projectDao.findByProjectId(ppid));
+            projects.add(projectDao.findById(collect_project.getProjectId()).orElse(null));
         }
         Map<String, Object> responseMap = new TreeMap<>();
         responseMap.put("projectList", projects);
