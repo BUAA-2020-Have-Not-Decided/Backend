@@ -237,7 +237,7 @@ public class UserController {
             res.setCode(1001);
             data.put("identification", u.getIdentify());
             data.put("username", u.getName());
-            data.put("avatar", u.getUserImagePath);
+            data.put("avatar", u.getUserImagePath());
             if(u.getIdentify()==1){
                 Scholar s = this.scholar_mapper.selectByUID(u.getUserID());
                 data.put("scholarId", s.getScholarid());
