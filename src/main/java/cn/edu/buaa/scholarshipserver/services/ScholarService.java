@@ -113,10 +113,15 @@ public class ScholarService {
         responseMap.put("patent",patentList);
                 //下面获取合作学者
         Map<String,Integer>coAuthorsMap = new TreeMap<>();
+
         for(DataScholar dataScholar :dataScholarList){
-            List<Cooperation> cooperationList = cooperationDao.findByAuthorId1(dataScholar.getAuthorId());
+            List<Cooperation> cooperationList = cooperationDao.findByAuthorId1OrAuthorId2(dataScholar.getAuthorId(),dataScholar.getAuthorId());
             for(Cooperation cooperation : cooperationList){
-                String authorName = dataScholarMethod.getDataScholarByAuthorId(cooperation.getAuthorId2()).getNormalizedName();
+                String authorName;
+                if(cooperation.getAuthorId1().equals(dataScholar.getAuthorId()))
+                    authorName = dataScholarMethod.getDataScholarByAuthorId(cooperation.getAuthorId2()).getNormalizedName();
+                else
+                    authorName = dataScholarMethod.getDataScholarByAuthorId(cooperation.getAuthorId1()).getNormalizedName();
                 if(null == coAuthorsMap.get(authorName)){
                     coAuthorsMap.put(authorName,cooperation.getTimes());
                 }else{
@@ -126,6 +131,7 @@ public class ScholarService {
             }
         }
         responseMap.put("coAuthors",coAuthorsMap);
+
         //工作经历
         List<WorkExperience>workExperienceList = workExperienceDao.findByScholarId(scholar.getScholarId());
         responseMap.put("workExperience",workExperienceList);
@@ -337,6 +343,7 @@ public class ScholarService {
             Map<String, String> ins = new HashMap<String, String>();
             int scholarId = subscribes.get(i).getScholarId();
             Scholar scholar = scholarMethod.getScholarById(scholarId);
+            if(scholar==null) return ResponseEntity.ok(new Response(400, "database wrong", ""));
             ins.put("AvatarUrl", scholar.getAvatarUrl());
             ins.put("Name", scholar.getName());
             ins.put("ScholarId", String.valueOf(scholar.getScholarId()));
