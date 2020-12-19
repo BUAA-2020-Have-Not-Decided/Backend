@@ -96,6 +96,9 @@ public class ShiroConfig {
         filterRuleMap.put("/scholarship/getHaveClaim/**","jwt_user");
 
         filterRuleMap.put("/scholarship/starStatus", "jwt_user");
+        filterRuleMap.put("/scholarship/staredPaper", "jwt_user");
+        filterRuleMap.put("/scholarship/staredPatent", "jwt_user");
+        filterRuleMap.put("/scholarship/staredProject", "jwt_user");
 
 
 
