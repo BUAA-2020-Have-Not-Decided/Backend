@@ -34,19 +34,20 @@ public class TestController {
         private DataScholarDao dataScholarDao;
         @Autowired
         private CooperationDao cooperationDao;
+        @Autowired
+        private PaperDataScholarDao paperDataScholarDao;
         @PutMapping("/test1")
         public ResponseEntity<Response> test(){
-                Scholar scholar = new Scholar();
-                scholar.setScholarId(13);
-                scholar.setEnglishName("lululu");
-                scholar.setName("路路路");
-                scholar.setEmail("18231077@buaa.edu.cn");
-                scholarDao.save(scholar);
-                return ResponseEntity.ok(new Response(""));
+                List<DataScholar> dataScholar = dataScholarDao.findByScholarId(13);
+                for(int i = 0 ;i<dataScholar.size();i++){
+                        dataScholar.get(i).setScholarId(-1);
+                }
+                dataScholarDao.saveAll(dataScholar);
+                return ResponseEntity.ok(new Response(dataScholar));
         }
         @GetMapping("/test1")
         public ResponseEntity<Response> test1(){
-                return ResponseEntity.ok(new Response(paperDao.findByPaperId(2892786837L)));
+                return ResponseEntity.ok(new Response(paperDataScholarDao.findByAuthorId(2099217884L)));
         }
         @GetMapping("/test2")
         public ResponseEntity<Response> test2(){
