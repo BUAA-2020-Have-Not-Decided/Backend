@@ -77,7 +77,8 @@ public class ScholarService {
             List<Paper_DataScholar> paperDataScholarList = paperDataScholarDao.findByAuthorId(dataScholar.getAuthorId());
             for (Paper_DataScholar paperDataScholar : paperDataScholarList) {
                 Paper paper = paperDao.findByPaperId(paperDataScholar.getPaperId());
-                paperSet.add(paper);
+                if(paper != null)
+                    paperSet.add(paper);
                                 /*
                                 NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
                                 nativeSearchQueryBuilder.withQuery(QueryBuilders.termsQuery("paperId",paperList));
@@ -93,7 +94,9 @@ public class ScholarService {
             Page<Paper_DataScholar> tem = paperDataScholarDao.search(nativeSearchQueryBuilder.build());
             List<String> tem1 = new ArrayList<>();
             for(Paper_DataScholar paperDataScholar : tem){
-                tem1.add(dataScholarMethod.getDataScholarByAuthorId(paperDataScholar.getAuthorId()).getNormalizedName());
+                DataScholar dataScholar1 = dataScholarMethod.getDataScholarByAuthorId(paperDataScholar.getAuthorId());
+                if(dataScholar1!=null)
+                    tem1.add(dataScholar1.getNormalizedName());
             }
             authorList.add(tem1);
         }
@@ -159,17 +162,21 @@ public class ScholarService {
             List<Paper_DataScholar> paperDataScholarList = paperDataScholarDao.findByAuthorId(dataScholar.getAuthorId());
             for (Paper_DataScholar paperDataScholar : paperDataScholarList) {
                 Paper paper = paperDao.findByPaperId(paperDataScholar.getPaperId());
-                paperSet.add(paper);
+                if(paper != null)
+                    paperSet.add(paper);
             }
             List<Paper>paperList = new ArrayList<>(paperSet);
             List<List<String>> authorList = new ArrayList<>();
             for(Paper paper : paperList){
                 NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder() ;
+                System.out.println(paper);
                 nativeSearchQueryBuilder.withQuery(QueryBuilders.termQuery("PaperId",paper.getPaperId()));
                 Page<Paper_DataScholar> tem = paperDataScholarDao.search(nativeSearchQueryBuilder.build());
                 List<String> tem1 = new ArrayList<>();
                 for(Paper_DataScholar paperDataScholar : tem){
-                    tem1.add(dataScholarMethod.getDataScholarByAuthorId(paperDataScholar.getAuthorId()).getNormalizedName());
+                    DataScholar dataScholar1 = dataScholarMethod.getDataScholarByAuthorId(paperDataScholar.getAuthorId());
+                    if(dataScholar1!=null)
+                        tem1.add(dataScholar1.getNormalizedName());
                 }
                 authorList.add(tem1);
             }
