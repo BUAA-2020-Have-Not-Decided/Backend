@@ -327,6 +327,7 @@ public class ScholarService {
             Map<String, String> ins = new HashMap<String, String>();
             int scholarId = subscribes.get(i).getScholarId();
             Scholar scholar = scholarMethod.getScholarById(scholarId);
+            if(scholar==null) return ResponseEntity.ok(new Response(400, "database wrong", ""));
             ins.put("AvatarUrl", scholar.getAvatarUrl());
             ins.put("Name", scholar.getName());
             ins.put("ScholarId", String.valueOf(scholar.getScholarId()));
