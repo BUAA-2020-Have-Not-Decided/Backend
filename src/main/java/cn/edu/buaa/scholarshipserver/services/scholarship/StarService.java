@@ -36,23 +36,23 @@ public class StarService {
             case 0:
                 Collect_Article collect_article = collectMapper.getCollectPaper(userId, paperId);
                 if (collect_article == null) {
-                    return 0;
-                } else {
                     return 1;
+                } else {
+                    return 0;
                 }
             case 1:
                 Collect_Patent collect_patent = collectMapper.getCollectPatent(userId, paperId);
                 if (collect_patent == null) {
-                    return 2;
-                } else {
                     return 3;
+                } else {
+                    return 2;
                 }
             case 2:
                 Collect_Project collect_project = collectMapper.getCollectProject(userId, paperId);
                 if (collect_project == null) {
-                    return 4;
-                } else {
                     return 5;
+                } else {
+                    return 4;
                 }
             default:
                 return 6;

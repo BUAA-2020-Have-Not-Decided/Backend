@@ -1,5 +1,6 @@
 package cn.edu.buaa.scholarshipserver.controllers;
 
+import cn.edu.buaa.scholarshipserver.controllers.scholarship.ChangeStarStatus;
 import cn.edu.buaa.scholarshipserver.dao.ScholarDao;
 import cn.edu.buaa.scholarshipserver.es.CorrectPaper;
 import cn.edu.buaa.scholarshipserver.es.Paper;
@@ -379,18 +380,19 @@ public class ScholarshipController {
         return ResponseEntity.ok(new Response(responseMap));
     }
 
-    @PutMapping("/scholarship/starStatus")
+    @PutMapping("/starStatus")
     @ApiOperation(notes = "修改收藏状态", value = "修改收藏状态")
-    public ResponseEntity<Response> changeStarStatus(Long paperId, Integer type) {
+    public ResponseEntity<Response> changeStarStatus(@RequestBody ChangeStarStatus request) {
         User u = (User)SecurityUtils.getSubject().getPrincipal();
         if(u == null)
             return ResponseEntity.ok(new Response(403,"请先登录！",0));
-        return starService.changeStarStatus(u.getUserID(), paperId, type);
+        return starService.changeStarStatus(u.getUserID(), request.getPaperId(), request.getType());
     }
 
-    @GetMapping("/scholarship/starStatus")
+    @GetMapping("/starStatus")
     @ApiOperation(notes = "获取收藏状态", value = "获取收藏状态")
-    public ResponseEntity<Response> getStarStatusRes (Long paperId, Integer type) {
+    public ResponseEntity<Response> getStarStatusRes (@RequestParam("paperId") Long paperId,
+                                                      @RequestParam("type") Integer type) {
         User u = (User)SecurityUtils.getSubject().getPrincipal();
         if(u == null)
             return ResponseEntity.ok(new Response(403,"请先登录！",0));
@@ -406,7 +408,7 @@ public class ScholarshipController {
         }
     }
 
-    @GetMapping("/scholarship/staredPaper")
+    @GetMapping("/staredPaper")
     @ApiOperation(notes = "获取已收藏文献列表", value = "获取已收藏文献列表")
     public ResponseEntity<Response> getStaredPaper () {
         User u = (User)SecurityUtils.getSubject().getPrincipal();
@@ -415,7 +417,7 @@ public class ScholarshipController {
         return starService.getStaredPaper(u.getUserID());
     }
 
-    @GetMapping("/scholarship/staredPatent")
+    @GetMapping("/staredPatent")
     @ApiOperation(notes = "获取已收藏专利列表", value = "获取已收藏专利列表")
     public ResponseEntity<Response> getStaredPatent () {
         User u = (User)SecurityUtils.getSubject().getPrincipal();
@@ -424,7 +426,7 @@ public class ScholarshipController {
         return starService.getStaredPatent(u.getUserID());
     }
 
-    @GetMapping("/scholarship/staredProject")
+    @GetMapping("/staredProject")
     @ApiOperation(notes = "获取已收藏项目列表", value = "获取已收藏项目列表")
     public ResponseEntity<Response> getStaredProject () {
         User u = (User)SecurityUtils.getSubject().getPrincipal();
