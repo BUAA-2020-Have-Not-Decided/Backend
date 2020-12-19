@@ -9,8 +9,11 @@ import cn.edu.buaa.scholarshipserver.services.scholar.ScholarMethod;
 import cn.edu.buaa.scholarshipserver.services.scholar.SubscribeMethod;
 import cn.edu.buaa.scholarshipserver.utils.Response;
 import org.apache.shiro.SecurityUtils;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.joda.time.DateTime;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -85,7 +88,9 @@ public class ScholarService {
         List<Paper>paperList = new ArrayList<>(paperSet);
         List<List<String>> authorList = new ArrayList<>();
         for(Paper paper : paperList){
-            List<Paper_DataScholar> tem = paperDataScholarDao.findByPaperId(paper.getPaperId());
+            NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder() ;
+            nativeSearchQueryBuilder.withQuery(QueryBuilders.termQuery("PaperId",paper.getPaperId()));
+            Page<Paper_DataScholar> tem = paperDataScholarDao.search(nativeSearchQueryBuilder.build());
             List<String> tem1 = new ArrayList<>();
             for(Paper_DataScholar paperDataScholar : tem){
                 tem1.add(dataScholarMethod.getDataScholarByAuthorId(paperDataScholar.getAuthorId()).getNormalizedName());
