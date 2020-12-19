@@ -6,6 +6,7 @@ import cn.edu.buaa.scholarshipserver.utils.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -86,11 +87,11 @@ public class MessageService {
     public ResponseEntity<Response> makeAppeal(Integer userId,
                                                Long towardsId,
                                                String towardsType,
-                                               String complaintMaterial,
+                                               String complaintMaterialUrl,
                                                String messageTitle,
                                                String messageContent) {
         try {
-            Message newMessage = new Message(null, null, null, null, null, null, userId, 0, messageTitle, messageContent, 0, new Date(), 2);
+            Message newMessage = new Message(null, null, null, null, null, complaintMaterialUrl, userId, 0, messageTitle, messageContent, 0, new Date(), 2);
             switch (towardsType) {
                 case "dataScholar":
                     newMessage.setDataScholarId(towardsId);
@@ -106,15 +107,6 @@ public class MessageService {
                     break;
                 default:
                     return ResponseEntity.ok(new Response(400, "wrong scholarship type", ""));
-            }
-            if (complaintMaterial != null) {
-                try {
-                    String complaintMaterialFilePath = uploadImage(complaintMaterial);
-                    newMessage.setComplaintMaterialUrl(complaintMaterialFilePath);
-                }
-                catch (Exception e) {
-                    return ResponseEntity.ok(new Response(500, e.getMessage(), ""));
-                }
             }
             messageMapper.insertSelective(newMessage);
             return ResponseEntity.ok(new Response("done", ""));
@@ -175,6 +167,10 @@ public class MessageService {
             e.printStackTrace();
             throw new Exception("IOException occurred");
         }
+    }
+
+    public ResponseEntity<Response> uploadFile(MultipartFile complaintMaterial){
+
     }
 
     public ResponseEntity<Response> getAppeals() {
