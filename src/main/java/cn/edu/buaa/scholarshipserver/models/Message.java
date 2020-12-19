@@ -7,6 +7,7 @@ public class Message implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private Integer msgid;
+    private Integer scholar_id;
     private Long data_scholar_id;
     private Long paperid;
     private Long patentid;
@@ -20,8 +21,9 @@ public class Message implements Serializable {
     private Date sendtime;
     private Integer msgtype;
 
-    public Message(Integer msgid, Long data_scholar_id, Long paperid, Long patentid, Long projectid, String complaint_material_url, Integer sender_userid, Integer receiver_userid, String msgtitle, String msgcontent, Integer msgstatus, Date sendtime, Integer msgtype) {
+    public Message(Integer msgid, Integer scholar_id, Long data_scholar_id, Long paperid, Long patentid, Long projectid, String complaint_material_url, Integer sender_userid, Integer receiver_userid, String msgtitle, String msgcontent, Integer msgstatus, Date sendtime, Integer msgtype) {
         this.msgid = msgid;
+        this.scholar_id = scholar_id;
         this.data_scholar_id = data_scholar_id;
         this.paperid = paperid;
         this.patentid = patentid;
@@ -42,6 +44,14 @@ public class Message implements Serializable {
 
     public void setMsgid(Integer msgid) {
         this.msgid = msgid;
+    }
+
+    public Integer getScholarId() {
+        return scholar_id;
+    }
+
+    public void setScholarId(Integer scholar_id) {
+        this.scholar_id = scholar_id;
     }
 
     public Long getDataScholarId() {
