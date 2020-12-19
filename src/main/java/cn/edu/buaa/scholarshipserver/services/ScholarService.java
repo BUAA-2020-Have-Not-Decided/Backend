@@ -102,9 +102,13 @@ public class ScholarService {
         Map<String,Integer>coAuthorsMap = new TreeMap<>();
         /*
         for(DataScholar dataScholar :dataScholarList){
-            List<Cooperation> cooperationList = cooperationDao.findByAuthorId1(dataScholar.getAuthorId());
+            List<Cooperation> cooperationList = cooperationDao.findByAuthorId1AndAuthorId2(dataScholar.getAuthorId(),dataScholar.getAuthorId());
             for(Cooperation cooperation : cooperationList){
-                String authorName = dataScholarMethod.getDataScholarByAuthorId(cooperation.getAuthorId2()).getNormalizedName();
+                String authorName;
+                if(cooperation.getAuthorId1().equals(dataScholar.getAuthorId()))
+                    authorName = dataScholarMethod.getDataScholarByAuthorId(cooperation.getAuthorId2()).getNormalizedName();
+                else
+                    authorName = dataScholarMethod.getDataScholarByAuthorId(cooperation.getAuthorId1()).getNormalizedName();
                 if(null == coAuthorsMap.get(authorName)){
                     coAuthorsMap.put(authorName,cooperation.getTimes());
                 }else{
