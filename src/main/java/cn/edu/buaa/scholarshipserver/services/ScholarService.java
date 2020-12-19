@@ -100,9 +100,9 @@ public class ScholarService {
         responseMap.put("patent",patentList);
                 //下面获取合作学者
         Map<String,Integer>coAuthorsMap = new TreeMap<>();
-        /*
+
         for(DataScholar dataScholar :dataScholarList){
-            List<Cooperation> cooperationList = cooperationDao.findByAuthorId1AndAuthorId2(dataScholar.getAuthorId(),dataScholar.getAuthorId());
+            List<Cooperation> cooperationList = cooperationDao.findByAuthorId1OrAuthorId2(dataScholar.getAuthorId(),dataScholar.getAuthorId());
             for(Cooperation cooperation : cooperationList){
                 String authorName;
                 if(cooperation.getAuthorId1().equals(dataScholar.getAuthorId()))
@@ -118,7 +118,7 @@ public class ScholarService {
             }
         }
         responseMap.put("coAuthors",coAuthorsMap);
-        */
+
         //工作经历
         List<WorkExperience>workExperienceList = workExperienceDao.findByScholarId(scholar.getScholarId());
         responseMap.put("workExperience",workExperienceList);

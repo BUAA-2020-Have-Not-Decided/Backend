@@ -17,7 +17,7 @@ import java.util.Date;
 public class Paper implements Serializable {
         @Id
         @Field(type = FieldType.Auto)
-        private Long PaperId;
+        private Long paperId;
         @Field(type = FieldType.Auto)
         private String doi;
         @Field(type = FieldType.Auto)
