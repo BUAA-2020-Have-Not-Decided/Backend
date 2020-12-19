@@ -126,10 +126,20 @@ public class ScholarService {
             List<Cooperation> cooperationList = cooperationDao.findByAuthorId1OrAuthorId2(dataScholar.getAuthorId(),dataScholar.getAuthorId());
             for(Cooperation cooperation : cooperationList){
                 String authorName;
-                if(cooperation.getAuthorId1().equals(dataScholar.getAuthorId()))
-                    authorName = dataScholarMethod.getDataScholarByAuthorId(cooperation.getAuthorId2()).getNormalizedName();
-                else
-                    authorName = dataScholarMethod.getDataScholarByAuthorId(cooperation.getAuthorId1()).getNormalizedName();
+                if(cooperation.getAuthorId1().equals(dataScholar.getAuthorId())){
+                    DataScholar dataScholar1 = dataScholarMethod.getDataScholarByAuthorId(cooperation.getAuthorId2());
+                    if(dataScholar1!=null)
+                        authorName = dataScholarMethod.getDataScholarByAuthorId(cooperation.getAuthorId2()).getNormalizedName();
+                    else
+                        continue;
+                }
+                else{
+                    DataScholar dataScholar1 = dataScholarMethod.getDataScholarByAuthorId(cooperation.getAuthorId1());
+                    if(dataScholar1!=null)
+                        authorName = dataScholarMethod.getDataScholarByAuthorId(cooperation.getAuthorId1()).getNormalizedName();
+                    else
+                        continue;
+                }
                 if(null == coAuthorsMap.get(authorName)){
                     coAuthorsMap.put(authorName,cooperation.getTimes());
                 }else{
