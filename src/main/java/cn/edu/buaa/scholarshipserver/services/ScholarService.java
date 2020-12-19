@@ -162,8 +162,20 @@ public class ScholarService {
                 paperSet.add(paper);
             }
             List<Paper>paperList = new ArrayList<>(paperSet);
+            List<List<String>> authorList = new ArrayList<>();
+            for(Paper paper : paperList){
+                NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder() ;
+                nativeSearchQueryBuilder.withQuery(QueryBuilders.termQuery("PaperId",paper.getPaperId()));
+                Page<Paper_DataScholar> tem = paperDataScholarDao.search(nativeSearchQueryBuilder.build());
+                List<String> tem1 = new ArrayList<>();
+                for(Paper_DataScholar paperDataScholar : tem){
+                    tem1.add(dataScholarMethod.getDataScholarByAuthorId(paperDataScholar.getAuthorId()).getNormalizedName());
+                }
+                authorList.add(tem1);
+            }
             responseMap.put("paperNum",paperList.size());
             responseMap.put("paper",paperList);
+            responseMap.put("authorList",authorList);
             if(dataScholar.getLastKnownAffiliationId()==-1L){
                 responseMap.put("institution","");
             }
