@@ -165,6 +165,7 @@ public class UserController {
             int uid = s.getUid();
             this.user_mapper.updateIdentify(uid, 1);
             res.setMessage("认证学者成功");
+            data.put("englishname", s.getEnglishname());
         }catch(Exception e){
             res.setCode(500);
             res.setMessage("服务器有点问题");
@@ -172,7 +173,6 @@ public class UserController {
         return res;
     }
 
-    //TODO 接收前端上传的头像
     @PostMapping("/avatar")
     public Response uploadAvatar(@RequestParam("Base64")String picture){
         HashMap<String, Object> data = new HashMap<>();
