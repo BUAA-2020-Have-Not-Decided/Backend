@@ -206,8 +206,25 @@ public class MessageService {
     public ResponseEntity<Response> updateAppealMessageStatus(Integer messageId, Integer messageStatus) {
         try {
             Message message = messageMapper.selectByPrimaryKey(messageId);
-            message.setMsgstatus(messageStatus);
-            messageMapper.updateByPrimaryKeySelective(message);
+            Integer currentStatus = message.getMsgstatus();
+            if (!messageStatus.equals(currentStatus)) {
+                message.setMsgstatus(messageStatus);
+                messageMapper.updateByPrimaryKeySelective(message);
+                Integer scholarId = message.getScholarId();
+                Integer senderUserId = message.getSenderUserid();
+                if (messageStatus == 3) {
+                    Message systemMessage = new Message(null, scholarId, null, null, null,
+                            null, null, 0, senderUserId, "系统消息",
+                            "您的申诉已通过", 0, new Date(), 0);
+                    messageMapper.insertSelective(systemMessage);
+                }
+                else if (messageStatus == 4) {
+                    Message systemMessage = new Message(null, scholarId, null, null, null,
+                            null, null, 0, senderUserId, "系统消息",
+                            "抱歉，您的申诉未通过", 0, new Date(), 0);
+                    messageMapper.insertSelective(systemMessage);
+                }
+            }
             return ResponseEntity.ok(new Response("done", ""));
         } catch (Exception e) {
             return ResponseEntity.ok(new Response(500, "something's wrong", ""));
