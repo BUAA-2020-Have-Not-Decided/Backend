@@ -47,7 +47,10 @@ public class TestController {
         }
         @GetMapping("/test1")
         public ResponseEntity<Response> test1(){
-                return ResponseEntity.ok(new Response(paperDataScholarDao.findByAuthorId(2099217884L)));
+                
+
+                return ResponseEntity.ok(new Response(cooperationDao.findByAuthorId1OrAuthorId2(2099217884L,2099217884L)));
+
         }
         @GetMapping("/test2")
         public ResponseEntity<Response> test2(){
