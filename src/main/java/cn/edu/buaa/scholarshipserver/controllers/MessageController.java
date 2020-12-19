@@ -57,7 +57,7 @@ public class MessageController {
         return messageService.makeAppeal(user.getUserID(), scholarId, towardsId, towardsType, complaintMaterialUrl, messageTitle, messageContent);
     }
 
-    @PostMapping("/scholar/appeal/one/file")
+    @PostMapping("/file/one")
     public ResponseEntity<Response> uploadComplaintMaterial(MultipartFile file) {
         return messageService.uploadFile(file);
     }
