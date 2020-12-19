@@ -6,6 +6,7 @@ import cn.edu.buaa.scholarshipserver.utils.Response;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/message")
@@ -48,11 +49,16 @@ public class MessageController {
     @PostMapping("/scholar/appeal/one")
     public ResponseEntity<Response> makeAppeal(Long towardsId,
                                                String towardsType,
-                                               String complaintMaterial,
+                                               String complaintMaterialUrl,
                                                String messageTitle,
                                                String messageContent) {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
-        return messageService.makeAppeal(user.getUserID(), towardsId, towardsType, complaintMaterial, messageTitle, messageContent);
+        return messageService.makeAppeal(user.getUserID(), towardsId, towardsType, complaintMaterialUrl, messageTitle, messageContent);
+    }
+
+    @PostMapping("/scholar/appeal/one/file")
+    public ResponseEntity<Response> uploadComplaintMaterial(MultipartFile file) {
+        return messageService.uploadFile(file);
     }
 
     @GetMapping("/admin/appeal/all")
