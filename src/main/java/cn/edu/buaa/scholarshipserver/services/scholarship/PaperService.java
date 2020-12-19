@@ -85,30 +85,32 @@ public class PaperService {
         for (org.elasticsearch.search.SearchHit documentFields : searchResponse.getHits().getHits()) {
             long authorid = Long.parseLong(documentFields.getSourceAsMap().get("authorId").toString());
             DataScholar dataScholar = dataScholarDao.findByAuthorId(authorid);
-            if (dataScholar.getScholarId() == -1) {
-                HashMap<String, Object> authorMap = new HashMap<>();
-                authorMap.put("type", 0);
-                authorMap.put("authorId", dataScholar.getAuthorId());
-                authorMap.put("name", dataScholar.getDisplayName());
-                authorMap.put("paperCount", dataScholar.getPaperCount());
-                authorMap.put("citationCount", dataScholar.getCitationCount());
-                authorMap.put("HIndex", dataScholar.getHIndex());
-                authorList.add(authorMap);
-            } else {
-                int scholarId = dataScholar.getScholarId();
-                Scholar scholar = scholarDao.findByScholarId(scholarId);
-                HashMap<String, Object> scholarMap = new HashMap<>();
-                scholarMap.put("type", 1);
-                scholarMap.put("scholarId", scholar.getScholarId());
-                scholarMap.put("englishName", scholar.getEnglishName());
-                scholarMap.put("name", scholar.getName());
-                scholarMap.put("title", scholar.getTitle());
-                scholarMap.put("organization", scholar.getOrganization());
-                scholarMap.put("papers", scholar.getPapers());
-                scholarMap.put("citations", scholar.getCitations());
-                scholarMap.put("hIndex", scholar.getHIndex());
-                scholarMap.put("gIndex", scholar.getGIndex());
-                scholarList.add(scholarMap);
+            if (dataScholar != null) {
+                if (dataScholar.getScholarId() == -1) {
+                    HashMap<String, Object> authorMap = new HashMap<>();
+                    authorMap.put("type", 0);
+                    authorMap.put("authorId", dataScholar.getAuthorId());
+                    authorMap.put("name", dataScholar.getDisplayName());
+                    authorMap.put("paperCount", dataScholar.getPaperCount());
+                    authorMap.put("citationCount", dataScholar.getCitationCount());
+                    authorMap.put("HIndex", dataScholar.getHIndex());
+                    authorList.add(authorMap);
+                } else {
+                    int scholarId = dataScholar.getScholarId();
+                    Scholar scholar = scholarDao.findByScholarId(scholarId);
+                    HashMap<String, Object> scholarMap = new HashMap<>();
+                    scholarMap.put("type", 1);
+                    scholarMap.put("scholarId", scholar.getScholarId());
+                    scholarMap.put("englishName", scholar.getEnglishName());
+                    scholarMap.put("name", scholar.getName());
+                    scholarMap.put("title", scholar.getTitle());
+                    scholarMap.put("organization", scholar.getOrganization());
+                    scholarMap.put("papers", scholar.getPapers());
+                    scholarMap.put("citations", scholar.getCitations());
+                    scholarMap.put("hIndex", scholar.getHIndex());
+                    scholarMap.put("gIndex", scholar.getGIndex());
+                    scholarList.add(scholarMap);
+                }
             }
         }
         HashMap<String, Object> authorMap = new HashMap<>();
