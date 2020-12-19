@@ -57,8 +57,8 @@ public class MessageController {
     }
 
     @PostMapping("/scholar/appeal/one/file")
-    public ResponseEntity<Response> uploadComplaintMaterial(MultipartFile complaintMaterial) {
-        return messageService.uploadFile(complaintMaterial);
+    public ResponseEntity<Response> uploadComplaintMaterial(MultipartFile file) {
+        return messageService.uploadFile(file);
     }
 
     @GetMapping("/admin/appeal/all")

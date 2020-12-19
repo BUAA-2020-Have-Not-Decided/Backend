@@ -6,15 +6,14 @@ import cn.edu.buaa.scholarshipserver.utils.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 @Service
@@ -169,8 +168,28 @@ public class MessageService {
         }
     }
 
-    public ResponseEntity<Response> uploadFile(MultipartFile complaintMaterial){
-
+    public ResponseEntity<Response> uploadFile(MultipartFile file) {
+        String newFileName = "";
+        String originalFilename = file.getOriginalFilename();
+        String[] allowedExtensionNames = {"pdf", "docx", "doc", "ppt", "jpg", "png"};
+        if (originalFilename != null) {
+            String extensionName = originalFilename.substring(originalFilename.lastIndexOf(".")).substring(1);
+            if (Arrays.asList(allowedExtensionNames).contains(extensionName)) {
+                newFileName = UUID.randomUUID().toString() + "." + extensionName;
+            }
+            else {
+                return ResponseEntity.ok(new Response(400, "not-allowed extension name"));
+            }
+        }
+        else {
+            return ResponseEntity.ok(new Response(400, "didn't get the original file name"));
+        }
+        try {
+            FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(new File(filePath + newFileName)));
+        } catch (IOException e) {
+            return ResponseEntity.ok(new Response(500, "Something went wrong when writing the file to server"));
+        }
+        return ResponseEntity.ok(new Response("http://" + fileHost + "/files/" + newFileName));
     }
 
     public ResponseEntity<Response> getAppeals() {
