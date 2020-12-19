@@ -47,13 +47,14 @@ public class MessageController {
     }
 
     @PostMapping("/scholar/appeal/one")
-    public ResponseEntity<Response> makeAppeal(Long towardsId,
+    public ResponseEntity<Response> makeAppeal(Integer scholarId,
+                                               Long towardsId,
                                                String towardsType,
                                                String complaintMaterialUrl,
                                                String messageTitle,
                                                String messageContent) {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
-        return messageService.makeAppeal(user.getUserID(), towardsId, towardsType, complaintMaterialUrl, messageTitle, messageContent);
+        return messageService.makeAppeal(user.getUserID(), scholarId, towardsId, towardsType, complaintMaterialUrl, messageTitle, messageContent);
     }
 
     @PostMapping("/scholar/appeal/one/file")

@@ -148,6 +148,7 @@ create table Institution
 create table Message
 (
    MessageId            int not null auto_increment,
+   ScholarId            int,
    DataScholarId        bigint,
    PaperId              bigint,
    PatentId             bigint,

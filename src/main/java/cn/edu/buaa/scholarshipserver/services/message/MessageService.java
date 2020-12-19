@@ -33,7 +33,7 @@ public class MessageService {
                                                     String messageContent,
                                                     Integer sender_userid,
                                                     Integer receiver_userid) {
-        Message newMessage = new Message(null, null, null, null, null, null, sender_userid, receiver_userid, messageTitle, messageContent, 0, new Date(), 1);
+        Message newMessage = new Message(null, null, null, null, null, null, null, sender_userid, receiver_userid, messageTitle, messageContent, 0, new Date(), 1);
         try {
             messageMapper.insertSelective(newMessage);
             return ResponseEntity.ok(new Response("message sent", ""));
@@ -84,13 +84,14 @@ public class MessageService {
     }
 
     public ResponseEntity<Response> makeAppeal(Integer userId,
+                                               Integer scholarId,
                                                Long towardsId,
                                                String towardsType,
                                                String complaintMaterialUrl,
                                                String messageTitle,
                                                String messageContent) {
         try {
-            Message newMessage = new Message(null, null, null, null, null, complaintMaterialUrl, userId, 0, messageTitle, messageContent, 0, new Date(), 2);
+            Message newMessage = new Message(null, scholarId, null, null, null, null, complaintMaterialUrl, userId, 0, messageTitle, messageContent, 0, new Date(), 2);
             switch (towardsType) {
                 case "dataScholar":
                     newMessage.setDataScholarId(towardsId);
