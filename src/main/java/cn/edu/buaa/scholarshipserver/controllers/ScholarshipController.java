@@ -42,6 +42,9 @@ public class ScholarshipController {
     @Autowired
     private ScholarDao scholarDao;
 
+    @Autowired
+    private InstitutionService institutionService;
+
     @GetMapping("/getProjectById/{projectId}")
     @ApiOperation(notes = "查看项目内容", value = "查看项目内容")
     public ResponseEntity<Response> getProjectById(@PathVariable("projectId") String projectId) {
@@ -448,7 +451,7 @@ public class ScholarshipController {
 
     @GetMapping("/getClaimNumber/{type}/{scholarShipId}")
     @ApiOperation(notes = "检测认领者是否超过数量",value = "检测认领者是否超过数量")
-    public  ResponseEntity<Response> getClaimNumber(@PathVariable("type") String type,
+    public ResponseEntity<Response> getClaimNumber(@PathVariable("type") String type,
                                                     @PathVariable("scholarShipId") String scholarShipId) {
         HashMap<String,Object> responseMap = new HashMap<>();
         int nowClaimNumber;
@@ -469,6 +472,12 @@ public class ScholarshipController {
         responseMap.put("maxClaimNumber",maxClaimNumber);
         responseMap.put("canClaim",nowClaimNumber<maxClaimNumber);
         return ResponseEntity.ok(new Response(responseMap));
+    }
+
+    @GetMapping("/topInstitution")
+    @ApiOperation(notes = "获取排名最高的10个科研机构",value = "获取排名最高的10个科研机构")
+    public ResponseEntity<Response> getTopInstitution() {
+        return ResponseEntity.ok(new Response(institutionService.getTopInstitution()));
     }
 
 }
