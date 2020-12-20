@@ -120,11 +120,10 @@ public class ScholarService {
         responseMap.put("patentNum",patentList.size());
         responseMap.put("patent",patentList);
                 //下面获取合作学者
-        List<Map<String,Integer>>coAuthorList = new ArrayList<>();
+        List<Object>coAuthorList = new ArrayList<>();
         for(DataScholar dataScholar :dataScholarList){
             List<Cooperation> cooperationList = cooperationDao.findByAuthorId1OrAuthorId2(dataScholar.getAuthorId(),dataScholar.getAuthorId());
             for(Cooperation cooperation : cooperationList){
-                Map<String,Integer>coAuthorsMap = new TreeMap<>();
                 String authorName;
                 if(cooperation.getAuthorId1().equals(dataScholar.getAuthorId())){
                     DataScholar dataScholar1 = dataScholarMethod.getDataScholarByAuthorId(cooperation.getAuthorId2());
@@ -140,13 +139,14 @@ public class ScholarService {
                     else
                         continue;
                 }
-                if(null == coAuthorsMap.get(authorName)){
-                    coAuthorsMap.put(authorName,cooperation.getTimes());
-                }else{
-                    Integer oldTimes = coAuthorsMap.get(authorName);
-                    coAuthorsMap.put(authorName,oldTimes+cooperation.getTimes());
+                if(!coAuthorList.contains(authorName)){
+                    coAuthorList.add(authorName);
+                    coAuthorList.add(cooperation.getTimes());
                 }
-                coAuthorList.add(coAuthorsMap);
+                else{
+                    int index1 = coAuthorList.indexOf(authorName);
+                    coAuthorList.set(index1+1,(Integer)coAuthorList.get(index1+1)+cooperation.getTimes());
+                }
             }
         }
         responseMap.put("coAuthors",coAuthorList);
