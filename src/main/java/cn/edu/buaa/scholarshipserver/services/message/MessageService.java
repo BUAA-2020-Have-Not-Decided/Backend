@@ -1,7 +1,9 @@
 package cn.edu.buaa.scholarshipserver.services.message;
 
 import cn.edu.buaa.scholarshipserver.dao.MessageMapper;
+import cn.edu.buaa.scholarshipserver.dao.UserMapper;
 import cn.edu.buaa.scholarshipserver.models.Message;
+import cn.edu.buaa.scholarshipserver.models.MessageReturn;
 import cn.edu.buaa.scholarshipserver.utils.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +22,15 @@ import java.util.*;
 public class MessageService {
 
     private final MessageMapper messageMapper;
+    private final UserMapper userMapper;
     @Value("${files.path}")
     private String filePath;
     @Value("${files.host}")
     private String fileHost;
 
-    MessageService(MessageMapper messageMapper) {
+    MessageService(MessageMapper messageMapper, UserMapper userMapper) {
         this.messageMapper = messageMapper;
+        this.userMapper = userMapper;
     }
 
     public ResponseEntity<Response> sendUserMessage(String messageTitle,
@@ -45,8 +49,8 @@ public class MessageService {
     public ResponseEntity<Response> getMessages(Integer userId) {
         try {
             List<Message> userMessages = messageMapper.findByReceiverUserId(userId);
-            userMessages.removeIf(message -> message.getMsgstatus() == 2);
-            return ResponseEntity.ok(new Response(userMessages));
+            List<MessageReturn> messagesToReturn = fillMessagesToReturn(userMessages);
+            return ResponseEntity.ok(new Response(messagesToReturn));
         } catch (Exception e) {
             return ResponseEntity.ok(new Response(500, "something's wrong", ""));
         }
@@ -55,7 +59,8 @@ public class MessageService {
     public ResponseEntity<Response> getMessage(Integer messageId) {
         try {
             Message message = messageMapper.selectByPrimaryKey(messageId);
-            return ResponseEntity.ok(new Response(message));
+            MessageReturn messageToReturn = fillMessageToReturn(message);
+            return ResponseEntity.ok(new Response(messageToReturn));
         } catch (Exception e) {
             return ResponseEntity.ok(new Response(500, "something's wrong", ""));
         }
@@ -196,8 +201,8 @@ public class MessageService {
     public ResponseEntity<Response> getAppeals() {
         try {
             List<Message> appeals = messageMapper.findByReceiverUserId(0);
-            appeals.removeIf(message -> message.getMsgstatus() == 2);
-            return ResponseEntity.ok(new Response(appeals));
+            List<MessageReturn> appealsToReturn = fillMessagesToReturn(appeals);
+            return ResponseEntity.ok(new Response(appealsToReturn));
         } catch (Exception e) {
             return ResponseEntity.ok(new Response(500, "something's wrong", ""));
         }
@@ -229,6 +234,23 @@ public class MessageService {
         } catch (Exception e) {
             return ResponseEntity.ok(new Response(500, "something's wrong", ""));
         }
+    }
+
+    private MessageReturn fillMessageToReturn(Message message) {
+        Integer senderUserId = message.getSenderUserid();
+        String senderUserName = userMapper.getUserByID(senderUserId).getName();
+        return new MessageReturn(message, senderUserName);
+    }
+
+    private List<MessageReturn> fillMessagesToReturn(List<Message> messages) {
+        List<MessageReturn> messagesToReturn = new ArrayList<>();
+        for (Message message : messages) {
+            if (message.getMsgstatus() != 2) {
+                MessageReturn messageToReturn = fillMessageToReturn(message);
+                messagesToReturn.add(messageToReturn);
+            }
+        }
+        return messagesToReturn;
     }
 
 }
