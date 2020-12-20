@@ -58,6 +58,8 @@ public class ProjectService {
     public Project getTheProjectById(String projectId){
         Long id = Long.parseLong(projectId);
         Optional<Project> project = projectDao.findById(id);
+        if(!project.isPresent())
+            return null;
         return project.get();
     }
 
