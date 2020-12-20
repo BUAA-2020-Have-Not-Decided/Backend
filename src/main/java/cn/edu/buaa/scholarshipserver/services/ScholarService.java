@@ -8,8 +8,11 @@ import cn.edu.buaa.scholarshipserver.services.scholar.DataScholarMethod;
 import cn.edu.buaa.scholarshipserver.services.scholar.ScholarMethod;
 import cn.edu.buaa.scholarshipserver.services.scholar.SubscribeMethod;
 import cn.edu.buaa.scholarshipserver.utils.Response;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.joda.time.DateTime;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -101,6 +104,7 @@ public class ScholarService {
                 //下面获取合作学者
         Map<String,Integer>coAuthorsMap = new TreeMap<>();
 
+        List<Object>coAuthorList = new ArrayList<>();
         for(DataScholar dataScholar :dataScholarList){
             List<Cooperation> cooperationList = cooperationDao.findByAuthorId1OrAuthorId2(dataScholar.getAuthorId(),dataScholar.getAuthorId());
             for(Cooperation cooperation : cooperationList){
@@ -119,15 +123,17 @@ public class ScholarService {
                     else
                         continue;
                 }
-                if(null == coAuthorsMap.get(authorName)){
-                    coAuthorsMap.put(authorName,cooperation.getTimes());
-                }else{
-                    Integer oldTimes = coAuthorsMap.get(authorName);
-                    coAuthorsMap.put(authorName,oldTimes+cooperation.getTimes());
+                if(!coAuthorList.contains(authorName)){
+                    coAuthorList.add(authorName);
+                    coAuthorList.add(cooperation.getTimes());
+                }
+                else{
+                    int index1 = coAuthorList.indexOf(authorName);
+                    coAuthorList.set(index1+1,(Integer)coAuthorList.get(index1+1)+cooperation.getTimes());
                 }
             }
         }
-        responseMap.put("coAuthors",coAuthorsMap);
+        responseMap.put("coAuthors",coAuthorList);
 
         //工作经历
         List<WorkExperience>workExperienceList = workExperienceDao.findByScholarId(scholar.getScholarId());
@@ -154,6 +160,22 @@ public class ScholarService {
                 paperSet.add(paper);
             }
             List<Paper>paperList = new ArrayList<>(paperSet);
+
+            List<List<String>> authorList = new ArrayList<>();
+            for(Paper paper : paperList){
+            NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder() ;
+            System.out.println(paper);
+            nativeSearchQueryBuilder.withQuery(QueryBuilders.termQuery("PaperId",paper.getPaperId()));
+            Page<Paper_DataScholar> tem = paperDataScholarDao.search(nativeSearchQueryBuilder.build());
+            List<String> tem1 = new ArrayList<>();
+            for(Paper_DataScholar paperDataScholar : tem){
+                DataScholar dataScholar1 = dataScholarMethod.getDataScholarByAuthorId(paperDataScholar.getAuthorId());
+                if(dataScholar1!=null)
+                    tem1.add(dataScholar1.getNormalizedName());
+            }
+            authorList.add(tem1);
+        }
+
             responseMap.put("paperNum",paperList.size());
             responseMap.put("paper",paperList);
             if(dataScholar.getLastKnownAffiliationId()==-1L){
