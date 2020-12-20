@@ -455,11 +455,15 @@ public class ScholarshipController {
         int maxClaimNumber;
         if(type.equals("1")) {
             Project project = projectService.getTheProjectById(scholarShipId);
+            if(project==null)
+                return ResponseEntity.ok(new Response(404,"不存在该学术成果！",404));
             nowClaimNumber = patentService.getProjectNowClaimNumber(project);
             maxClaimNumber = patentService.getProjectMaxClaimNumber(project);
 
         }else if(type.equals("2")){
             Patent patent = patentService.getPatentByPatentId(scholarShipId);
+            if(patent==null)
+                return ResponseEntity.ok(new Response(404,"不存在该学术成果！",404));
             nowClaimNumber = patentService.getPatentNowClaimNumber(patent);
             maxClaimNumber = patentService.getPatentMaxClaimNumber(patent);
         }else{
