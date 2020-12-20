@@ -192,8 +192,8 @@ public class PaperService {
                 .build();
         //取消10000最大数量限制
         searchQuery.setTrackTotalHits(true);
-//        //限制查询结果为多少分以上
-//        searchQuery.setMinScore(0.5f);
+        //限制查询结果为多少分以上
+        searchQuery.setMinScore(1f);
         //查询
         SearchHits<CorrectPaper> search = elasticsearchRestTemplate.search(searchQuery, CorrectPaper.class);
         //得到查询返回的内容
@@ -242,8 +242,8 @@ public class PaperService {
                 .build();
         //取消10000最大数量限制
         searchQuery.setTrackTotalHits(true);
-//        //限制查询结果为多少分以上
-//        searchQuery.setMinScore(0.5f);
+        //限制查询结果为多少分以上
+        searchQuery.setMinScore(1f);
         //查询
         SearchHits<CorrectPaper> search = elasticsearchRestTemplate.search(searchQuery, CorrectPaper.class);
         //得到查询返回的内容
@@ -305,7 +305,7 @@ public class PaperService {
                 Date end = sdf.parse(endDate);
                 RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery("date")
                         .from(begin).to(end);
-                boolQuery.must(rangeQueryBuilder);
+                boolQuery.filter(rangeQueryBuilder);
             } catch (ParseException e) {
                 FunctionScoreQueryBuilder functionScoreQueryBuilder = QueryBuilders.functionScoreQuery(boolQuery);
                 return functionScoreQueryBuilder;
