@@ -130,38 +130,35 @@ public class ScholarController {
         return scholarService.GetAdminScholar(ScholarName,ScholarId);
     }
 
-    @GetMapping("/subscribe/{userId}")
+    @GetMapping("/subscribe/")
     @ApiOperation(value = "查找UserId的关注列表")
     @ApiImplicitParams({
             @ApiImplicitParam(name="userId",value="用户Id",required=true,paramType="path"),
     })
-    public ResponseEntity<Response> GetSubscribe(@PathVariable("userId") String userId) {
-        Integer a = Integer.valueOf(userId);
-        return scholarService.GetSubscribe(a);
+    public ResponseEntity<Response> GetSubscribe() {
+        return scholarService.GetSubscribe();
     }
 
-    @PostMapping("/subscribe/{UserId}/{ScholarId}")
+    @PostMapping("/subscribe/{ScholarId}")
     @ApiOperation(value = "向UserId的关注列表中添加ScholarId")
     @ApiImplicitParams({
             @ApiImplicitParam(name="UserId",value="用户Id",required=true,paramType="path"),
             @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path")
     })
-    public ResponseEntity<Response> PostSubscribe(@PathVariable("UserId") String userId, @PathVariable("ScholarId") String scholarId) {
-        Integer UserId = Integer.valueOf(userId);
+    public ResponseEntity<Response> PostSubscribe(@PathVariable("ScholarId") String scholarId) {
         Integer ScholarId = Integer.valueOf(scholarId);
-        return scholarService.PostSubscribe(UserId,ScholarId);
+        return scholarService.PostSubscribe(ScholarId);
     }
 
-    @DeleteMapping("/subscribe/{UserId}/{ScholarId}")
+    @DeleteMapping("/subscribe/{ScholarId}")
     @ApiOperation(value = "在UserId的关注列表中删除ScholarId")
     @ApiImplicitParams({
             @ApiImplicitParam(name="UserId",value="用户Id",required=true,paramType="path"),
             @ApiImplicitParam(name="ScholarId",value="学者Id",required=true,paramType="path")
     })
-    public ResponseEntity<Response> DeleteSubscribe(@PathVariable("UserId") String userId, @PathVariable("ScholarId") String scholarId) {
-        Integer UserId = Integer.valueOf(userId);
+    public ResponseEntity<Response> DeleteSubscribe( @PathVariable("ScholarId") String scholarId) {
         Integer ScholarId = Integer.valueOf(scholarId);
-        return scholarService.DeleteSubscribe(UserId,ScholarId);
+        return scholarService.DeleteSubscribe(ScholarId);
     }
 
     @GetMapping("/Search")

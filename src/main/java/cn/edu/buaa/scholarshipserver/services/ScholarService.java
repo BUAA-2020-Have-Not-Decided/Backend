@@ -381,9 +381,10 @@ public class ScholarService {
         return ResponseEntity.ok(new Response(1001, res));
     }
 
-    public ResponseEntity<Response> GetSubscribe (Integer fanId){
+    public ResponseEntity<Response> GetSubscribe (){
         List<Map<String, String>> res = new ArrayList<>();
-        List<Subscribe> subscribes = subscribeMethod.getSubscribeByFanId(fanId);
+        User u = (User) SecurityUtils.getSubject().getPrincipal();
+        List<Subscribe> subscribes = subscribeMethod.getSubscribeByFanId(u.getUserID());
         for (int i = 0; i < subscribes.size(); i++) {
             Map<String, String> ins = new HashMap<String, String>();
             int scholarId = subscribes.get(i).getScholarId();
@@ -398,11 +399,12 @@ public class ScholarService {
         return ResponseEntity.ok(new Response(1001, res));
     }
 
-    public ResponseEntity<Response> PostSubscribe (Integer UserId, Integer ScholarId){
-        Subscribe subscribe = subscribeMethod.getSubscribeByFanIdAndScholarId(UserId, ScholarId);
+    public ResponseEntity<Response> PostSubscribe (Integer ScholarId){
+        User u = (User) SecurityUtils.getSubject().getPrincipal();
+        Subscribe subscribe = subscribeMethod.getSubscribeByFanIdAndScholarId(u.getUserID(), ScholarId);
         if (subscribe == null) {
             subscribe = new Subscribe();
-            subscribe.setFanId(UserId);
+            subscribe.setFanId(u.getUserID());
             subscribe.setScholarId(ScholarId);
             subscribe.setSubscribeDatetime(new DateTime().toString());
             subscribeMethod.updateSubscribe(subscribe);
@@ -410,8 +412,9 @@ public class ScholarService {
         } else return ResponseEntity.ok(new Response(400, "该关注关系已存在", ""));
     }
 
-    public ResponseEntity<Response> DeleteSubscribe (Integer UserId, Integer ScholarId){
-        Subscribe subscribe = subscribeMethod.getSubscribeByFanIdAndScholarId(UserId, ScholarId);
+    public ResponseEntity<Response> DeleteSubscribe (Integer ScholarId){
+        User u = (User) SecurityUtils.getSubject().getPrincipal();
+        Subscribe subscribe = subscribeMethod.getSubscribeByFanIdAndScholarId(u.getUserID(), ScholarId);
         if (subscribe != null) {
             subscribeMethod.deleteSubscribe(subscribe);
             return ResponseEntity.ok(new Response(1001, "success", ""));
