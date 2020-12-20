@@ -139,6 +139,8 @@ public class PaperService {
                 .build();
         //取消10000最大数量限制
         searchQuery.setTrackTotalHits(true);
+        //限制查询结果为多少分以上
+        searchQuery.setMinScore(1f);
         //查询
         SearchHits<CorrectPaper> search = elasticsearchRestTemplate.search(searchQuery, CorrectPaper.class);
         //得到查询返回的内容
@@ -280,6 +282,8 @@ public class PaperService {
 
         switch (doctype) {
             case 0:
+                boolQuery.should(QueryBuilders.matchQuery("doctype", "Conference"));
+                boolQuery.should(QueryBuilders.matchQuery("doctype", "Journal"));
                 break;
             case 1:
                 boolQuery.must(QueryBuilders.matchQuery("doctype", "Journal"));
