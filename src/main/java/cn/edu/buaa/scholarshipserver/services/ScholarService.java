@@ -243,8 +243,18 @@ public class ScholarService {
         return ResponseEntity.ok(new Response(1001, "success", ""));
     }
     public ResponseEntity<Response> GetScholar_DataScholar (Integer scholarId){
+        Map<String,Object> res = new HashMap<>();
         List<DataScholar> dataScholars = dataScholarMethod.getDataScholarByScholarId(scholarId);
-        return ResponseEntity.ok(new Response(1001,dataScholars));
+        List<String>institutionList = new ArrayList<>();
+        for(DataScholar dataScholar:dataScholars){
+            if(dataScholar.getLastKnownAffiliationId()==-1L)
+                institutionList.add("");
+            else
+                institutionList.add(institutionDao.findByInstitutionId(dataScholar.getLastKnownAffiliationId()).getInstitutionName());
+        }
+        res.put("dataScholars",dataScholars);
+        res.put("institution",institutionList);
+        return ResponseEntity.ok(new Response(1001,res));
     }
 
     public ResponseEntity<Response> PostScholar_DataScholar (Map < String, Object > params){
