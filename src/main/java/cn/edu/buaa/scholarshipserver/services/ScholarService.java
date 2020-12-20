@@ -407,6 +407,7 @@ public class ScholarService {
                 List<Paper_DataScholar> paper_dataScholars = paperDataScholarDao.findByAuthorId(dataScholar.getAuthorId());
                 for(Paper_DataScholar paper_dataScholar : paper_dataScholars){
                     Paper paper = paperDao.findByPaperId(paper_dataScholar.getPaperId());
+                    if(paper==null) continue;
                     List<Article_Field> article_fields = articleFieldDao.findByPaperId(paper.getPaperId());
                     for(Article_Field article_field : article_fields){
                         Map<String,String> fieldIns = new HashMap<String,String>();
