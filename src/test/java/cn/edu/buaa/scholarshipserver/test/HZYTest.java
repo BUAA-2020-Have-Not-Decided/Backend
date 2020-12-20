@@ -4,6 +4,7 @@ import cn.edu.buaa.scholarshipserver.dao.FieldDao;
 import cn.edu.buaa.scholarshipserver.dao.PatentDao;
 import cn.edu.buaa.scholarshipserver.dao.ProjectDao;
 import cn.edu.buaa.scholarshipserver.services.scholarship.FieldService;
+import cn.edu.buaa.scholarshipserver.services.scholarship.InstitutionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +20,8 @@ public class HZYTest {
     private PatentDao patentDao;
     @Autowired
     private ProjectDao projectDao;
+    @Autowired
+    private InstitutionService institutionService;
 
     @Test
     public void getHotFields() {
@@ -29,5 +32,10 @@ public class HZYTest {
     public void getPatentAndProject() {
         System.out.println(patentDao.findById(1L).orElse(null));
         System.out.println(projectDao.findById(3682L).orElse(null));
+    }
+
+    @Test
+    public void topInstitutionTest() {
+        System.out.println(institutionService.getTopInstitution());
     }
 }

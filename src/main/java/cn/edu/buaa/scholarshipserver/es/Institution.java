@@ -19,5 +19,9 @@ public class Institution {
         @Field(type = FieldType.Auto)
         private String institutionName;
         @Field(type = FieldType.Auto)
+        private String info;
+        @Field(type = FieldType.Auto)
         private Double natureIndex;
+        @Field(type = FieldType.Auto)
+        private Integer rank;
 }
