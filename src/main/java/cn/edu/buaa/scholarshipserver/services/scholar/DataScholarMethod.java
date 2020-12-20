@@ -3,8 +3,10 @@ package cn.edu.buaa.scholarshipserver.services.scholar;
 import cn.edu.buaa.scholarshipserver.dao.DataScholarDao;
 import cn.edu.buaa.scholarshipserver.es.DataScholar;
 import cn.edu.buaa.scholarshipserver.es.Scholar;
+import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
@@ -40,11 +42,11 @@ public class DataScholarMethod {
         //builder下有must、should以及mustNot 相当于sql中的and、or以及not
 
         //设置模糊搜索
-        builder.must(QueryBuilders.fuzzyQuery("normalizedName", Name));
+        builder.must(QueryBuilders.matchQuery("normalizedName", Name));
         //builder.must(QueryBuilders.fuzzyQuery("organization", Institution));
         //设置要查询博客的标题中含有关键字
         //builder.must(new QueryStringQueryBuilder("man").field("springdemo"));
-
+        FunctionScoreQueryBuilder functionScoreQueryBuilder = QueryBuilders.functionScoreQuery(builder);
         //排序
         FieldSortBuilder sort = SortBuilders.fieldSort("HIndex").order(SortOrder.DESC);;
         if(OrderType==2){
@@ -60,10 +62,11 @@ public class DataScholarMethod {
         //2.构建查询
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
         //将搜索条件设置到构建中
-        nativeSearchQueryBuilder.withQuery(builder);
+        nativeSearchQueryBuilder.withQuery(functionScoreQueryBuilder);
         //将分页设置到构建中
         nativeSearchQueryBuilder.withPageable(pageable);
         //将排序设置到构建中
+        nativeSearchQueryBuilder.withSort(SortBuilders.scoreSort());
         nativeSearchQueryBuilder.withSort(sort);
         //生产NativeSearchQuery
         NativeSearchQuery query = nativeSearchQueryBuilder.build();

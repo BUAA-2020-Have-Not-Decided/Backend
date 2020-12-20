@@ -57,7 +57,7 @@ public class TestController {
 
 
 
-                return ResponseEntity.ok(new Response(scholarDao.findByName("路路路")));
+                return ResponseEntity.ok(new Response(dataScholarDao.findByNormalizedName("tan huobin")));
 
         }
         @GetMapping("/test3")
