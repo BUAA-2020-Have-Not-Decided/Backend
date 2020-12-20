@@ -155,7 +155,8 @@ public class ScholarService {
         List<WorkExperience>workExperienceList = workExperienceDao.findByScholarId(scholar.getScholarId());
         responseMap.put("workExperience",workExperienceList);
         boolean isSubscribed = false;
-        if(subscribeDao.findByFanIdAndScholarId(u.getUserID(),id)!=null){
+
+        if(u.getUserID()!=null&&subscribeDao.findByFanIdAndScholarId(u.getUserID(),id)!=null){
             isSubscribed = true;
         }
         responseMap.put("isSubscribed",isSubscribed);
