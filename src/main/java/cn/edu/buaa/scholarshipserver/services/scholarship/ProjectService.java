@@ -230,7 +230,7 @@ public class ProjectService {
         if(!startYear.equals("")) {
             RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery("publishDate")
                     .from(startYear).to(endYear);
-            boolQuery.must(rangeQueryBuilder);
+            boolQuery.filter(rangeQueryBuilder);
         }
         FunctionScoreQueryBuilder functionScoreQueryBuilder= QueryBuilders.functionScoreQuery(boolQuery);
         return functionScoreQueryBuilder;

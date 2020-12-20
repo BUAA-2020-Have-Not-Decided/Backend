@@ -200,7 +200,7 @@ public class PatentService {
             String end = endDate;
             RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery("applicationDate")
                     .from(begin).to(end);
-            boolQuery.must(rangeQueryBuilder);
+            boolQuery.filter(rangeQueryBuilder);
         }
         FunctionScoreQueryBuilder functionScoreQueryBuilder = QueryBuilders.functionScoreQuery(boolQuery);
         return functionScoreQueryBuilder;
