@@ -121,6 +121,9 @@ public class ScholarshipController {
     public ResponseEntity<Response> getPatentByPatentId(@PathVariable("patentId") String patentId) {
         Map<String, Object> responseMap = new TreeMap<>();
         Patent patent = patentService.getPatentByPatentId(patentId);
+        if(patent==null){
+            return ResponseEntity.ok(new Response(404,"专利不存在",404));
+        }
         responseMap.put("patent", patent);
         return ResponseEntity.ok(new Response(responseMap));
 
