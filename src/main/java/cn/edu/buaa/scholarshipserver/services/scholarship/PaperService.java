@@ -66,7 +66,8 @@ public class PaperService {
         Long id = Long.parseLong(paperId);
         CorrectPaper correctPaper = correctPaperDao.findByPaperId(id);
         //格式化日期
-        correctPaper.setDate(correctPaper.getDate().substring(0, 10));
+        if (correctPaper != null)
+            correctPaper.setDate(correctPaper.getDate().substring(0, 10));
         return correctPaper;
     }
 
