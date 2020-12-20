@@ -154,6 +154,11 @@ public class UserController {
         try{
             Scholar s = this.redis_util.getScholarByCode(code);
             this.redis_util.removeItemByKey(code);
+            if(this.user_service.emailUsed(s.getEmail())){
+                res.setCode(501);
+                res.setMessage("这个邮箱被人抢注了");
+                return res;
+            }
             this.scholar_mapper.insert(s);
             s = this.scholar_mapper.selectByEmail(s.getEmail());
             cn.edu.buaa.scholarshipserver.es.Scholar ss = new cn.edu.buaa.scholarshipserver.es.Scholar();

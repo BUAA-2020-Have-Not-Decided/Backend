@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService{
         User u = user_mapper.getUserByEmail(email);
         System.out.println(u);
         Scholar s = this.scholar_mapper.selectByEmail(email);
-        return u != null&&s!=null;
+        return u != null||s!=null;
     }
 
     @Override
