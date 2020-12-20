@@ -7,6 +7,7 @@ import io.swagger.models.auth.In;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
+import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
@@ -45,11 +46,12 @@ public class ScholarMethod {
                 //builder下有must、should以及mustNot 相当于sql中的and、or以及not
 
                 //设置模糊搜索
-                builder.must(QueryBuilders.fuzzyQuery("name", Name));
+                builder.must(QueryBuilders.matchQuery("name", Name));
+                //builder.must(QueryBuilders.fuzzyQuery("name", Name));
 
                 //设置要查询博客的标题中含有关键字
                 //builder.must(new QueryStringQueryBuilder("man").field("springdemo"));
-
+                FunctionScoreQueryBuilder functionScoreQueryBuilder = QueryBuilders.functionScoreQuery(builder);
                 //排序
                 FieldSortBuilder sort = SortBuilders.fieldSort("hIndex").order(SortOrder.DESC);;
                 if(OrderType==2){
@@ -65,10 +67,11 @@ public class ScholarMethod {
                 //2.构建查询
                 NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
                 //将搜索条件设置到构建中
-                nativeSearchQueryBuilder.withQuery(builder);
+                nativeSearchQueryBuilder.withQuery(functionScoreQueryBuilder);
                 //将分页设置到构建中
                 nativeSearchQueryBuilder.withPageable(pageable);
                 //将排序设置到构建中
+                nativeSearchQueryBuilder.withSort(SortBuilders.scoreSort());
                 nativeSearchQueryBuilder.withSort(sort);
                 //生产NativeSearchQuery
                 NativeSearchQuery query = nativeSearchQueryBuilder.build();
@@ -91,11 +94,11 @@ public class ScholarMethod {
                 //builder下有must、should以及mustNot 相当于sql中的and、or以及not
 
                 //设置模糊搜索
-                builder.must(QueryBuilders.fuzzyQuery("name", Name));
-                builder.must(QueryBuilders.fuzzyQuery("organization", Organization));
+                builder.must(QueryBuilders.matchQuery("name", Name));
+                builder.must(QueryBuilders.matchQuery("organization", Organization));
                 //设置要查询博客的标题中含有关键字
                 //builder.must(new QueryStringQueryBuilder("man").field("springdemo"));
-
+                FunctionScoreQueryBuilder functionScoreQueryBuilder = QueryBuilders.functionScoreQuery(builder);
                 //排序
                 FieldSortBuilder sort = SortBuilders.fieldSort("hIndex").order(SortOrder.DESC);;
                 if(OrderType==2){
@@ -111,14 +114,14 @@ public class ScholarMethod {
                 //2.构建查询
                 NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
                 //将搜索条件设置到构建中
-                nativeSearchQueryBuilder.withQuery(builder);
+                nativeSearchQueryBuilder.withQuery(functionScoreQueryBuilder);
                 //将分页设置到构建中
                 nativeSearchQueryBuilder.withPageable(pageable);
                 //将排序设置到构建中
+                nativeSearchQueryBuilder.withSort(SortBuilders.scoreSort());
                 nativeSearchQueryBuilder.withSort(sort);
                 //生产NativeSearchQuery
                 NativeSearchQuery query = nativeSearchQueryBuilder.build();
-
                 //3.执行方法1
                 Page<Scholar> pages = scholarDao.search(query);
 
