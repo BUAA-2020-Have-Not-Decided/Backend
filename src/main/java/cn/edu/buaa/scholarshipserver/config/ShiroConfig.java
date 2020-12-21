@@ -114,6 +114,7 @@ public class ShiroConfig {
         filterRuleMap.put("/scholar/admin/**","jwt_admin");
         filterRuleMap.put("/scholar/subscribe/**","jwt_user");
         filterRuleMap.put("/scholar/Scholar/Search/**","anon");
+        filterRuleMap.put("/scholar/avatar", "jwt_scholar");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterRuleMap);
 
         /*管理员的过滤器*/
