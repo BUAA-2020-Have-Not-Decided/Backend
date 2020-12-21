@@ -18,7 +18,7 @@ public class EmailSender {
     String address;
     @Resource
     JavaMailSenderImpl JavaMailSender;
-    public void sendEmail(String msg, String receiver, String suffix, String code, String title)throws MessagingException {
+    public void sendEmail(String msg, String receiver, String suffix, String code, String title) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = JavaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message,true);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
