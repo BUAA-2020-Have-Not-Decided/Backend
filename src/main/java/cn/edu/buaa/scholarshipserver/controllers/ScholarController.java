@@ -36,6 +36,11 @@ public class ScholarController {
         System.out.println(scholarId);
         return scholarService.GetScholar(Integer.valueOf(scholarId));
     }
+    @GetMapping("/tourist/info/{ScholarId}")
+    public ResponseEntity<Response> GetTouristScholar(@PathVariable("ScholarId") String scholarId) {
+        System.out.println(scholarId);
+        return scholarService.GetScholar(Integer.valueOf(scholarId));
+    }
     @GetMapping("/dataScholar/{AuthorId}")
     public ResponseEntity<Response> GetDataScholar(@PathVariable("AuthorId") String authorId){
         return scholarService.GetDataScholar(Long.parseLong(authorId));

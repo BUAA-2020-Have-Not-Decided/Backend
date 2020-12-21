@@ -103,7 +103,8 @@ public class ShiroConfig {
 
 
         /*门户系统的过滤器*/
-        filterRuleMap.put("/scholar/info/**","anon");
+        filterRuleMap.put("/scholar/tourist/info/**","anon");
+        filterRuleMap.put("/scholar/info/**","jwt_user");
         filterRuleMap.put("/scholar/dataScholar/**","anon");
         filterRuleMap.put("/scholar/image/**","jwt_scholar");
         filterRuleMap.put("/scholar/infoUpdate/**","jwt_scholar");
