@@ -34,6 +34,8 @@ public class TestController {
         private DataScholarDao dataScholarDao;
         @Autowired
         private CooperationDao cooperationDao;
+        @Autowired
+        private  SubscribeDao subscribeDao;
         @PutMapping("/test1")
         public ResponseEntity<Response> test(){
                 Scholar scholar = new Scholar();
@@ -50,7 +52,9 @@ public class TestController {
         }
         @GetMapping("/test2")
         public ResponseEntity<Response> test2(){
-                return ResponseEntity.ok(new Response(scholarDao.findByName("路路路")));
+
+                return ResponseEntity.ok(new Response(subscribeDao.findByFanIdAndScholarId(11,13)));
+
         }
         @GetMapping("/test3")
         public ResponseEntity<Response> test3(){
