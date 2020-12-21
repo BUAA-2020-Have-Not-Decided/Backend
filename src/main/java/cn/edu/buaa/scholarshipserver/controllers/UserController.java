@@ -323,11 +323,10 @@ public class UserController {
         return res;
     }
 
-    // TODO 用户在redis中的也要改
     @PostMapping("/modifyPassword")
-    public Response modifyPassword(@RequestParam("NewPassword") String new_password, @RequestParam("OldPassword")String old_password){
+    public Response modifyPassword(@RequestParam("NewPassword") String new_password, @RequestParam("OldPassword")String old_password, HttpServletRequest request){
         User current_user = (User)SecurityUtils.getSubject().getPrincipal();
-
+        String jwt = request.getHeader("authorization");
         HashMap<String, Object> data = new HashMap<>();
         Response res = new Response(data);
         if(current_user.getPassword().compareTo(old_password)!=0){
@@ -336,6 +335,8 @@ public class UserController {
             return res;
         }
         this.user_mapper.updatePassword(current_user.getUserID(), new_password);
+        current_user.setPassword(new_password);
+        this.redis_util.setUserAndCode(current_user, jwt);
         data.put("success", true);
         return res;
     }
