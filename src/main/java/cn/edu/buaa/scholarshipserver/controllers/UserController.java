@@ -222,6 +222,7 @@ public class UserController {
     }
 
     //用户登录的地方
+    //TODO 如果没有头像地址，就返回空串
     @PostMapping("/login")
     public Response login(@RequestParam("Email") String email, @RequestParam("Password") String password, HttpServletResponse response){
         Map<String, Object> data = new HashMap<>();
@@ -242,7 +243,7 @@ public class UserController {
             res.setCode(1001);
             data.put("identification", u.getIdentify());
             data.put("username", u.getName());
-            data.put("avatar", u.getUserImagePath());
+            data.put("avatar", u.getUserImagePath()==null?"":u.getUserImagePath());
             if(u.getIdentify()==1){
                 Scholar s = this.scholar_mapper.selectByUID(u.getUserID());
                 data.put("scholarId", s.getScholarid());
@@ -256,12 +257,14 @@ public class UserController {
         return res;
     }
 
+    // TODO 使用用户的头像地址
     @PostMapping("/toBeScholar")
     public Response beScholar(@RequestParam("OrgEmail")String email,@RequestParam("RealName") String real_name, @RequestParam("EnglishName")String english_name){
         HashMap<String, Object> data = new HashMap<>();
         Response res = new Response(data);
         User u = (User)SecurityUtils.getSubject().getPrincipal();
         Scholar s = new Scholar(u.getUserID(), real_name, email, english_name);
+        s.setAvatarurl(u.getUserImagePath());
         if(u.getIdentify()==1){//这个用户已经是学者了
             res.setCode(501);
             res.setMessage("已经是学者了");
@@ -278,6 +281,7 @@ public class UserController {
             ss.setName(s.getName());
             ss.setEnglishName(s.getEnglishname());
             ss.setEmail(s.getEmail());
+            ss.setAvatarUrl(u.getUserImagePath());
             System.out.println(ss);
             this.scholar_dao.save(ss);
             return res;
@@ -290,7 +294,7 @@ public class UserController {
         else{//如果不一样，那就发送邮件，并且把相关的东西存在redis中
             try{
                 String rand_code = this.digest_util.getRandMD5Code(email);
-                this.email_sender.sendEmail("点击链接完成学者认证", email, "/#/user/scholarVerify/",rand_code, "学着认证邮箱验证");
+                this.email_sender.sendEmail("点击链接完成学者认证", email, "/#/user/scholarVerify/",rand_code, "学者认证邮箱验证");
                 this.redis_util.setScholarAndCode(s, rand_code);
                 res.setMessage(String.format("验证邮件已发送到%s，连接在10分钟内有效", email));
                 return res;
@@ -302,6 +306,7 @@ public class UserController {
         }
     }
 
+    // TODO 用户在redis中的也要改
     @PostMapping("/modifyUsername")
     public Response modifyUsername(@RequestParam("NewName")String name){
         User current_user = (User)SecurityUtils.getSubject().getPrincipal();
@@ -317,6 +322,7 @@ public class UserController {
         return res;
     }
 
+    // TODO 用户在redis中的也要改
     @PostMapping("/modifyPassword")
     public Response modifyPassword(@RequestParam("NewPassword") String new_password, @RequestParam("OldPassword")String old_password){
         User current_user = (User)SecurityUtils.getSubject().getPrincipal();
@@ -333,6 +339,7 @@ public class UserController {
         return res;
     }
 
+    // TODO 用户在redis中的也要改
     @PostMapping("/modifyEmail")
     public Response modifyEmail(@RequestParam("Email")String email){
         User current_user = (User)SecurityUtils.getSubject().getPrincipal();
@@ -355,6 +362,7 @@ public class UserController {
         return res;
     }
 
+    // TODO 用户在redis中的也要改
     @PostMapping("/link/modifyEmail")
     public Response linkModifyEmail(@RequestParam("Code")String code){
         HashMap<String,Object> data = new HashMap<>();
