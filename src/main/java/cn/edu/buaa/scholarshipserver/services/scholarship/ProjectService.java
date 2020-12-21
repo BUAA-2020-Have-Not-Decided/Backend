@@ -132,6 +132,8 @@ public class ProjectService {
                 .build();
         //取消10000最大数量限制
         searchQuery.setTrackTotalHits(true);
+        //限制查询结果为多少分以上
+        searchQuery.setMinScore(1f);
         //查询
         SearchHits<Project> search = elasticsearchRestTemplate.search(searchQuery, Project.class);
         //得到查询返回的内容
@@ -189,6 +191,8 @@ public class ProjectService {
                 .build();
         //取消10000最大数量限制
         searchQuery.setTrackTotalHits(true);
+        //限制查询结果为多少分以上
+        searchQuery.setMinScore(1f);
         //查询
         SearchHits<Project> search = elasticsearchRestTemplate.search(searchQuery, Project.class);
         //得到查询返回的内容
