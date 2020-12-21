@@ -222,7 +222,6 @@ public class UserController {
     }
 
     //用户登录的地方
-    //TODO 如果没有头像地址，就返回空串
     @PostMapping("/login")
     public Response login(@RequestParam("Email") String email, @RequestParam("Password") String password, HttpServletResponse response){
         Map<String, Object> data = new HashMap<>();
