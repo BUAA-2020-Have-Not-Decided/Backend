@@ -198,7 +198,6 @@ public class UserController {
         return res;
     }
 
-    //TODO 根据验证码决定要不要重制
     @PostMapping("/findPassword")
     public Response findPassword(@RequestParam("Email")String email){
         HashMap<String, Object> data = new HashMap<>();
@@ -210,7 +209,14 @@ public class UserController {
             return res;
         }
         try{
-            this.email_sender.sendPasswordEmail(email, current_user.getPassword());
+            // TODO 先随机生成一个密码，然后重置，并且放进去md5的版本
+            Random rd = new Random();
+            long rand_number = rd.nextLong()%90000000+10000000;
+            char c = (char)(rd.nextInt()%26+97);
+            String random_password = rand_number +String.valueOf(c);
+            this.email_sender.sendPasswordEmail(email, random_password);
+            System.out.println(random_password);
+            this.user_mapper.updatePassword(current_user.getUserID(), this.digest_util.getStableMD5Code(random_password));
         }catch(Exception e){
             res.setCode(501);
             res.setMessage("发送邮件失败");
