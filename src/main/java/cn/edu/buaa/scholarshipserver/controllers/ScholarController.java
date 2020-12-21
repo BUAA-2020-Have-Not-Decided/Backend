@@ -1,9 +1,13 @@
 package cn.edu.buaa.scholarshipserver.controllers;
 
+import cn.edu.buaa.scholarshipserver.dao.ScholarDao;
+import cn.edu.buaa.scholarshipserver.dao.UserMapper;
+import cn.edu.buaa.scholarshipserver.es.Scholar;
 import cn.edu.buaa.scholarshipserver.es.WorkExperience;
-import cn.edu.buaa.scholarshipserver.models.Scholar;
+import cn.edu.buaa.scholarshipserver.models.User;
 import cn.edu.buaa.scholarshipserver.services.ScholarService;
 import cn.edu.buaa.scholarshipserver.services.UploadService;
+import cn.edu.buaa.scholarshipserver.services.message.MessageService;
 import cn.edu.buaa.scholarshipserver.utils.Response;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -11,6 +15,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Delete;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +32,12 @@ public class ScholarController {
     private ScholarService scholarService;
     @Autowired
     private UploadService uploadService;
+    @Autowired
+    private MessageService message_service;
+    @Autowired
+    private UserMapper user_mapper;
+    @Autowired
+    private ScholarDao scholar_dao;
     @GetMapping("/info/{ScholarId}")
     @ApiOperation(value = "获得学者门户相关信息")
     @ApiImplicitParams({
@@ -183,6 +194,25 @@ public class ScholarController {
             ,@RequestParam("orderType") Integer orderType
             ,@RequestParam("pageNumber") Integer pageNumber) {
         return scholarService.SearchDataScholar(ScholarName,orderType,pageNumber);
+    }
+
+    @PostMapping("/avatar")
+    public Response uploadAvatar(@RequestParam("Base64")String picture){
+        HashMap<String, Object> data = new HashMap<>();
+        Response res = new Response(data);
+        try{
+            String url = this.message_service.uploadImage(picture);
+            res.setMessage("头像上传成功");
+            User current_user = (User) SecurityUtils.getSubject().getPrincipal();
+            Scholar s = this.scholar_dao.findByScholarId(current_user.getUserID());
+            s.setAvatarUrl(url);
+            this.scholar_dao.save(s);
+            data.put("url", url);
+        }catch(Exception e){
+            res.setCode(500);
+            res.setMessage("图片保存失败");
+        }
+        return res;
     }
 }
 
