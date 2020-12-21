@@ -203,9 +203,21 @@ public class UserController {
     public Response findPassword(@RequestParam("Email")String email){
         HashMap<String, Object> data = new HashMap<>();
         Response res = new Response(data);
-        User current_user = (User)SecurityUtils.getSubject().getPrincipal();
-        String new_pwd = this.user_service.randomPassword();
-        System.out.println(new_pwd);
+        User current_user = this.user_mapper.getUserByEmail(email);
+        if(current_user==null){
+            res.setCode(500);
+            res.setMessage("邮箱不存在");
+            return res;
+        }
+        try{
+            this.email_sender.sendPasswordEmail(email, current_user.getPassword());
+        }catch(Exception e){
+            res.setCode(501);
+            res.setMessage("发送邮件失败");
+            return res;
+        }
+        res.setMessage("您的密码已发送到您的邮箱："+email);
+        res.setCode(1001);
         return res;
     }
 
