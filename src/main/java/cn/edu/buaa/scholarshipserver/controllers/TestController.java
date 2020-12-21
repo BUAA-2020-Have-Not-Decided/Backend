@@ -36,6 +36,8 @@ public class TestController {
         private CooperationDao cooperationDao;
         @Autowired
         private PaperDataScholarDao paperDataScholarDao;
+        @Autowired
+        private SubscribeDao subscribeDao;
         @PutMapping("/test1")
         public ResponseEntity<Response> test(){
                 List<DataScholar> dataScholar = dataScholarDao.findByScholarId(13);
@@ -49,7 +51,7 @@ public class TestController {
         public ResponseEntity<Response> test1(){
                 
 
-                return ResponseEntity.ok(new Response(cooperationDao.findByAuthorId1OrAuthorId2(2099217884L,2099217884L)));
+                return ResponseEntity.ok(new Response(subscribeDao.findByFanIdAndScholarId(11,13)));
 
         }
         @GetMapping("/test2")
