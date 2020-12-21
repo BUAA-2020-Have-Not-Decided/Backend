@@ -11,8 +11,10 @@ import cn.edu.buaa.scholarshipserver.utils.*;
 import io.swagger.annotations.Api;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
@@ -196,8 +198,7 @@ public class UserController {
         return res;
     }
 
-    //TODO 找回密码
-    // 发送邮件，点击邮件重置密码
+    //TODO 根据验证码决定要不要重制
     @PostMapping("/findPassword")
     public Response findPassword(@RequestParam("Email")String email){
         HashMap<String, Object> data = new HashMap<>();
@@ -256,7 +257,6 @@ public class UserController {
         return res;
     }
 
-    // TODO 使用用户的头像地址
     @PostMapping("/toBeScholar")
     public Response beScholar(@RequestParam("OrgEmail")String email,@RequestParam("RealName") String real_name, @RequestParam("EnglishName")String english_name){
         HashMap<String, Object> data = new HashMap<>();
@@ -305,11 +305,11 @@ public class UserController {
         }
     }
 
-    // TODO 用户在redis中的也要改
     @PostMapping("/modifyUsername")
-    public Response modifyUsername(@RequestParam("NewName")String name){
+    public Response modifyUsername(@RequestParam("NewName")String name, HttpServletRequest request){
         User current_user = (User)SecurityUtils.getSubject().getPrincipal();
         HashMap<String, Object> data = new HashMap<>();
+        String jwt = request.getHeader("authorization");
         Response res = new Response(data);
         if(this.user_service.usernameUsed(name)){
             res.setCode(500);
@@ -317,6 +317,8 @@ public class UserController {
             return res;
         }
         this.user_mapper.updateName(current_user.getUserID(), name);
+        current_user.setName(name);
+        this.redis_util.setUserAndCode(current_user, jwt);
         data.put("success", true);
         return res;
     }
