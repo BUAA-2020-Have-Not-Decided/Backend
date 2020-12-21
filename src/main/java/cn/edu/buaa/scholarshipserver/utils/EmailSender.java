@@ -35,7 +35,7 @@ public class EmailSender {
     public void sendPasswordEmail(String receiver, String password) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = JavaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message,true);
-        String text = "您好，您在NOsearch平台的登录密码是："+password;
+        String text = "您好，您在NOsearch平台的登录密码已被重置为："+password+"请您尽快重新设置密码";
         helper.setFrom("notdecidedyet@126.com", "NOsearch项目组");
         helper.setTo(receiver);
         helper.setSubject("NOsearch找回密码");
