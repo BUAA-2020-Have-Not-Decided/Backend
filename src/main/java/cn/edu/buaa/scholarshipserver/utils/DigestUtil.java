@@ -16,4 +16,8 @@ public class DigestUtil {
         StringBuilder result = DigestUtils.appendMd5DigestAsHex(randMD5.getBytes(), new StringBuilder(emailMD5));
         return result.toString();
     }
+    /*根据邮箱获得一个稳定的MD5码*/
+    public String getStableMD5Code(String email){
+        return DigestUtils.md5DigestAsHex(email.getBytes());
+    }
 }

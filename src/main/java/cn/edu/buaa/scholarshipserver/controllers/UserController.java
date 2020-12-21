@@ -11,8 +11,10 @@ import cn.edu.buaa.scholarshipserver.utils.*;
 import io.swagger.annotations.Api;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
@@ -196,15 +198,26 @@ public class UserController {
         return res;
     }
 
-    //TODO 找回密码
-    // 发送邮件，点击邮件重置密码
+    //TODO 根据验证码决定要不要重制
     @PostMapping("/findPassword")
     public Response findPassword(@RequestParam("Email")String email){
         HashMap<String, Object> data = new HashMap<>();
         Response res = new Response(data);
-        User current_user = (User)SecurityUtils.getSubject().getPrincipal();
-        String new_pwd = this.user_service.randomPassword();
-        System.out.println(new_pwd);
+        User current_user = this.user_mapper.getUserByEmail(email);
+        if(current_user==null){
+            res.setCode(500);
+            res.setMessage("邮箱不存在");
+            return res;
+        }
+        try{
+            this.email_sender.sendPasswordEmail(email, current_user.getPassword());
+        }catch(Exception e){
+            res.setCode(501);
+            res.setMessage("发送邮件失败");
+            return res;
+        }
+        res.setMessage("您的密码已发送到您的邮箱："+email);
+        res.setCode(1001);
         return res;
     }
 
@@ -242,7 +255,7 @@ public class UserController {
             res.setCode(1001);
             data.put("identification", u.getIdentify());
             data.put("username", u.getName());
-            data.put("avatar", u.getUserImagePath());
+            data.put("avatar", u.getUserImagePath()==null?"":u.getUserImagePath());
             if(u.getIdentify()==1){
                 Scholar s = this.scholar_mapper.selectByUID(u.getUserID());
                 data.put("scholarId", s.getScholarid());
@@ -262,6 +275,7 @@ public class UserController {
         Response res = new Response(data);
         User u = (User)SecurityUtils.getSubject().getPrincipal();
         Scholar s = new Scholar(u.getUserID(), real_name, email, english_name);
+        s.setAvatarurl(u.getUserImagePath());
         if(u.getIdentify()==1){//这个用户已经是学者了
             res.setCode(501);
             res.setMessage("已经是学者了");
@@ -278,6 +292,7 @@ public class UserController {
             ss.setName(s.getName());
             ss.setEnglishName(s.getEnglishname());
             ss.setEmail(s.getEmail());
+            ss.setAvatarUrl(u.getUserImagePath());
             System.out.println(ss);
             this.scholar_dao.save(ss);
             return res;
@@ -290,7 +305,7 @@ public class UserController {
         else{//如果不一样，那就发送邮件，并且把相关的东西存在redis中
             try{
                 String rand_code = this.digest_util.getRandMD5Code(email);
-                this.email_sender.sendEmail("点击链接完成学者认证", email, "/#/user/scholarVerify/",rand_code, "学着认证邮箱验证");
+                this.email_sender.sendEmail("点击链接完成学者认证", email, "/#/user/scholarVerify/",rand_code, "学者认证邮箱验证");
                 this.redis_util.setScholarAndCode(s, rand_code);
                 res.setMessage(String.format("验证邮件已发送到%s，连接在10分钟内有效", email));
                 return res;
@@ -303,9 +318,10 @@ public class UserController {
     }
 
     @PostMapping("/modifyUsername")
-    public Response modifyUsername(@RequestParam("NewName")String name){
+    public Response modifyUsername(@RequestParam("NewName")String name, HttpServletRequest request){
         User current_user = (User)SecurityUtils.getSubject().getPrincipal();
         HashMap<String, Object> data = new HashMap<>();
+        String jwt = request.getHeader("authorization");
         Response res = new Response(data);
         if(this.user_service.usernameUsed(name)){
             res.setCode(500);
@@ -313,14 +329,16 @@ public class UserController {
             return res;
         }
         this.user_mapper.updateName(current_user.getUserID(), name);
+        current_user.setName(name);
+        this.redis_util.setUserAndCode(current_user, jwt);
         data.put("success", true);
         return res;
     }
 
     @PostMapping("/modifyPassword")
-    public Response modifyPassword(@RequestParam("NewPassword") String new_password, @RequestParam("OldPassword")String old_password){
+    public Response modifyPassword(@RequestParam("NewPassword") String new_password, @RequestParam("OldPassword")String old_password, HttpServletRequest request){
         User current_user = (User)SecurityUtils.getSubject().getPrincipal();
-
+        String jwt = request.getHeader("authorization");
         HashMap<String, Object> data = new HashMap<>();
         Response res = new Response(data);
         if(current_user.getPassword().compareTo(old_password)!=0){
@@ -329,6 +347,8 @@ public class UserController {
             return res;
         }
         this.user_mapper.updatePassword(current_user.getUserID(), new_password);
+        current_user.setPassword(new_password);
+        this.redis_util.setUserAndCode(current_user, jwt);
         data.put("success", true);
         return res;
     }
@@ -337,7 +357,7 @@ public class UserController {
     public Response modifyEmail(@RequestParam("Email")String email){
         User current_user = (User)SecurityUtils.getSubject().getPrincipal();
         current_user.setEmail(email);
-        String code = this.digest_util.getRandMD5Code(email);
+        String code = this.digest_util.getStableMD5Code(email);
         HashMap<String, Object> data = new HashMap<>();
         Response res = new Response(data);
         if(this.user_service.emailUsed(email)){
