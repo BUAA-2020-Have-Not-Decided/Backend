@@ -1,9 +1,10 @@
 package cn.edu.buaa.scholarshipserver.controllers;
 
 import cn.edu.buaa.scholarshipserver.dao.ScholarDao;
+import cn.edu.buaa.scholarshipserver.dao.ScholarMapper;
 import cn.edu.buaa.scholarshipserver.dao.UserMapper;
-import cn.edu.buaa.scholarshipserver.es.Scholar;
 import cn.edu.buaa.scholarshipserver.es.WorkExperience;
+import cn.edu.buaa.scholarshipserver.models.Scholar;
 import cn.edu.buaa.scholarshipserver.models.User;
 import cn.edu.buaa.scholarshipserver.services.ScholarService;
 import cn.edu.buaa.scholarshipserver.services.UploadService;
@@ -38,6 +39,8 @@ public class ScholarController {
     private UserMapper user_mapper;
     @Autowired
     private ScholarDao scholar_dao;
+    @Autowired
+    private ScholarMapper scholar_mapper;
     @GetMapping("/info/{ScholarId}")
     @ApiOperation(value = "获得学者门户相关信息")
     @ApiImplicitParams({
@@ -209,9 +212,10 @@ public class ScholarController {
             String url = this.message_service.uploadImage(picture);
             res.setMessage("头像上传成功");
             User current_user = (User) SecurityUtils.getSubject().getPrincipal();
-            Scholar s = this.scholar_dao.findByScholarId(current_user.getUserID());
-            s.setAvatarUrl(url);
-            this.scholar_dao.save(s);
+            Scholar s = this.scholar_mapper.selectByUID(current_user.getUserID());
+            cn.edu.buaa.scholarshipserver.es.Scholar ss = this.scholar_dao.findByScholarId(s.getScholarid());
+            ss.setAvatarUrl(url);
+            this.scholar_dao.save(ss);
             data.put("url", url);
         }catch(Exception e){
             res.setCode(500);
