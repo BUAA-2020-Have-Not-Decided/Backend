@@ -341,12 +341,11 @@ public class UserController {
         return res;
     }
 
-    // TODO 用户在redis中的也要改
     @PostMapping("/modifyEmail")
     public Response modifyEmail(@RequestParam("Email")String email){
         User current_user = (User)SecurityUtils.getSubject().getPrincipal();
         current_user.setEmail(email);
-        String code = this.digest_util.getRandMD5Code(email);
+        String code = this.digest_util.getStableMD5Code(email);
         HashMap<String, Object> data = new HashMap<>();
         Response res = new Response(data);
         if(this.user_service.emailUsed(email)){
@@ -364,7 +363,6 @@ public class UserController {
         return res;
     }
 
-    // TODO 用户在redis中的也要改
     @PostMapping("/link/modifyEmail")
     public Response linkModifyEmail(@RequestParam("Code")String code){
         HashMap<String,Object> data = new HashMap<>();
