@@ -149,6 +149,7 @@ public class UserController {
     }
 
     //用来验证学者的地方
+    // TODO 验证成功返回学者ID
     @PostMapping("/scholar/verify")
     public Response verifyScholar(@RequestParam("Code") String code){
         HashMap<String, Object> data = new HashMap<>();
@@ -173,6 +174,7 @@ public class UserController {
             this.user_mapper.updateIdentify(uid, 1);
             res.setMessage("认证学者成功");
             data.put("englishname", s.getEnglishname());
+            data.put("scholarId", s.getScholarid());
         }catch(Exception e){
             res.setCode(500);
             res.setMessage("服务器有点问题");
