@@ -4,6 +4,7 @@ import cn.edu.buaa.scholarshipserver.dao.MessageMapper;
 import cn.edu.buaa.scholarshipserver.dao.UserMapper;
 import cn.edu.buaa.scholarshipserver.models.Message;
 import cn.edu.buaa.scholarshipserver.models.MessageReturn;
+import cn.edu.buaa.scholarshipserver.models.User;
 import cn.edu.buaa.scholarshipserver.utils.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -238,8 +239,10 @@ public class MessageService {
 
     private MessageReturn fillMessageToReturn(Message message) {
         Integer senderUserId = message.getSenderUserid();
-        String senderUserName = userMapper.getUserByID(senderUserId).getName();
-        return new MessageReturn(message, senderUserName);
+        User sender = userMapper.getUserByID(senderUserId);
+        String senderName = sender.getName();
+        String senderAvatar = sender.getUserImagePath();
+        return new MessageReturn(message, senderName, senderAvatar);
     }
 
     private List<MessageReturn> fillMessagesToReturn(List<Message> messages) {
