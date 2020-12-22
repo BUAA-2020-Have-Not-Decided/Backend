@@ -91,8 +91,9 @@ public class ScholarController {
         return scholarService.PutWorkExperience(workExperienceList);
     }
     @DeleteMapping("/workExperience")
-    public ResponseEntity<Response> DeleteWorkExperience(@RequestBody WorkExperience workExperience){
-        return scholarService.DeleteWorkExperience(workExperience);
+    public ResponseEntity<Response> DeleteWorkExperience(@RequestParam("scholarId")Integer scholarId,@RequestParam("introduction")String introduction,@RequestParam("organization")String organization,@RequestParam("yearStart")Integer yearStart,@RequestParam("yearEnd")Integer yearEnd){
+
+        return scholarService.DeleteWorkExperience(scholarId,introduction,organization, yearStart, yearEnd);
     }
     @GetMapping("/sameName/{UserName}/{ScholarId}")
     @ApiOperation(value = "推送同名学者")
