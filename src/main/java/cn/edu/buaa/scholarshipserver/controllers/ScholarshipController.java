@@ -481,4 +481,10 @@ public class ScholarshipController {
         return ResponseEntity.ok(new Response(institutionService.getTopInstitution()));
     }
 
+    @GetMapping("/topInstitution/field")
+    @ApiOperation(notes = "根据领域获取排名最高的10个科研机构",value = "根据领域获取排名最高的10个科研机构")
+    public ResponseEntity<Response> getTopInstitutionByField(@RequestParam("fieldId") Long fieldId) {
+        return ResponseEntity.ok(new Response(institutionService.getTopInstitutionByField(fieldId)));
+    }
+
 }

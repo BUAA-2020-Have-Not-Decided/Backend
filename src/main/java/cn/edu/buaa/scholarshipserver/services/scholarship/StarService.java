@@ -14,6 +14,7 @@ import cn.edu.buaa.scholarshipserver.utils.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -23,12 +24,14 @@ public class StarService {
     private CorrectPaperDao correctPaperDao;
     private PatentDao patentDao;
     private ProjectDao projectDao;
+    private PaperService paperService;
 
-    public StarService(CollectMapper collectMapper, CorrectPaperDao correctPaperDao, PatentDao patentDao, ProjectDao projectDao) {
+    public StarService(CollectMapper collectMapper, CorrectPaperDao correctPaperDao, PatentDao patentDao, ProjectDao projectDao, PaperService paperService) {
         this.collectMapper = collectMapper;
         this.correctPaperDao = correctPaperDao;
         this.patentDao = patentDao;
         this.projectDao = projectDao;
+        this.paperService = paperService;
     }
 
     public int getStarStatus (Integer userId, Long paperId, Integer type) {
@@ -94,6 +97,12 @@ public class StarService {
         Map<String, Object> responseMap = new TreeMap<>();
         responseMap.put("paperList", correctPapers);
         responseMap.put("total", correctPapers.size());
+        try {
+            responseMap.put("authors", paperService.getAuthorList(correctPapers));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.ok(new Response(500, "服务器内部异常", null));
+        }
         return ResponseEntity.ok(new Response(responseMap));
     }
 
