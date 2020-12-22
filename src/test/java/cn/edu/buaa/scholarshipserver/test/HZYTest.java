@@ -38,4 +38,9 @@ public class HZYTest {
     public void topInstitutionTest() {
         System.out.println(institutionService.getTopInstitution());
     }
+
+    @Test
+    public void getTopInstitutionByField() {
+        System.out.println(institutionService.getTopInstitutionByField(154945302L));
+    }
 }
