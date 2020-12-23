@@ -404,8 +404,10 @@ public class ScholarService {
     }
 
     public ResponseEntity<Response> GetSubscribe (){
-        List<Map<String, String>> res = new ArrayList<>();
+        Map<String, Object> res = new HashMap<>();
+        List<Map<String, String>> info = new ArrayList<>();
         User u = (User) SecurityUtils.getSubject().getPrincipal();
+        res.put("userId",u.getUserID());
         List<Subscribe> subscribes = subscribeMethod.getSubscribeByFanId(u.getUserID());
         for (int i = 0; i < subscribes.size(); i++) {
             Map<String, String> ins = new HashMap<String, String>();
@@ -416,8 +418,9 @@ public class ScholarService {
             ins.put("Name", scholar.getName());
             ins.put("ScholarId", String.valueOf(scholar.getScholarId()));
             ins.put("Institution", scholar.getOrganization());
-            res.add(ins);
+            info.add(ins);
         }
+        res.put("scholars",info);
         return ResponseEntity.ok(new Response(1001, res));
     }
 
