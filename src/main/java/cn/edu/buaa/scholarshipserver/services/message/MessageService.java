@@ -247,7 +247,6 @@ public class MessageService {
              senderAvatar = scholarMapper.selectByUID(senderUserId).getAvatarurl();
         }
         catch (Exception e) {
-            e.printStackTrace();
             senderAvatar = null;
         }
         return new MessageReturn(message, senderName, senderAvatar);
