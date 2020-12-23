@@ -3,8 +3,9 @@ package cn.edu.buaa.scholarshipserver.models;
 public class MessageReturn extends Message {
     private String senderUsername;
     private String senderAvatar;
+    private Integer senderScholarId;
 
-    public MessageReturn(Message message, String senderUsername, String senderAvatar) {
+    public MessageReturn(Message message, String senderUsername, String senderAvatar, Integer senderScholarId) {
         super(message.getMsgid(),
                 message.getScholarId(),
                 message.getDataScholarId(),
@@ -22,6 +23,15 @@ public class MessageReturn extends Message {
 
         this.senderUsername = senderUsername;
         this.senderAvatar = senderAvatar;
+        this.senderScholarId = senderScholarId;
+    }
+
+    public Integer getSenderScholarId() {
+        return senderScholarId;
+    }
+
+    public void setSenderScholarId(Integer senderScholarId) {
+        this.senderScholarId = senderScholarId;
     }
 
     public String getSenderUsername() {
