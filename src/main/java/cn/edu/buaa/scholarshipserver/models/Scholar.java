@@ -78,6 +78,14 @@ public class Scholar implements Serializable {
         this.avatarurl = avatarurl;
     }
 
+    public Integer getUid() {
+        return uid;
+    }
+
+    public void setUid(Integer uid) {
+        this.uid = uid;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

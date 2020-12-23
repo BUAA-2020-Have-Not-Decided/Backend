@@ -39,7 +39,8 @@ public class MessageService {
     public ResponseEntity<Response> sendUserMessage(String messageTitle,
                                                     String messageContent,
                                                     Integer sender_userid,
-                                                    Integer receiver_userid) {
+                                                    Integer receiverScholarId) {
+        Integer receiver_userid = scholarMapper.selectByPrimaryKey(receiverScholarId).getUid();
         Message newMessage = new Message(null, null, null, null, null, null, null, sender_userid, receiver_userid, messageTitle, messageContent, 0, new Date(), 1);
         try {
             messageMapper.insertSelective(newMessage);

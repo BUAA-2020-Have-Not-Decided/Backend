@@ -20,9 +20,9 @@ public class MessageController {
     @PostMapping("/user/one")
     public ResponseEntity<Response> sendMessage(String messageTitle,
                                                 String messageContent,
-                                                Integer receiver_userid) {
+                                                Integer receiverScholarId) {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
-        return messageService.sendUserMessage(messageTitle, messageContent, user.getUserID(), receiver_userid);
+        return messageService.sendUserMessage(messageTitle, messageContent, user.getUserID(), receiverScholarId);
     }
 
     @GetMapping("/user/inbox")
