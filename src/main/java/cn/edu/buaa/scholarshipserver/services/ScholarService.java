@@ -345,16 +345,18 @@ public class ScholarService {
                 int maxHIndex=0;
                 Scholar scholar = scholarMethod.getScholarById((Integer) params.get("scholarId"));
                 if(scholar!=null) {
+                    int originCitation=0 ;
+                    int originPaper=0 ;
                     List<DataScholar> dataScholars = dataScholarMethod.getDataScholarByScholarId((Integer) params.get("scholarId"));
                     if (dataScholars != null) {
                         for (DataScholar dataScholar1 : dataScholars) {
                             maxHIndex = maxHIndex < dataScholar1.getHIndex() ? dataScholar1.getHIndex() : maxHIndex;
+                            originCitation += dataScholar1.getCitationCount();
+                            originPaper += dataScholar1.getPaperCount();
                         }
                     }
-                    int originCitation = scholar.getCitations();
-                    int originPaper = scholar.getPapers();
-                    scholar.setPapers(originPaper-dataScholar.getPaperCount());
-                    scholar.setCitations(originCitation-dataScholar.getCitationCount());
+                    scholar.setPapers(originPaper);
+                    scholar.setCitations(originCitation);
                     scholar.setHIndex(maxHIndex);
                     scholarMethod.updateScholar(scholar);
                 }
