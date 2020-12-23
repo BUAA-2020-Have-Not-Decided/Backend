@@ -257,7 +257,7 @@ public class MessageService {
             if (senderEnglishName == null && senderNativeName == null) {
                 senderName = null;
             }
-            else {
+            else { // not a perfect "else"
                 if (senderEnglishName == null) {
                     senderEnglishName = "";
                 }
