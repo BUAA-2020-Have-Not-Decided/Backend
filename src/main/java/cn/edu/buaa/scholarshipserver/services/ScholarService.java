@@ -306,6 +306,21 @@ public class ScholarService {
                         scholar.setHIndex(dataScholar.getHIndex());
                         scholarMethod.updateScholar(scholar);
                     }
+                    if(scholar.getCitations()==null){
+                        scholar.setCitations(dataScholar.getCitationCount());
+                    }
+                    else{
+                        int originCitations = scholar.getCitations();
+                        scholar.setCitations(originCitations+dataScholar.getCitationCount());
+                    }
+                    if(scholar.getPapers()==null){
+                        scholar.setPapers(dataScholar.getPaperCount());
+                    }
+                    else{
+                        int originPapers = scholar.getPapers();
+                        scholar.setPapers(originPapers+dataScholar.getPaperCount());
+                    }
+                    scholarMethod.updateScholar(scholar);
                 }
                 else
                     return ResponseEntity.ok(new Response(400, "学者id不存在", ""));
@@ -336,6 +351,10 @@ public class ScholarService {
                             maxHIndex = maxHIndex < dataScholar1.getHIndex() ? dataScholar1.getHIndex() : maxHIndex;
                         }
                     }
+                    int originCitation = scholar.getCitations();
+                    int originPaper = scholar.getPapers();
+                    scholar.setPapers(originPaper-dataScholar.getPaperCount());
+                    scholar.setCitations(originCitation-dataScholar.getCitationCount());
                     scholar.setHIndex(maxHIndex);
                     scholarMethod.updateScholar(scholar);
                 }
