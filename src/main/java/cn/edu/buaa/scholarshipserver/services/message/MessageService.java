@@ -1,10 +1,10 @@
 package cn.edu.buaa.scholarshipserver.services.message;
 
 import cn.edu.buaa.scholarshipserver.dao.MessageMapper;
+import cn.edu.buaa.scholarshipserver.dao.ScholarMapper;
 import cn.edu.buaa.scholarshipserver.dao.UserMapper;
 import cn.edu.buaa.scholarshipserver.models.Message;
 import cn.edu.buaa.scholarshipserver.models.MessageReturn;
-import cn.edu.buaa.scholarshipserver.models.User;
 import cn.edu.buaa.scholarshipserver.utils.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +24,16 @@ public class MessageService {
 
     private final MessageMapper messageMapper;
     private final UserMapper userMapper;
+    private final ScholarMapper scholarMapper;
     @Value("${files.path}")
     private String filePath;
     @Value("${files.host}")
     private String fileHost;
 
-    MessageService(MessageMapper messageMapper, UserMapper userMapper) {
+    MessageService(MessageMapper messageMapper, UserMapper userMapper, ScholarMapper scholarMapper) {
         this.messageMapper = messageMapper;
         this.userMapper = userMapper;
+        this.scholarMapper = scholarMapper;
     }
 
     public ResponseEntity<Response> sendUserMessage(String messageTitle,
@@ -239,9 +241,14 @@ public class MessageService {
 
     private MessageReturn fillMessageToReturn(Message message) {
         Integer senderUserId = message.getSenderUserid();
-        User sender = userMapper.getUserByID(senderUserId);
-        String senderName = sender.getName();
-        String senderAvatar = sender.getUserImagePath();
+        String senderName = userMapper.getUserByID(senderUserId).getName();
+        String senderAvatar = "";
+        try {
+             senderAvatar = scholarMapper.selectByUID(senderUserId).getAvatarurl();
+        }
+        catch (Exception e) {
+            senderAvatar = null;
+        }
         return new MessageReturn(message, senderName, senderAvatar);
     }
 
