@@ -70,6 +70,14 @@ public class Scholar implements Serializable {
         this.fans = 0;
     }
 
+    public String getAvatarurl() {
+        return avatarurl;
+    }
+
+    public void setAvatarurl(String avatarurl) {
+        this.avatarurl = avatarurl;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
