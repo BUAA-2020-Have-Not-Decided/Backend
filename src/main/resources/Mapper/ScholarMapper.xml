@@ -101,7 +101,7 @@
     -->
     ScholarId, InstitutionId, EnglishName, Name, Title, Organization, Email, Phone, Fans, 
     PersonalPage, Introduction, Papers, Citations, HIndex, GIndex, Sociability, Diversity, 
-    Activity, AvatarUrl, LastKnownTime
+    Activity, AvatarUrl, LastKnownTime, UID
   </sql>
   <select id="selectByExample" parameterType="cn.edu.buaa.scholarshipserver.models.ScholarExample" resultMap="BaseResultMap">
     <!--
