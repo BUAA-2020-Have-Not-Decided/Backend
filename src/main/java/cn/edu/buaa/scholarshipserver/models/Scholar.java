@@ -70,6 +70,30 @@ public class Scholar implements Serializable {
         this.fans = 0;
     }
 
+    public Integer getScholarid() {
+        return scholarid;
+    }
+
+    public void setScholarid(Integer scholarid) {
+        this.scholarid = scholarid;
+    }
+
+    public String getEnglishname() {
+        return englishname;
+    }
+
+    public void setEnglishname(String englishname) {
+        this.englishname = englishname;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getAvatarurl() {
         return avatarurl;
     }
