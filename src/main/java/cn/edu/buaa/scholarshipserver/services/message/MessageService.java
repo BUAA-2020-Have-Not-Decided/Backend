@@ -243,29 +243,13 @@ public class MessageService {
 
     private MessageReturn fillMessageToReturn(Message message) {
         Integer senderUserId = message.getSenderUserid();
-        String senderEnglishName = null;
-        String senderNativeName = null;
+        String senderName = userMapper.getUserByID(senderUserId).getName();
         String senderAvatar = null;
         Integer senderScholarId = null;
-        String senderName = null;
         try {
             Scholar sender = scholarMapper.selectByUID(senderUserId);
-            senderEnglishName = sender.getEnglishname();
-            senderNativeName = sender.getName();
             senderAvatar = sender.getAvatarurl();
             senderScholarId = sender.getScholarid();
-            if (senderEnglishName == null && senderNativeName == null) {
-                senderName = null;
-            }
-            else { // not a perfect "else"
-                if (senderEnglishName == null) {
-                    senderEnglishName = "";
-                }
-                if (senderNativeName == null) {
-                    senderNativeName = "";
-                }
-                senderName = senderEnglishName + " " + senderNativeName;
-            }
         } catch (Exception e) {
             System.out.println("didn't find the scholar");
         }
