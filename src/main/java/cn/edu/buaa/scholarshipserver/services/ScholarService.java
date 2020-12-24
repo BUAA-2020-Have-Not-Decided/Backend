@@ -387,6 +387,8 @@ public class ScholarService {
                 ins.put("Name", scholar.getName());
                 ins.put("ScholarId", String.valueOf(scholar.getScholarId()));
                 ins.put("Institution", scholar.getOrganization());
+                ins.put("paperCount",String.valueOf(scholar.getPapers()));
+                ins.put("citationCount",String.valueOf(scholar.getCitations()));
                 res.add(ins);
             } else return ResponseEntity.ok(new Response(400, "scholarId不存在", ""));
         } else if (ScholarName.length() != 0) {
@@ -397,6 +399,8 @@ public class ScholarService {
                 ins.put("Name", scholars.get(i).getName());
                 ins.put("ScholarId", String.valueOf(scholars.get(i).getScholarId()));
                 ins.put("Institution", scholars.get(i).getOrganization());
+                ins.put("paperCount",String.valueOf(scholars.get(i).getPapers()));
+                ins.put("citationCount",String.valueOf(scholars.get(i).getCitations()));
                 res.add(ins);
             }
         } else return ResponseEntity.ok(new Response(400, "2个参数都为空", ""));
